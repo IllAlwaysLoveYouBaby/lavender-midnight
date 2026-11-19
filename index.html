@@ -192,7 +192,7 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.65));
 }
 
-/* FALLING PHOTOS */
+/* UNIFORM FALLING PHOTO CARDS */
 #photos {
   position: absolute;
   inset: 0;
@@ -204,21 +204,15 @@ body {
 .falling-photo {
   position: absolute;
   top: -45px;
-
-  /* Identical card dimensions */
   width: 85px;
   height: 105px;
-
-  /* Fill every photo card consistently */
   object-fit: cover;
   object-position: center;
-
   padding: 4px;
   border: 1px solid rgba(255,255,255,.65);
   border-radius: 3px;
   background: #ffffff;
   box-shadow: 0 4px 18px rgba(20,10,30,.25);
-
   opacity: 0;
   animation: fall var(--fall-duration) linear forwards;
   will-change: transform, opacity;
@@ -467,8 +461,11 @@ const main = document.getElementById("main");
 const photos = document.getElementById("photos");
 
 let photoDeck = [];
-let lastPhoto = null;
+let lastDisplayedPhoto = null;
+let failedPhotos = new Set();
 let photoTimer = null;
+let photoStarted = false;
+
 let player = null;
 let playerReady = false;
 let musicRequested = false;
@@ -489,7 +486,7 @@ function makeStars() {
   }
 }
 
-/* SHUFFLE */
+/* SHUFFLE PHOTO COLLECTION */
 
 function shuffle(array) {
   const result = [...array];
@@ -502,28 +499,52 @@ function shuffle(array) {
   return result;
 }
 
+/* CREATE A NEW CYCLE ONLY AFTER THE CURRENT ONE IS EMPTY */
+
+function startNewPhotoCycle() {
+  const availablePhotos = photoFiles.filter(
+    filename => !failedPhotos.has(filename)
+  );
+
+  photoDeck = shuffle(availablePhotos);
+
+  /* Prevent the next cycle from starting with
+     the same photo that ended the previous cycle. */
+  if (
+    photoDeck.length > 1 &&
+    photoDeck[0] === lastDisplayedPhoto
+  ) {
+    [photoDeck[0], photoDeck[1]] =
+      [photoDeck[1], photoDeck[0]];
+  }
+}
+
 function getNextPhoto() {
   if (photoDeck.length === 0) {
-    photoDeck = shuffle(photoFiles);
-
-    if (photoDeck.length > 1 && photoDeck[0] === lastPhoto) {
-      [photoDeck[0], photoDeck[1]] =
-        [photoDeck[1], photoDeck[0]];
-    }
+    startNewPhotoCycle();
   }
 
-  lastPhoto = photoDeck.shift();
-  return lastPhoto;
+  if (photoDeck.length === 0) {
+    return null;
+  }
+
+  return photoDeck.shift();
 }
 
 /* FALLING PHOTOS */
 
 function createFallingPhoto() {
   const filename = getNextPhoto();
+
+  if (!filename) {
+    console.warn("No available photos to display.");
+    return;
+  }
+
   const img = document.createElement("img");
 
-  /* Random rotation and drift.
-     Uniform card size and slower falling speed. */
+  /* Random rotation and drift; fixed card size;
+     slower falling animation. */
   const rotation = -16 + Math.random() * 32;
   const duration = 12 + Math.random() * 6;
   const drift = -65 + Math.random() * 130;
@@ -539,26 +560,31 @@ function createFallingPhoto() {
   img.style.setProperty("--drift", drift + "px");
 
   img.onload = () => {
+    lastDisplayedPhoto = filename;
     photos.appendChild(img);
   };
 
   img.onerror = () => {
+    failedPhotos.add(filename);
     img.remove();
     console.warn("Skipping unavailable photo:", filename);
   };
 
-  img.src = "./" + encodeURIComponent(filename);
-
   img.addEventListener("animationend", () => {
     img.remove();
   });
+
+  img.src = "./" + encodeURIComponent(filename);
 }
 
 /* PHOTO STARTUP */
 
 function startPhotos() {
-  if (photoTimer) return;
+  if (photoStarted) return;
 
+  photoStarted = true;
+
+  /* Initial entrance: five photos close together. */
   createFallingPhoto();
 
   setTimeout(createFallingPhoto, 400);
@@ -566,7 +592,11 @@ function startPhotos() {
   setTimeout(createFallingPhoto, 1200);
   setTimeout(createFallingPhoto, 1600);
 
-  photoTimer = setInterval(createFallingPhoto, 1900);
+  /* After the initial entrance, wait three seconds
+     before starting the slower repeating sequence. */
+  setTimeout(() => {
+    photoTimer = setInterval(createFallingPhoto, 3000);
+  }, 1600);
 }
 
 /* YOUTUBE PLAYER */
