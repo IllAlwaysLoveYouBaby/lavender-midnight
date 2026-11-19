@@ -180,6 +180,8 @@ body {
   pointer-events: none;
 }
 
+/* PHOTO CARDS */
+
 .falling-photo {
   position: absolute;
   top: -130px;
@@ -196,6 +198,8 @@ body {
   animation: fall var(--fall-duration) linear forwards;
   will-change: transform;
 }
+
+/* SLOWER 35–45 SECOND FALL */
 
 @keyframes fall {
   0% {
@@ -383,9 +387,7 @@ body {
 
 <script>
 
-/* ---------------------------------
-   PHOTO FILES
----------------------------------- */
+/* PHOTO FILES */
 
 const photoFiles = [
   "Picture_36_Original_Original.jpeg",
@@ -494,9 +496,7 @@ const photoFiles = [
   "IMG_0842_Original.jpeg"
 ];
 
-/* ---------------------------------
-   STARS
----------------------------------- */
+/* STARS */
 
 function createStars(containerId, count) {
   const container = document.getElementById(containerId);
@@ -515,9 +515,7 @@ function createStars(containerId, count) {
 createStars("opening-stars", 100);
 createStars("main-stars", 110);
 
-/* ---------------------------------
-   PHOTO SHUFFLE / NO REPEATS
----------------------------------- */
+/* PHOTO SHUFFLE / NO REPEATS */
 
 const photos = document.getElementById("photos");
 
@@ -574,7 +572,10 @@ function createFallingPhoto() {
   const img = document.createElement("img");
 
   const rotation = -16 + Math.random() * 32;
-  const duration = 18 + Math.random() * 6;
+
+  // Each photo now takes 35–45 seconds to fall
+  const duration = 35 + Math.random() * 10;
+
   const drift = -65 + Math.random() * 130;
 
   img.className = "falling-photo";
@@ -605,33 +606,29 @@ function createFallingPhoto() {
   img.src = "./" + encodeURIComponent(filename);
 }
 
-/* ---------------------------------
-   SLOWER PHOTO START
----------------------------------- */
+/* SLOWER PHOTO START */
 
 function startPhotos() {
   if (photoStarted) return;
 
   photoStarted = true;
 
-  // Opening: only 3 photos
+  // Only 3 photos during the opening
   createFallingPhoto();
 
   setTimeout(createFallingPhoto, 1500);
   setTimeout(createFallingPhoto, 3000);
 
-  // Wait until 8 seconds total before regular drops begin
+  // Wait 8 seconds before regular drops
   setTimeout(() => {
     createFallingPhoto();
 
-    // Thereafter, one photo every 5 seconds
+    // Then one photo every 5 seconds
     photoTimer = setInterval(createFallingPhoto, 5000);
   }, 8000);
 }
 
-/* ---------------------------------
-   YOUTUBE MUSIC
----------------------------------- */
+/* YOUTUBE MUSIC */
 
 let player;
 let playerReady = false;
@@ -695,9 +692,7 @@ function playMusic() {
 
 loadYouTubeAPI();
 
-/* ---------------------------------
-   OPEN SURPRISE
----------------------------------- */
+/* OPEN SURPRISE */
 
 const opening = document.getElementById("opening");
 const main = document.getElementById("main");
@@ -719,9 +714,7 @@ openButton.addEventListener("click", function() {
   }, 1000);
 });
 
-/* ---------------------------------
-   MANUAL MUSIC BUTTON
----------------------------------- */
+/* MANUAL MUSIC BUTTON */
 
 document.getElementById("music-button").addEventListener("click", function() {
   if (playerReady && player) {
