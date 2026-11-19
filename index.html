@@ -94,7 +94,7 @@ body {
   }
 }
 
-/* OPENING SCREEN */
+/* OPENING */
 
 #opening {
   z-index: 10;
@@ -199,7 +199,7 @@ body {
   will-change: transform;
 }
 
-/* SLOW 35–45 SECOND FALL */
+/* SLOW FALLING PHOTOS */
 
 @keyframes fall {
   0% {
@@ -256,35 +256,62 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
 }
 
-/* VISIBLE YOUTUBE PLAYER */
+/* RESTORED MUSIC CONTROL */
 
-#music-area {
+.music-control {
   position: absolute;
   z-index: 20;
   left: 50%;
-  bottom: 10px;
+  bottom: 25px;
   transform: translateX(-50%);
-  width: 210px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0 15px;
 }
 
-#youtube-player {
-  width: 190px;
-  height: 107px;
-  overflow: hidden;
-  border-radius: 8px;
-  background: rgba(0,0,0,.3);
-  box-shadow: 0 4px 18px rgba(10,5,20,.3);
+.music-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 30px;
+  background: rgba(255,255,255,.1);
+  color: white;
+  padding: 10px 22px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  -webkit-appearance: none;
+}
+
+.music-button:active {
+  transform: scale(.96);
+  background: rgba(255,255,255,.2);
 }
 
 .music-note {
-  margin-top: 5px;
-  font-size: 11px;
-  letter-spacing: .3px;
+  font-size: 12px;
+  letter-spacing: .4px;
   color: rgba(255,255,255,.75);
   text-align: center;
+}
+
+/* HIDDEN YOUTUBE PLAYER */
+
+#youtube-player {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  opacity: .01;
+  pointer-events: none;
+  left: -10px;
+  bottom: -10px;
 }
 
 /* SMALL SCREENS */
@@ -304,14 +331,16 @@ body {
     height: 98px;
   }
 
-  #music-area {
-    bottom: 8px;
+  .music-control {
+    bottom: 20px;
   }
 }
 </style>
 </head>
 
 <body>
+
+<!-- OPENING SCREEN -->
 
 <div class="screen" id="opening">
 
@@ -338,6 +367,8 @@ body {
 
 </div>
 
+<!-- MAIN SCREEN -->
+
 <div class="screen" id="main">
 
   <div class="stars" id="main-stars"></div>
@@ -347,6 +378,8 @@ body {
   <div class="shooting-star" style="top:60%;left:85%;animation-delay:8s"></div>
 
   <div id="photos"></div>
+
+  <!-- CENTER MESSAGE -->
 
   <div class="center-message">
     <span class="message-text">I'll Always Choose You</span>
@@ -360,21 +393,29 @@ body {
     </svg>
   </div>
 
-  <!-- RESTORED VISIBLE MUSIC PLAYER -->
+  <!-- VISIBLE PLAY BUTTON -->
 
-  <div id="music-area">
-    <div id="youtube-player"></div>
+  <div class="music-control">
+    <button class="music-button" id="music-button">
+      Play Song ♫
+    </button>
+
     <div class="music-note">
-      The song is set to start when you open the surprise.
-      If playback doesn't start, tap the play button.
+      If the song doesn't start automatically, tap Play Song ♫
     </div>
   </div>
 
 </div>
 
+<!-- YOUTUBE -->
+
+<div id="youtube-player"></div>
+
 <script>
 
-/* PHOTO FILES */
+/* --------------------------------
+   PHOTO FILES
+--------------------------------- */
 
 const photoFiles = [
   "Picture_36_Original_Original.jpeg",
@@ -483,18 +524,22 @@ const photoFiles = [
   "IMG_0842_Original.jpeg"
 ];
 
-/* STARS */
+/* --------------------------------
+   STARS
+--------------------------------- */
 
 function createStars(containerId, count) {
   const container = document.getElementById(containerId);
 
   for (let i = 0; i < count; i++) {
     const star = document.createElement("div");
+
     star.className = "star";
     star.style.left = Math.random() * 100 + "%";
     star.style.top = Math.random() * 100 + "%";
     star.style.animationDelay = Math.random() * 5 + "s";
     star.style.animationDuration = (2 + Math.random() * 4) + "s";
+
     container.appendChild(star);
   }
 }
@@ -502,7 +547,9 @@ function createStars(containerId, count) {
 createStars("opening-stars", 100);
 createStars("main-stars", 110);
 
-/* PHOTO SHUFFLE / NO REPEATS */
+/* --------------------------------
+   PHOTO SHUFFLE / NO REPEATS
+--------------------------------- */
 
 const photos = document.getElementById("photos");
 
@@ -559,10 +606,7 @@ function createFallingPhoto() {
   const img = document.createElement("img");
 
   const rotation = -16 + Math.random() * 32;
-
-  // Photo falls slowly for 35–45 seconds
   const duration = 35 + Math.random() * 10;
-
   const drift = -65 + Math.random() * 130;
 
   img.className = "falling-photo";
@@ -593,32 +637,37 @@ function createFallingPhoto() {
   img.src = "./" + encodeURIComponent(filename);
 }
 
-/* PHOTO START SEQUENCE */
+/* --------------------------------
+   PHOTO START SEQUENCE
+--------------------------------- */
 
 function startPhotos() {
   if (photoStarted) return;
 
   photoStarted = true;
 
-  // 3 opening photos
+  // Initial three photos
   createFallingPhoto();
 
   setTimeout(createFallingPhoto, 1500);
   setTimeout(createFallingPhoto, 3000);
 
-  // Wait 8 seconds before regular drops
+  // Begin regular photos at 8 seconds
   setTimeout(() => {
     createFallingPhoto();
 
-    // One photo every 5 seconds thereafter
+    // One additional photo every 5 seconds
     photoTimer = setInterval(createFallingPhoto, 5000);
   }, 8000);
 }
 
-/* YOUTUBE PLAYER */
+/* --------------------------------
+   YOUTUBE MUSIC PLAYER
+--------------------------------- */
 
-let player;
+let player = null;
 let playerReady = false;
+let playbackRequested = false;
 
 const videoId = "yLZoVTayvxY";
 
@@ -631,6 +680,7 @@ function loadYouTubeAPI() {
   if (document.getElementById("youtube-api")) return;
 
   const tag = document.createElement("script");
+
   tag.id = "youtube-api";
   tag.src = "https://www.youtube.com/iframe_api";
 
@@ -645,44 +695,66 @@ function createPlayer() {
   if (player || !window.YT || !window.YT.Player) return;
 
   player = new YT.Player("youtube-player", {
-    height: "107",
-    width: "190",
+    height: "1",
+    width: "1",
     videoId: videoId,
+
     playerVars: {
       autoplay: 0,
-      controls: 1,
+      controls: 0,
       playsinline: 1,
-      modestbranding: 1,
       rel: 0,
       loop: 1,
       playlist: videoId
     },
+
     events: {
-      onReady: function() {
+      onReady: function(event) {
         playerReady = true;
+        event.target.setVolume(100);
+
+        if (playbackRequested) {
+          startPlayback();
+        }
+      },
+
+      onStateChange: function(event) {
+        // Restart song if it reaches the end
+        if (event.data === YT.PlayerState.ENDED) {
+          player.playVideo();
+        }
       }
     }
   });
 }
 
-function playMusic() {
-  if (!playerReady || !player) {
-    loadYouTubeAPI();
-    return;
-  }
+function startPlayback() {
+  if (!playerReady || !player) return;
 
   try {
-    player.unMute();
     player.setVolume(100);
+    player.unMute();
     player.playVideo();
   } catch (error) {
-    console.log("Playback could not start automatically.");
+    console.log("Playback unavailable:", error);
+  }
+}
+
+function playMusic() {
+  playbackRequested = true;
+
+  if (playerReady && player) {
+    startPlayback();
+  } else {
+    loadYouTubeAPI();
   }
 }
 
 loadYouTubeAPI();
 
-/* OPEN SURPRISE */
+/* --------------------------------
+   OPEN SURPRISE
+--------------------------------- */
 
 const opening = document.getElementById("opening");
 const main = document.getElementById("main");
@@ -690,6 +762,9 @@ const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
   opening.style.opacity = "0";
+
+  // User interaction requests music playback
+  playMusic();
 
   setTimeout(() => {
     opening.style.display = "none";
@@ -700,8 +775,15 @@ openButton.addEventListener("click", function() {
     });
 
     startPhotos();
-    playMusic();
   }, 1000);
+});
+
+/* --------------------------------
+   MANUAL MUSIC BUTTON
+--------------------------------- */
+
+document.getElementById("music-button").addEventListener("click", function() {
+  playMusic();
 });
 
 </script>
