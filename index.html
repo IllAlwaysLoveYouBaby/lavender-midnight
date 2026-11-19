@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lavender Midnight</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Nunito:wght@300;400;500&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: 'Nunito', sans-serif;
+  background: #21182f;
+  color: white;
+}
+
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 50% 25%, #c2a9dc 0%, #9982bb 28%, #6d5a91 55%, #302440 100%);
+  transition: opacity 1.2s ease, visibility 1.2s ease;
+}
+
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.25; transform: scale(0.75); }
+  to { opacity: 1; transform: scale(1.2); }
+}
+
+.moon {
+  position: absolute;
+  top: 12%;
+  right: 12%;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #fff7ff;
+  box-shadow: 0 0 25px rgba(255,255,255,0.6),
+              0 0 70px rgba(255,230,255,0.3);
+}
+
+.moon::after {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: -15px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #9b83bb;
+}
+
+.opening-content {
+  z-index: 2;
+  width: 90%;
+  text-align: center;
+  padding: 24px;
+}
+
+.opening-small {
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: 3px;
+  margin-bottom: 26px;
+}
+
+.opening-title {
+  font-family: 'Allura', cursive;
+  font-size: clamp(48px, 12vw, 76px);
+  font-weight: normal;
+  line-height: 1.1;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(255,255,255,0.25);
+}
+
+.opening-subtitle {
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 1px;
+  margin-top: 24px;
+  color: #f4eaff;
+}
+
+.open-button {
+  margin-top: 45px;
+  padding: 15px 30px;
+  color: white;
+  background: rgba(255,255,255,0.09);
+  border: 1px solid rgba(255,255,255,0.55);
+  border-radius: 40px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 14px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.3s, transform 0.3s;
+}
+
+.open-button:active {
+  transform: scale(0.96);
+  background: rgba(255,255,255,0.2);
+}
+
+.main-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  padding: 12px;
+  text-align: center;
+}
+
+.main-message {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  width: 100%;
+  font-family: 'Allura', cursive;
+  font-size: clamp(32px, 8.6vw, 66px);
+  font-weight: normal;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(255,255,255,0.35),
+               0 0 28px rgba(255,255,255,0.15);
+}
+
+.heart {
+  font-family: Arial, sans-serif;
+  font-size: 0.72em;
+  margin-left: 7px;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+@media (max-width: 380px) {
+  .main-message {
+    font-size: 8vw;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- OPENING SCREEN -->
+<div class="screen" id="opening">
+  <div class="stars" id="stars1"></div>
+  <div class="moon"></div>
+
+  <div class="opening-content">
+    <div class="opening-small">A LITTLE MOMENT, JUST FOR YOU</div>
+
+    <h1 class="opening-title">Under the Lavender Sky</h1>
+
+    <div class="opening-subtitle">
+      Some things are worth taking a moment for...
+    </div>
+
+    <button class="open-button" onclick="openSurprise()">
+      Open Your Surprise ♡
+    </button>
+  </div>
+</div>
+
+<!-- MAIN SCREEN -->
+<div class="screen hidden" id="main">
+  <div class="stars" id="stars2"></div>
+  <div class="moon"></div>
+
+  <div class="main-content">
+    <div class="main-message">
+      <span>I'll Always Choose You</span>
+      <span class="heart">♥</span>
+    </div>
+  </div>
+</div>
+
+<script>
+function createStars(containerId, amount) {
+  const container = document.getElementById(containerId);
+
+  for (let i = 0; i < amount; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+
+    const size = Math.random() * 2.5 + 1;
+    star.style.width = size + 'px';
+    star.style.height = size + 'px';
+    star.style.left = Math.random() * 100 + '%';
+    star.style.top = Math.random() * 100 + '%';
+    star.style.animationDuration = (1.5 + Math.random() * 3) + 's';
+    star.style.animationDelay = Math.random() * 3 + 's';
+
+    container.appendChild(star);
+  }
+}
+
+createStars('stars1', 90);
+createStars('stars2', 90);
+
+function openSurprise() {
+  document.getElementById('opening').classList.add('hidden');
+  document.getElementById('main').classList.remove('hidden');
+}
+</script>
+
+</body>
+</html>
