@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -238,6 +237,32 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
 }
 
+/* NEW: BOTTOM LYRICS */
+
+#lyrics {
+  position: absolute;
+  z-index: 6;
+  left: 0;
+  right: 0;
+  bottom: calc(24px + env(safe-area-inset-bottom));
+  width: 100%;
+  padding: 0 24px;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+#lyrics-text {
+  display: inline-block;
+  font-family: 'Allura', cursive;
+  font-size: clamp(22px, 6vw, 32px);
+  font-weight: 400;
+  color: white;
+  line-height: 1.15;
+  text-shadow: 0 0 12px rgba(255,255,255,.25);
+}
+
 /* HIDDEN YOUTUBE PLAYER */
 
 #youtube-player-container {
@@ -320,6 +345,12 @@ body {
       c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
     </svg>
   </div>
+
+  <!-- NEW: LYRICS DISPLAY -->
+
+  <div id="lyrics" aria-live="polite">
+    <span id="lyrics-text"></span>
+  </div>
 </div>
 
 <script>
@@ -374,7 +405,7 @@ const photoFiles = [
   "IMG_0581_Original.jpeg",
   "IMG_0578_Original.jpeg",
   "IMG_0287_Original.jpeg",
-  "IMG_0242_Original.jpeg",
+  "IMG_0242_Original.jpeg,
   "FBC1621D-16B5-47FD-8211-F0C568D772B5_Original.jpeg",
   "F7343407-203D-45D6-8BB2-4D16D2D8D40A_Original.jpeg",
   "D41356E5-D304-4600-A436-F31E1A256817_Original.jpeg",
@@ -463,7 +494,7 @@ let failedPhotos = new Set();
 let photoStarted = false;
 let photoTimer = null;
 
-/* NEW: TRACK PHOTOS THAT ARE STILL LOADING */
+/* TRACK PHOTOS THAT ARE STILL LOADING */
 let pendingPhotos = 0;
 
 function shuffle(array) {
@@ -559,11 +590,11 @@ function createFallingPhoto() {
   img.style.setProperty("--fall-duration", duration + "s");
   img.style.setProperty("--drift", drift + "px");
 
-  /* NEW: COUNT THIS PHOTO WHILE IT LOADS */
+  /* COUNT THIS PHOTO WHILE IT LOADS */
   pendingPhotos++;
 
   img.onload = () => {
-    /* NEW: PHOTO HAS LOADED AND IS NOW DISPLAYED */
+    /* PHOTO HAS LOADED AND IS NOW DISPLAYED */
     pendingPhotos--;
 
     lastDisplayedPhoto = filename;
@@ -571,7 +602,7 @@ function createFallingPhoto() {
   };
 
   img.onerror = () => {
-    /* NEW: FAILED PHOTO DOES NOT BLOCK THE NEXT CYCLE */
+    /* FAILED PHOTO DOES NOT BLOCK THE NEXT CYCLE */
     pendingPhotos--;
 
     failedPhotos.add(filename);
@@ -611,6 +642,132 @@ let youtubePlayer = null;
 let youtubePlayerReady = false;
 let startMusicWhenReady = false;
 
+/* NEW: LYRIC ELEMENTS AND PLAYER STATE */
+
+const lyricsContainer = document.getElementById("lyrics");
+const lyricsText = document.getElementById("lyrics-text");
+
+let currentPlayerState = -1;
+let lastLyric = "";
+let lyricTimer = null;
+
+/*
+  INITIAL LYRIC TIMELINE
+
+  These timings are initial estimates, not frame-perfect
+  vocal timestamps. They can be fine-tuned after testing.
+
+  Song length: approximately 4:11 (251 seconds).
+*/
+
+const lyricCues = [
+  { start:  7, end: 14, text: "I see deep sorrow in your eyes" },
+  { start: 14, end: 21, text: "When everything is said and done" },
+  { start: 21, end: 28, text: "In the end we will say good-bye" },
+  { start: 28, end: 35, text: "But, if only we could go back" },
+
+  { start: 36, end: 42, text: "You don't have to runaway" },
+  { start: 42, end: 48, text: "You don't have to try to me" },
+
+  { start: 49, end: 56, text: "I just wanna love you as you are" },
+  { start: 56, end: 63, text: "Hold you close and never let you stray" },
+  { start: 63, end: 70, text: "Even if the world turns its back" },
+  { start: 70, end: 77, text: "I'll be there close where you are" },
+  { start: 77, end: 83, text: "If you're mine, even if you're far" },
+  { start: 83, end: 89, text: "With voice inside your head" },
+  { start: 89, end: 96, text: "You don't have to face it alone" },
+  { start: 96, end: 102, text: "I will stay" },
+
+  { start: 107, end: 114, text: "Every scar is healed with time" },
+  { start: 114, end: 121, text: "Every broken piece inside" },
+  { start: 121, end: 128, text: "They will slowly fade away in time" },
+  { start: 128, end: 134, text: "You don't have to be okay" },
+  { start: 134, end: 140, text: "Just let the tears fall down" },
+  { start: 140, end: 146, text: "No need to hide the pain inside" },
+
+  { start: 147, end: 154, text: "I just wanna love you as you are" },
+  { start: 154, end: 161, text: "Hold you close and never let you stray" },
+  { start: 161, end: 168, text: "Even if the world turns its back" },
+  { start: 168, end: 175, text: "I'll be there close where you are" },
+  { start: 175, end: 181, text: "If you're mine, even if you're far" },
+  { start: 181, end: 187, text: "With voice inside your head" },
+  { start: 187, end: 194, text: "You don't have to face it alone" },
+  { start: 194, end: 200, text: "I will stay" },
+
+  { start: 204, end: 211, text: "I wanna let you go" },
+  { start: 211, end: 218, text: "Even if they break me" },
+  { start: 218, end: 225, text: "Even if it's a scar" },
+  { start: 225, end: 232, text: "I'll stand between you and the dark" },
+
+  { start: 233, end: 240, text: "I just wanna love you as you are" },
+  { start: 240, end: 246, text: "Hold you close and never let you stray" },
+  { start: 246, end: 253, text: "Even if the world turns its back" },
+  { start: 253, end: 260, text: "I'll be there close where you are" },
+  { start: 260, end: 267, text: "If you're mine, even if you're far" },
+  { start: 267, end: 275, text: "I will stay with you" }
+];
+
+/* NEW: SHOW THE CURRENT LYRIC */
+
+function updateLyrics() {
+  if (
+    !youtubePlayerReady ||
+    currentPlayerState !== YT.PlayerState.PLAYING ||
+    !youtubePlayer
+  ) {
+    hideLyrics();
+    return;
+  }
+
+  const currentTime = youtubePlayer.getCurrentTime();
+
+  const cue = lyricCues.find(
+    lyric => currentTime >= lyric.start && currentTime < lyric.end
+  );
+
+  const newLyric = cue ? cue.text : "";
+
+  if (newLyric === lastLyric) return;
+
+  lastLyric = newLyric;
+
+  lyricsContainer.style.opacity = "0";
+
+  setTimeout(() => {
+    if (lastLyric === newLyric) {
+      lyricsText.textContent = newLyric;
+      lyricsContainer.style.opacity = newLyric ? "1" : "0";
+    }
+  }, 350);
+}
+
+/* NEW: HIDE LYRICS */
+
+function hideLyrics() {
+  lastLyric = "";
+  lyricsContainer.style.opacity = "0";
+  lyricsText.textContent = "";
+}
+
+/* NEW: CHECK SONG POSITION REGULARLY */
+
+function startLyricSync() {
+  if (lyricTimer) return;
+
+  lyricTimer = setInterval(updateLyrics, 250);
+}
+
+function stopLyricSync() {
+  if (lyricTimer) {
+    clearInterval(lyricTimer);
+    lyricTimer = null;
+  }
+
+  hideLyrics();
+}
+
+/* YOUTUBE PLAYER */
+
 function onYouTubeIframeAPIReady() {
   youtubePlayer = new YT.Player("youtube-player", {
     width: "200",
@@ -638,6 +795,14 @@ function onYouTubeIframeAPIReady() {
         }
       },
       onStateChange: function(event) {
+        currentPlayerState = event.data;
+
+        if (event.data === YT.PlayerState.PLAYING) {
+          startLyricSync();
+        } else {
+          stopLyricSync();
+        }
+
         if (event.data === YT.PlayerState.ENDED) {
           event.target.playVideo();
         }
