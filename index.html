@@ -256,7 +256,7 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
 }
 
-/* RESTORED MUSIC CONTROL */
+/* MUSIC CONTROL */
 
 .music-control {
   position: absolute;
@@ -302,7 +302,7 @@ body {
   text-align: center;
 }
 
-/* HIDDEN YOUTUBE PLAYER */
+/* HIDDEN MUSIC PLAYER */
 
 #youtube-player {
   position: fixed;
@@ -312,6 +312,13 @@ body {
   pointer-events: none;
   left: -10px;
   bottom: -10px;
+  overflow: hidden;
+}
+
+#youtube-player iframe {
+  width: 1px;
+  height: 1px;
+  border: 0;
 }
 
 /* SMALL SCREENS */
@@ -393,7 +400,7 @@ body {
     </svg>
   </div>
 
-  <!-- VISIBLE PLAY BUTTON -->
+  <!-- MUSIC BUTTON -->
 
   <div class="music-control">
     <button class="music-button" id="music-button">
@@ -407,7 +414,7 @@ body {
 
 </div>
 
-<!-- YOUTUBE -->
+<!-- YOUTUBE PLAYER CONTAINER -->
 
 <div id="youtube-player"></div>
 
@@ -662,95 +669,38 @@ function startPhotos() {
 }
 
 /* --------------------------------
-   YOUTUBE MUSIC PLAYER
+   MUSIC PLAYER - AUTOPLAY FIX
 --------------------------------- */
 
-let player = null;
-let playerReady = false;
-let playbackRequested = false;
-
 const videoId = "yLZoVTayvxY";
+const youtubeContainer = document.getElementById("youtube-player");
 
-function loadYouTubeAPI() {
-  if (window.YT && window.YT.Player) {
-    createPlayer();
-    return;
-  }
+let musicFrame = null;
 
-  if (document.getElementById("youtube-api")) return;
+function startMusicFromTap() {
+  // Create a fresh YouTube iframe with autoplay enabled.
+  // This is triggered directly by the user's button tap.
+  youtubeContainer.innerHTML = "";
 
-  const tag = document.createElement("script");
+  musicFrame = document.createElement("iframe");
 
-  tag.id = "youtube-api";
-  tag.src = "https://www.youtube.com/iframe_api";
+  musicFrame.id = "music-frame";
+  musicFrame.setAttribute("title", "Background music");
+  musicFrame.setAttribute("allow", "autoplay; encrypted-media");
+  musicFrame.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
 
-  document.body.appendChild(tag);
+  musicFrame.src =
+    "https://www.youtube-nocookie.com/embed/" + videoId +
+    "?autoplay=1" +
+    "&mute=0" +
+    "&controls=0" +
+    "&playsinline=1" +
+    "&loop=1" +
+    "&playlist=" + videoId +
+    "&rel=0";
+
+  youtubeContainer.appendChild(musicFrame);
 }
-
-window.onYouTubeIframeAPIReady = function() {
-  createPlayer();
-};
-
-function createPlayer() {
-  if (player || !window.YT || !window.YT.Player) return;
-
-  player = new YT.Player("youtube-player", {
-    height: "1",
-    width: "1",
-    videoId: videoId,
-
-    playerVars: {
-      autoplay: 0,
-      controls: 0,
-      playsinline: 1,
-      rel: 0,
-      loop: 1,
-      playlist: videoId
-    },
-
-    events: {
-      onReady: function(event) {
-        playerReady = true;
-        event.target.setVolume(100);
-
-        if (playbackRequested) {
-          startPlayback();
-        }
-      },
-
-      onStateChange: function(event) {
-        // Restart song if it reaches the end
-        if (event.data === YT.PlayerState.ENDED) {
-          player.playVideo();
-        }
-      }
-    }
-  });
-}
-
-function startPlayback() {
-  if (!playerReady || !player) return;
-
-  try {
-    player.setVolume(100);
-    player.unMute();
-    player.playVideo();
-  } catch (error) {
-    console.log("Playback unavailable:", error);
-  }
-}
-
-function playMusic() {
-  playbackRequested = true;
-
-  if (playerReady && player) {
-    startPlayback();
-  } else {
-    loadYouTubeAPI();
-  }
-}
-
-loadYouTubeAPI();
 
 /* --------------------------------
    OPEN SURPRISE
@@ -761,10 +711,10 @@ const main = document.getElementById("main");
 const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
-  opening.style.opacity = "0";
+  // Music launch happens immediately from the tap
+  startMusicFromTap();
 
-  // User interaction requests music playback
-  playMusic();
+  opening.style.opacity = "0";
 
   setTimeout(() => {
     opening.style.display = "none";
@@ -783,7 +733,8 @@ openButton.addEventListener("click", function() {
 --------------------------------- */
 
 document.getElementById("music-button").addEventListener("click", function() {
-  playMusic();
+  // Tapping the music button restarts the song
+  startMusicFromTap();
 });
 
 </script>
