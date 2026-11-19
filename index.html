@@ -247,68 +247,22 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
 }
 
-/* MUSIC CONTROL */
-
-.music-control {
-  position: absolute;
-  z-index: 20;
-  left: 50%;
-  bottom: 25px;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 0 15px;
-}
-
-.music-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255,255,255,.6);
-  border-radius: 30px;
-  background: rgba(255,255,255,.1);
-  color: white;
-  padding: 10px 22px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 16px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  -webkit-appearance: none;
-}
-
-.music-button:active {
-  transform: scale(.96);
-  background: rgba(255,255,255,.2);
-}
-
-.music-note {
-  font-size: 12px;
-  letter-spacing: .4px;
-  color: rgba(255,255,255,.75);
-  text-align: center;
-}
-
 /* HIDDEN YOUTUBE PLAYER */
 
-#youtube-player {
+#youtube-player-container {
   position: fixed;
-  width: 1px;
-  height: 1px;
-  opacity: .01;
+  width: 200px;
+  height: 200px;
+  left: -10000px;
+  top: -10000px;
+  opacity: 0;
   pointer-events: none;
-  left: -10px;
-  bottom: -10px;
   overflow: hidden;
 }
 
-#youtube-player iframe {
-  width: 1px;
-  height: 1px;
+#youtube-player-container iframe {
+  width: 200px;
+  height: 200px;
   border: 0;
 }
 
@@ -316,20 +270,27 @@ body {
 
 @media (max-width: 380px) {
   .opening-subtitle { font-size: 17px; }
+
   .opening-eyebrow {
     font-size: 11px;
     letter-spacing: 4px;
   }
+
   .falling-photo {
     width: 78px;
     height: 98px;
   }
-  .music-control { bottom: 20px; }
 }
 </style>
 </head>
 
 <body>
+
+<!-- HIDDEN YOUTUBE PLAYER -->
+
+<div id="youtube-player-container">
+  <div id="youtube-player"></div>
+</div>
 
 <!-- OPENING SCREEN -->
 
@@ -365,6 +326,8 @@ body {
 
   <div id="photos"></div>
 
+  <!-- CENTER MESSAGE -->
+
   <div class="center-message">
     <span class="message-text">I'll Always Choose You</span>
 
@@ -373,26 +336,10 @@ body {
       2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
       C13.09 3.81 14.76 3 16.5 3
       19.58 3 22 5.42 22 8.5
-      c3.78 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
     </svg>
   </div>
-
-  <!-- VISIBLE PLAY BUTTON -->
-
-  <div class="music-control">
-    <button class="music-button" id="music-button">
-      Play Song ♫
-    </button>
-
-    <div class="music-note">
-      If the song doesn't start automatically, tap Play Song ♫
-    </div>
-  </div>
 </div>
-
-<!-- YOUTUBE PLAYER -->
-
-<div id="youtube-player"></div>
 
 <script>
 
@@ -630,103 +577,60 @@ function startPhotos() {
   }, 8000);
 }
 
-/* YOUTUBE MUSIC PLAYER - RESTORED API VERSION */
-
-let player = null;
-let playerReady = false;
-let playbackRequested = false;
-let playerCreationStarted = false;
+/* HIDDEN YOUTUBE PLAYER WITH AUTOPLAY AND LOOP */
 
 const videoId = "yLZoVTayvxY";
 
-function loadYouTubeAPI() {
-  if (window.YT && window.YT.Player) {
-    createPlayer();
-    return;
-  }
+let youtubePlayer = null;
+let youtubePlayerReady = false;
+let startMusicWhenReady = false;
 
-  if (document.getElementById("youtube-api")) return;
+function onYouTubeIframeAPIReady() {
+  youtubePlayer = new YT.Player("youtube-player", {
+    width: "200",
+    height: "200",
 
-  const tag = document.createElement("script");
-  tag.id = "youtube-api";
-  tag.src = "https://www.youtube.com/iframe_api";
-
-  document.body.appendChild(tag);
-}
-
-window.onYouTubeIframeAPIReady = function() {
-  createPlayer();
-};
-
-function createPlayer() {
-  if (playerCreationStarted || !window.YT || !window.YT.Player) return;
-
-  playerCreationStarted = true;
-
-  player = new YT.Player("youtube-player", {
-    height: "1",
-    width: "1",
     videoId: videoId,
 
     playerVars: {
       autoplay: 0,
       controls: 0,
+      disablekb: 1,
+      fs: 0,
       playsinline: 1,
       rel: 0,
       loop: 1,
-      playlist: videoId,
-      enablejsapi: 1
+      playlist: videoId
     },
 
     events: {
       onReady: function(event) {
-        playerReady = true;
+        youtubePlayerReady = true;
 
-        event.target.setVolume(100);
-        event.target.unMute();
-
-        // If the user already tapped, attempt playback now.
-        if (playbackRequested) {
-          startPlayback();
+        if (startMusicWhenReady) {
+          event.target.playVideo();
+          startMusicWhenReady = false;
         }
       },
 
       onStateChange: function(event) {
         if (event.data === YT.PlayerState.ENDED) {
-          player.playVideo();
+          event.target.playVideo();
         }
       }
     }
   });
 }
 
-function startPlayback() {
-  if (!playerReady || !player) return;
+/* LOAD YOUTUBE API BEFORE THE OPENING BUTTON IS TAPPED */
 
-  try {
-    player.setVolume(100);
-    player.unMute();
-    player.playVideo();
-  } catch (error) {
-    console.log("Playback unavailable:", error);
-  }
-}
+(function loadYouTubeAPI() {
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
 
-function playMusic() {
-  playbackRequested = true;
-
-  // If the player is already ready, play immediately from this tap.
-  if (playerReady && player) {
-    startPlayback();
-    return;
-  }
-
-  // Player is still loading; retain the request.
-  loadYouTubeAPI();
-}
-
-// Load and initialize the player before the opening-screen tap.
-loadYouTubeAPI();
+  const firstScript = document.getElementsByTagName("script")[0];
+  firstScript.parentNode.insertBefore(tag, firstScript);
+})();
 
 /* OPEN SURPRISE */
 
@@ -735,8 +639,13 @@ const main = document.getElementById("main");
 const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
-  // Trigger playback directly from the user's interaction.
-  playMusic();
+
+  // Start the hidden song directly from the user's tap
+  if (youtubePlayer && youtubePlayerReady) {
+    youtubePlayer.playVideo();
+  } else {
+    startMusicWhenReady = true;
+  }
 
   opening.style.opacity = "0";
 
@@ -750,12 +659,6 @@ openButton.addEventListener("click", function() {
 
     startPhotos();
   }, 1000);
-});
-
-/* MANUAL MUSIC BUTTON */
-
-document.getElementById("music-button").addEventListener("click", function() {
-  playMusic();
 });
 
 </script>
