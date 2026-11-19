@@ -182,10 +182,11 @@ body {
 
 .falling-photo {
   position: absolute;
-  top: -160px;
+  top: -200px;
+  display: block;
   object-fit: contain;
   object-position: center;
-  padding: 4px;
+  padding: 5px;
   border: 1px solid rgba(255,255,255,.75);
   border-radius: 3px;
   background: white;
@@ -263,17 +264,6 @@ body {
   height: 200px;
   border: 0;
 }
-
-/* SMALL SCREENS */
-
-@media (max-width: 380px) {
-  .opening-subtitle { font-size: 17px; }
-
-  .opening-eyebrow {
-    font-size: 11px;
-    letter-spacing: 4px;
-  }
-}
 </style>
 </head>
 
@@ -318,8 +308,6 @@ body {
   <div class="shooting-star" style="top:60%;left:85%;animation-delay:8s"></div>
 
   <div id="photos"></div>
-
-  <!-- CENTER MESSAGE -->
 
   <div class="center-message">
     <span class="message-text">I'll Always Choose You</span>
@@ -513,31 +501,40 @@ function getNextPhoto() {
   return photoDeck.shift();
 }
 
-/* RANDOM PHOTO DIMENSIONS */
+/* RANDOM SIZE AND ORIGINAL IMAGE PROPORTIONS */
 
-function getRandomPhotoSize() {
-  const sizes = [
-    { width: 78, height: 98 },
-    { width: 88, height: 110 },
-    { width: 98, height: 122 },
-    { width: 108, height: 135 },
-    { width: 118, height: 148 },
-    { width: 128, height: 160 }
-  ];
+function getRandomPhotoSize(img) {
+  const originalWidth = img.naturalWidth;
+  const originalHeight = img.naturalHeight;
 
-  const selected = sizes[
-    Math.floor(Math.random() * sizes.length)
-  ];
+  if (!originalWidth || !originalHeight) {
+    return { width: 95, height: 120 };
+  }
 
-  // Keep wider cards within the available screen width.
-  const maxWidth = Math.max(70, window.innerWidth - 20);
-  const scale = Math.min(1, maxWidth / selected.width);
+  // Each photo gets a different random display scale.
+  const scale = 0.22 + Math.random() * 0.19;
 
+  // Limit the photo dimensions so large photos fit on mobile screens.
+  const maxPhotoWidth = Math.min(window.innerWidth * 0.43, 190);
+  const maxPhotoHeight = Math.min(window.innerHeight * 0.36, 230);
+
+  const fitScale = Math.min(
+    scale,
+    maxPhotoWidth / originalWidth,
+    maxPhotoHeight / originalHeight
+  );
+
+  const photoWidth = originalWidth * fitScale;
+  const photoHeight = originalHeight * fitScale;
+
+  // Add Polaroid padding and border to the actual image dimensions.
   return {
-    width: Math.round(selected.width * scale),
-    height: Math.round(selected.height * scale)
+    width: Math.round(photoWidth + 12),
+    height: Math.round(photoHeight + 12)
   };
 }
+
+/* CREATE FALLING PHOTO */
 
 function createFallingPhoto() {
   const filename = getNextPhoto();
@@ -549,25 +546,29 @@ function createFallingPhoto() {
   const rotation = -16 + Math.random() * 32;
   const duration = 35 + Math.random() * 10;
   const drift = -65 + Math.random() * 130;
-  const size = getRandomPhotoSize();
 
   img.className = "falling-photo";
   img.alt = "";
   img.draggable = false;
   img.loading = "eager";
 
-  img.style.width = size.width + "px";
-  img.style.height = size.height + "px";
-
-  // Randomize horizontal placement while keeping the whole card on screen.
-  const availableWidth = Math.max(0, window.innerWidth - size.width);
-  img.style.left = (Math.random() * availableWidth) + "px";
-
   img.style.setProperty("--rotation", rotation + "deg");
   img.style.setProperty("--fall-duration", duration + "s");
   img.style.setProperty("--drift", drift + "px");
 
   img.onload = () => {
+    const size = getRandomPhotoSize(img);
+
+    img.style.width = size.width + "px";
+    img.style.height = size.height + "px";
+
+    const availableWidth = Math.max(
+      0,
+      window.innerWidth - size.width
+    );
+
+    img.style.left = (Math.random() * availableWidth) + "px";
+
     lastDisplayedPhoto = filename;
     photos.appendChild(img);
   };
