@@ -178,7 +178,7 @@ body {
   pointer-events: none;
 }
 
-/* RANDOM-SIZED POLAROID PHOTO CARDS */
+/* POLAROID PHOTOS - TIGHTER WHITE FRAME */
 
 .falling-photo {
   position: absolute;
@@ -186,8 +186,8 @@ body {
   display: block;
   object-fit: contain;
   object-position: center;
-  padding: 5px;
-  border: 1px solid rgba(255,255,255,.75);
+  padding: 3px;
+  border: 1px solid rgba(255,255,255,.85);
   border-radius: 3px;
   background: white;
   box-shadow: 0 4px 18px rgba(20,10,30,.25);
@@ -246,7 +246,7 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
 }
 
-/* HIDDEN YOUTUBE PLAYER */
+/* HIDDEN YOUTUBE PLAYER - PRESERVED */
 
 #youtube-player-container {
   position: fixed;
@@ -501,7 +501,7 @@ function getNextPhoto() {
   return photoDeck.shift();
 }
 
-/* RANDOM SIZE AND ORIGINAL IMAGE PROPORTIONS */
+/* RANDOMIZED PHOTO SIZE WITH TIGHT FRAME */
 
 function getRandomPhotoSize(img) {
   const originalWidth = img.naturalWidth;
@@ -511,12 +511,12 @@ function getRandomPhotoSize(img) {
     return { width: 95, height: 120 };
   }
 
-  // Each photo gets a different random display scale.
-  const scale = 0.22 + Math.random() * 0.19;
+  // Each photograph gets its own randomized size.
+  const scale = 0.24 + Math.random() * 0.18;
 
-  // Limit the photo dimensions so large photos fit on mobile screens.
-  const maxPhotoWidth = Math.min(window.innerWidth * 0.43, 190);
-  const maxPhotoHeight = Math.min(window.innerHeight * 0.36, 230);
+  // Keep cards within reasonable screen dimensions.
+  const maxPhotoWidth = Math.min(window.innerWidth * 0.48, 200);
+  const maxPhotoHeight = Math.min(window.innerHeight * 0.38, 240);
 
   const fitScale = Math.min(
     scale,
@@ -527,10 +527,10 @@ function getRandomPhotoSize(img) {
   const photoWidth = originalWidth * fitScale;
   const photoHeight = originalHeight * fitScale;
 
-  // Add Polaroid padding and border to the actual image dimensions.
+  // Tight frame: 3px padding on each side and 1px border.
   return {
-    width: Math.round(photoWidth + 12),
-    height: Math.round(photoHeight + 12)
+    width: Math.round(photoWidth + 8),
+    height: Math.round(photoHeight + 8)
   };
 }
 
@@ -605,6 +605,7 @@ function startPhotos() {
 }
 
 /* HIDDEN YOUTUBE PLAYER WITH AUTOPLAY AND LOOP */
+/* PRESERVED FROM THE PREVIOUS WORKING VERSION */
 
 const videoId = "yLZoVTayvxY";
 
