@@ -23,15 +23,16 @@ html, body {
 body {
   font-family: 'Nunito', sans-serif;
   color: white;
-  background: linear-gradient(180deg,#967b96,#705c7a 55%,#483d59);
+  background:
+    radial-gradient(ellipse at 50% 20%, #a987a9 0%, transparent 55%),
+    linear-gradient(180deg, #92758f 0%, #705b78 48%, #483d59 100%);
 }
 
-/* OPENING */
-
+/* OPENING SCREEN */
 #opening {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -39,8 +40,8 @@ body {
   text-align: center;
   padding: 24px;
   background:
-    radial-gradient(ellipse at 50% 25%,#b493b1 0%,transparent 58%),
-    linear-gradient(180deg,#967b96 0%,#705c7a 55%,#51445f 100%);
+    radial-gradient(ellipse at 50% 25%, #b493b1 0%, transparent 58%),
+    linear-gradient(180deg, #967b96 0%, #705c7a 55%, #51445f 100%);
   transition: opacity 1.2s ease, visibility 1.2s ease;
 }
 
@@ -55,11 +56,13 @@ body {
   letter-spacing: 4px;
   font-weight: 600;
   margin-bottom: 24px;
+  opacity: .9;
 }
 
 .opening-title {
   font-family: 'Allura', cursive;
-  font-size: clamp(3.2rem,12vw,5.5rem);
+  font-size: clamp(3.2rem, 12vw, 5.5rem);
+  font-weight: 400;
   line-height: 1.05;
   text-shadow: 0 0 20px rgba(255,255,255,.35);
 }
@@ -78,25 +81,21 @@ body {
   border-radius: 30px;
   background: rgba(255,255,255,.12);
   color: white;
-  font: 13px 'Nunito',sans-serif;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
   letter-spacing: 1px;
   cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background .3s ease, transform .3s ease;
 }
 
-.open-button:disabled {
-  opacity: .55;
-  cursor: wait;
+.open-button:active {
+  transform: scale(.96);
+  background: rgba(255,255,255,.25);
 }
 
-#loading-message {
-  margin-top: 14px;
-  min-height: 18px;
-  font-size: 10px;
-  opacity: .8;
-}
-
-/* MAIN */
-
+/* MAIN EXPERIENCE */
 #main {
   position: fixed;
   inset: 0;
@@ -104,14 +103,13 @@ body {
   opacity: 0;
   transition: opacity 1.8s ease;
   background:
-    radial-gradient(ellipse at 50% 25%,#987c9b 0%,transparent 55%),
-    linear-gradient(180deg,#806983 0%,#62516f 55%,#433a54 100%);
+    radial-gradient(ellipse at 50% 25%, #987c9b 0%, transparent 55%),
+    linear-gradient(180deg, #806983 0%, #62516f 55%, #433a54 100%);
 }
 
 #main.visible { opacity: 1; }
 
 /* STARS */
-
 #stars {
   position: absolute;
   inset: 0;
@@ -136,8 +134,7 @@ body {
   to { opacity: .95; transform: scale(1.35); }
 }
 
-/* MOON */
-
+/* CRESCENT MOON */
 .moon {
   position: absolute;
   top: 8%;
@@ -162,27 +159,45 @@ body {
   background: #89708d;
 }
 
-/* MESSAGE */
-
+/* CENTER MESSAGE */
 #message {
   position: absolute;
   z-index: 5;
-  top: 45%;
+  top: 48%;
   left: 50%;
-  transform: translate(-50%,-50%);
+  transform: translate(-50%, -50%);
   width: 96%;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: .12em;
   white-space: nowrap;
-  font-family: 'Allura',cursive;
-  font-size: clamp(1.4rem,7vw,4.2rem);
-  color: white;
-  text-shadow: 0 0 8px rgba(255,255,255,.75),
-               0 0 22px rgba(255,255,255,.4);
+  font-family: 'Allura', cursive;
+  font-size: clamp(1.35rem, 6.5vw, 4.2rem);
+  font-weight: 400;
+  color: #fff;
+  text-shadow:
+    0 0 8px rgba(255,255,255,.75),
+    0 0 22px rgba(255,255,255,.4);
   pointer-events: none;
 }
 
-/* FALLING PHOTOS */
+#message-text {
+  white-space: nowrap;
+}
 
+/* FIXED WHITE SVG HEART */
+.white-heart {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: .53em;
+  height: .53em;
+  fill: #ffffff;
+  overflow: visible;
+  filter: drop-shadow(0 0 5px rgba(255,255,255,.65));
+}
+
+/* FALLING POLAROID PHOTOS */
 #photos {
   position: absolute;
   inset: 0;
@@ -201,50 +216,50 @@ body {
   padding: 4px;
   border: 1px solid rgba(255,255,255,.65);
   border-radius: 3px;
-  background: rgba(255,255,255,.9);
+  background: rgba(255,255,255,.88);
   box-shadow: 0 4px 18px rgba(20,10,30,.25);
   opacity: 0;
-  visibility: hidden;
   animation: fall var(--fall-duration) linear forwards;
+  will-change: transform, opacity;
 }
 
 @keyframes fall {
   0% {
     opacity: 0;
-    transform: translateY(0) rotate(var(--rotation));
+    transform: translate3d(0,0,0) rotate(var(--rotation));
   }
   10% { opacity: .85; }
   85% { opacity: .8; }
   100% {
     opacity: 0;
     transform:
-      translate(var(--drift),115vh)
+      translate3d(var(--drift),115vh,0)
       rotate(calc(var(--rotation) + 35deg));
   }
 }
 
-/* MUSIC AREA */
-
+/* YOUTUBE PLAYER AND BACKUP PLAY BUTTON */
 #music-area {
   position: absolute;
-  z-index: 10;
-  bottom: 9px;
+  z-index: 7;
+  bottom: 12px;
   left: 50%;
   transform: translateX(-50%);
-  width: min(92%,260px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  width: 220px;
 }
 
 #music-player {
   width: 190px;
   height: 107px;
-  overflow: hidden;
   border-radius: 8px;
-  background: rgba(255,255,255,.08);
+  overflow: hidden;
+  opacity: .82;
   box-shadow: 0 3px 18px rgba(20,10,30,.25);
+  background: rgba(255,255,255,.08);
 }
 
 #music-player iframe {
@@ -255,52 +270,30 @@ body {
 }
 
 #play-song {
+  padding: 7px 17px;
   border: 1px solid rgba(255,255,255,.65);
-  border-radius: 22px;
-  padding: 7px 20px;
-  background: rgba(255,255,255,.16);
+  border-radius: 20px;
+  background: rgba(255,255,255,.12);
   color: white;
-  font: 11px 'Nunito',sans-serif;
-  letter-spacing: .6px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
   cursor: pointer;
 }
 
-#play-song:disabled {
-  opacity: .5;
-  cursor: wait;
-}
-
 #music-note {
-  margin: 0;
-  width: 100%;
-  color: rgba(255,255,255,.9);
-  font-size: 9px;
-  line-height: 1.45;
-  font-weight: 300;
+  max-width: 215px;
   text-align: center;
-  text-shadow: 0 1px 5px rgba(20,10,30,.5);
-}
-
-#music-status {
-  min-height: 12px;
-  margin: 0;
   font-size: 9px;
-  text-align: center;
-  color: rgba(255,255,255,.8);
+  line-height: 1.4;
+  letter-spacing: .3px;
+  color: rgba(255,255,255,.85);
 }
 
-#youtube-fallback {
-  display: none;
-  color: white;
-  font-size: 10px;
-  text-decoration: underline;
-}
-
-/* MOBILE */
-
+/* SMALL SCREENS */
 @media (max-width: 380px) {
   #message {
-    font-size: clamp(1.35rem,6.5vw,2.2rem);
+    font-size: clamp(1.25rem, 6.2vw, 2.2rem);
   }
 
   .falling-photo { max-height: 115px; }
@@ -309,33 +302,34 @@ body {
     width: 160px;
     height: 90px;
   }
+}
 
-  #music-area { bottom: 7px; }
-  #music-note { font-size: 8.5px; }
+@media (prefers-reduced-motion: reduce) {
+  .star { animation: none; }
 }
 </style>
 </head>
 
 <body>
 
+<!-- OPENING SCREEN -->
 <div id="opening">
   <div class="eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
 
-  <div class="opening-title">Under the Shooting Stars</div>
+  <div class="opening-title">
+    Under the Shooting Stars
+  </div>
 
   <div class="subtitle">
     Some things are worth taking a moment for...
   </div>
 
-  <button class="open-button" id="openButton" disabled>
-    Preparing Your Surprise...
+  <button class="open-button" id="openButton">
+    Open Your Surprise ♡
   </button>
-
-  <div id="loading-message">
-    Getting the music ready ♡
-  </div>
 </div>
 
+<!-- MAIN SCREEN -->
 <main id="main">
 
   <div id="stars"></div>
@@ -343,37 +337,29 @@ body {
   <div id="photos"></div>
 
   <div id="message">
-    I'll Always Choose You ♥
+    <span id="message-text">I'll Always Choose You</span>
+    <svg class="white-heart" viewBox="0 0 24 24" aria-label="White heart" role="img">
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
+      2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
+      C13.09 3.81 14.76 3 16.5 3
+      19.58 3 22 5.42 22 8.5
+      c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
   </div>
 
   <div id="music-area">
-
     <div id="music-player"></div>
-
-    <button id="play-song" disabled>
-      Play Song ♫
-    </button>
-
-    <p id="music-note">
+    <button id="play-song" type="button">Play Song ♫</button>
+    <div id="music-note">
       The song is set to start when you open the surprise.
       If your iPhone blocks playback, tap Play here.
-    </p>
-
-    <p id="music-status"></p>
-
-    <a id="youtube-fallback"
-       href="https://www.youtube.com/watch?v=yLZoVTayvxY"
-       target="_blank"
-       rel="noopener">
-      Open song on YouTube
-    </a>
-
+    </div>
   </div>
+
 </main>
 
 <script>
-
-/* PHOTO FILES */
+/* PHOTO COLLECTION */
 
 const photoFiles = [
   "Picture_36_Original_Original.jpeg",
@@ -435,316 +421,116 @@ const photoFiles = [
   "IMG_0911_Original.jpeg",
   "IMG_5759_Original.jpeg",
   "IMG_3926_Original.jpeg",
-  "9F274428-57F9-4635-8F59-2F71D23A9E15_Original.jpeg",
+
   "wedding-photo-1.jpg",
   "wedding-photo-2.jpg",
   "wedding-photo-3.png",
   "wedding-photo-4.png",
   "wedding-photo-5.png",
   "wedding-photo-6.png",
-  "wedding-photo-7.png"
+  "wedding-photo-7.png",
+  "wedding-photo-8.png",
+  "wedding-photo-9.png",
+  "wedding-photo-10.png",
+  "wedding-photo-11.png",
+  "wedding-photo-12.png",
+  "wedding-photo-13.png",
+  "wedding-photo-14.png",
+  "wedding-photo-15.png",
+  "wedding-photo-16.png",
+  "wedding-photo-17.png",
+
+  "IMG_0340_Original.jpeg",
+  "IMG_0300_Original.jpeg",
+  "IMG_0337_Original.jpeg",
+  "IMG_0485_Original.jpeg",
+  "IMG_0659_Original.jpeg",
+  "IMG_0662_Original.jpeg",
+  "IMG_1489_Original.jpeg",
+  "IMG_0056_Original.jpeg",
+  "IMG_0518_Original.jpeg",
+  "IMG_2535_Original.jpeg",
+  "IMG_2774_Original.jpeg",
+  "IMG_4296_Original.jpeg",
+  "IMG_4299_Original.jpeg",
+  "IMG_0604_Original.jpeg",
+  "IMG_0792_Original.jpeg",
+  "IMG_1777_Original.jpeg",
+  "IMG_0541_Original.jpeg",
+  "IMG_0564_Original.jpeg",
+  "IMG_0803_Original.jpeg",
+  "IMG_1778_Original.jpeg",
+  "IMG_1830_Original.jpeg",
+  "IMG_3562_Original.jpeg",
+  "IMG_3930_Original.jpeg",
+  "IMG_4036_Original.jpeg",
+  "IMG_4250_Original.jpeg",
+  "IMG_4254_Original.jpeg",
+  "IMG_0842_Original.jpeg"
 ];
 
 /* ELEMENTS */
 
 const opening = document.getElementById("opening");
 const main = document.getElementById("main");
-const openButton = document.getElementById("openButton");
-const loadingMessage = document.getElementById("loading-message");
-const playSongButton = document.getElementById("play-song");
-const musicStatus = document.getElementById("music-status");
-const youtubeFallback = document.getElementById("youtube-fallback");
 const photos = document.getElementById("photos");
+const musicPlayer = document.getElementById("music-player");
 
-const videoId = "yLZoVTayvxY";
-
-let player = null;
-let playerReady = false;
-let openingTapped = false;
 let photoDeck = [];
 let lastPhoto = null;
 let photoTimer = null;
-let availablePhotoFiles = [];
+let player = null;
+let playerReady = false;
+let musicRequested = false;
 
-/* MUSIC PLAYER */
-
-function setMusicStatus(message) {
-  musicStatus.textContent = message;
-}
-
-/*
-  The YouTube API is loaded before the opening button
-  is enabled. This is important: the visitor's tap
-  can then call playVideo() on an already-ready player.
-*/
-
-function enableOpening() {
-  openButton.disabled = false;
-  openButton.textContent = "Open Your Surprise ♡";
-  loadingMessage.textContent = "Your surprise is ready ♡";
-}
-
-function showMusicFallback() {
-  openButton.disabled = false;
-  openButton.textContent = "Open Your Surprise ♡";
-  loadingMessage.textContent = "Your surprise is ready ♡";
-  youtubeFallback.style.display = "block";
-  setMusicStatus("If the player doesn't load, open the song on YouTube.");
-}
-
-window.onYouTubeIframeAPIReady = function() {
-
-  player = new YT.Player("music-player", {
-    width: "190",
-    height: "107",
-    videoId: videoId,
-
-    playerVars: {
-      autoplay: 0,
-      controls: 1,
-      playsinline: 1,
-      rel: 0,
-      modestbranding: 1,
-      loop: 1,
-      playlist: videoId,
-      enablejsapi: 1
-    },
-
-    events: {
-
-      onReady: function() {
-
-        playerReady = true;
-
-        playSongButton.disabled = false;
-
-        enableOpening();
-
-        /*
-          If the visitor tapped while the player
-          was still initializing, try playback now.
-        */
-
-        if (openingTapped) {
-          startPlayback();
-        }
-      },
-
-      onStateChange: function(event) {
-
-        if (event.data === YT.PlayerState.PLAYING) {
-          setMusicStatus("Now playing ♡");
-        }
-
-        if (event.data === YT.PlayerState.PAUSED) {
-          setMusicStatus("Song paused");
-        }
-
-        if (event.data === YT.PlayerState.ENDED) {
-          try {
-            player.playVideo();
-          } catch (error) {
-            console.log(error);
-          }
-        }
-      },
-
-      onError: function(event) {
-        console.warn("YouTube player error:", event.data);
-        setMusicStatus("Playback unavailable. Try opening the song on YouTube.");
-        youtubeFallback.style.display = "block";
-      }
-    }
-  });
-
-};
-
-/* LOAD YOUTUBE API */
-
-const youtubeScript = document.createElement("script");
-youtubeScript.src = "https://www.youtube.com/iframe_api";
-
-youtubeScript.onerror = function() {
-  showMusicFallback();
-};
-
-document.head.appendChild(youtubeScript);
-
-/*
-  Safety fallback: don't leave the opening screen
-  permanently disabled if the YouTube API cannot load.
-*/
-
-setTimeout(function() {
-  if (!playerReady) {
-    showMusicFallback();
-  }
-}, 12000);
-
-/* PLAYBACK */
-
-function startPlayback() {
-
-  if (!playerReady || !player) {
-    setMusicStatus("The music player is still getting ready.");
-    return;
-  }
-
-  try {
-
-    /*
-      Explicitly request normal-volume playback.
-      No forced mute is applied.
-    */
-
-    player.unMute();
-    player.setVolume(100);
-    player.playVideo();
-
-    setMusicStatus("Starting your song ♡");
-
-  } catch (error) {
-
-    console.warn("Playback request failed:", error);
-
-    setMusicStatus("If playback is blocked, tap Play Song ♫.");
-  }
-}
-
-/* OPENING BUTTON */
-
-openButton.addEventListener("click", function() {
-
-  openingTapped = true;
-
-  /*
-    Call the player directly from the visitor's tap,
-    before changing screens.
-  */
-
-  if (playerReady) {
-    startPlayback();
-  }
-
-  opening.classList.add("hidden");
-  main.classList.add("visible");
-
-  startPhotos();
-});
-
-/* MANUAL PLAY BUTTON */
-
-playSongButton.addEventListener("click", function() {
-
-  if (playerReady) {
-    startPlayback();
-  } else {
-    setMusicStatus("The player is still loading. Please try again shortly.");
-  }
-});
-
-/* STAR FIELD */
+/* TWINKLING STARS */
 
 function makeStars() {
-
-  const container = document.getElementById("stars");
+  const starContainer = document.getElementById("stars");
 
   for (let i = 0; i < 85; i++) {
-
     const star = document.createElement("span");
-
     star.className = "star";
     star.style.left = Math.random() * 100 + "%";
     star.style.top = Math.random() * 100 + "%";
     star.style.animationDelay = Math.random() * 4 + "s";
-    star.style.animationDuration = 2 + Math.random() * 4 + "s";
-
-    container.appendChild(star);
+    star.style.animationDuration = (2 + Math.random() * 4) + "s";
+    starContainer.appendChild(star);
   }
 }
 
-/* SHUFFLE */
+/* RANDOM SHUFFLE */
 
 function shuffle(array) {
-
   const result = [...array];
 
   for (let i = result.length - 1; i > 0; i--) {
-
     const j = Math.floor(Math.random() * (i + 1));
-
     [result[i], result[j]] = [result[j], result[i]];
   }
 
   return result;
 }
 
-/* VALIDATE PHOTOS BEFORE DISPLAYING */
-
-function validatePhotos() {
-
-  const checks = photoFiles.map(function(filename) {
-
-    return new Promise(function(resolve) {
-
-      const testImage = new Image();
-
-      testImage.onload = function() {
-        resolve(filename);
-      };
-
-      testImage.onerror = function() {
-        console.warn("Photo not found or unable to load:", filename);
-        resolve(null);
-      };
-
-      testImage.src = "./" + encodeURIComponent(filename);
-    });
-  });
-
-  return Promise.all(checks).then(function(results) {
-
-    availablePhotoFiles = results.filter(Boolean);
-
-    console.log(
-      "Successfully validated photos:",
-      availablePhotoFiles.length,
-      "of",
-      photoFiles.length
-    );
-
-    return availablePhotoFiles;
-  });
-}
-
-/* PHOTO DECK: NO REPEATS UNTIL CYCLE ENDS */
+/* NO REPEATS UNTIL ALL PHOTOS HAVE BEEN ATTEMPTED */
 
 function getNextPhoto() {
-
   if (photoDeck.length === 0) {
+    photoDeck = shuffle(photoFiles);
 
-    photoDeck = shuffle(availablePhotoFiles);
-
-    if (
-      photoDeck.length > 1 &&
-      photoDeck[0] === lastPhoto
-    ) {
+    if (photoDeck.length > 1 && photoDeck[0] === lastPhoto) {
       [photoDeck[0], photoDeck[1]] =
         [photoDeck[1], photoDeck[0]];
     }
   }
 
   lastPhoto = photoDeck.shift();
-
   return lastPhoto;
 }
 
-/* CREATE FALLING PHOTO */
+/* CREATE FALLING PHOTOS */
 
 function createFallingPhoto() {
-
-  if (availablePhotoFiles.length === 0) return;
-
   const filename = getNextPhoto();
   const img = document.createElement("img");
 
@@ -756,57 +542,139 @@ function createFallingPhoto() {
   img.className = "falling-photo";
   img.alt = "";
   img.draggable = false;
+  img.loading = "eager";
 
   img.style.left = (3 + Math.random() * 88) + "%";
-
   img.style.setProperty("--photo-width", width + "px");
   img.style.setProperty("--rotation", rotation + "deg");
   img.style.setProperty("--fall-duration", duration + "s");
   img.style.setProperty("--drift", drift + "px");
 
-  img.onload = function() {
-    img.style.visibility = "visible";
+  img.onload = () => {
+    photos.appendChild(img);
   };
 
-  img.onerror = function() {
-    console.warn("Could not display photo:", filename);
+  img.onerror = () => {
     img.remove();
+    console.warn("Skipping unavailable photo:", filename);
   };
 
   img.src = "./" + encodeURIComponent(filename);
 
-  img.addEventListener("animationend", function() {
+  img.addEventListener("animationend", () => {
     img.remove();
   });
-
-  photos.appendChild(img);
 }
 
-/* START PHOTOS */
+/* START PHOTO ANIMATION */
 
 function startPhotos() {
-
   if (photoTimer) return;
 
-  validatePhotos().then(function() {
+  for (let i = 0; i < 4; i++) {
+    setTimeout(createFallingPhoto, i * 850);
+  }
 
-    if (availablePhotoFiles.length === 0) {
-      console.warn("No photos could be loaded.");
-      return;
+  photoTimer = setInterval(createFallingPhoto, 2300);
+}
+
+/* YOUTUBE IFRAME API */
+
+function loadYouTubeAPI() {
+  if (window.YT && window.YT.Player) {
+    createYouTubePlayer();
+    return;
+  }
+
+  window.onYouTubeIframeAPIReady = createYouTubePlayer;
+
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  tag.async = true;
+  document.head.appendChild(tag);
+}
+
+function createYouTubePlayer() {
+  if (player) return;
+
+  player = new YT.Player("music-player", {
+    width: "190",
+    height: "107",
+    videoId: "yLZoVTayvxY",
+    playerVars: {
+      autoplay: 0,
+      controls: 1,
+      playsinline: 1,
+      modestbranding: 1,
+      rel: 0,
+      loop: 1,
+      playlist: "yLZoVTayvxY"
+    },
+    events: {
+      onReady: function(event) {
+        playerReady = true;
+        event.target.setVolume(100);
+
+        if (musicRequested) {
+          playMusic();
+        }
+      },
+      onError: function(event) {
+        console.warn("YouTube player error:", event.data);
+      }
     }
-
-    for (let i = 0; i < 4; i++) {
-      setTimeout(createFallingPhoto, i * 850);
-    }
-
-    photoTimer = setInterval(createFallingPhoto, 2300);
   });
 }
 
-/* START */
+function playMusic() {
+  if (!playerReady || !player) return;
+
+  try {
+    player.unMute();
+    player.setVolume(100);
+    player.playVideo();
+  } catch (error) {
+    console.warn("Playback could not start:", error);
+  }
+}
+
+/* OPEN THE SURPRISE */
+
+document.getElementById("openButton").addEventListener("click", () => {
+  musicRequested = true;
+
+  if (playerReady) {
+    playMusic();
+  }
+
+  opening.classList.add("hidden");
+  main.classList.add("visible");
+
+  startPhotos();
+
+  if (!player) {
+    loadYouTubeAPI();
+  }
+});
+
+/* BACKUP MUSIC BUTTON */
+
+document.getElementById("play-song").addEventListener("click", () => {
+  musicRequested = true;
+
+  if (playerReady) {
+    playMusic();
+  } else {
+    loadYouTubeAPI();
+  }
+});
+
+/* INITIALIZE */
 
 makeStars();
+loadYouTubeAPI();
 
 </script>
+
 </body>
 </html>
