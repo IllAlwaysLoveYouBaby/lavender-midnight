@@ -199,7 +199,7 @@ body {
   will-change: transform;
 }
 
-/* SLOWER 35–45 SECOND FALL */
+/* SLOW 35–45 SECOND FALL */
 
 @keyframes fall {
   0% {
@@ -256,49 +256,35 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
 }
 
-/* MUSIC */
+/* VISIBLE YOUTUBE PLAYER */
 
-.music-control {
+#music-area {
   position: absolute;
   z-index: 20;
   left: 50%;
-  bottom: 25px;
+  bottom: 10px;
   transform: translateX(-50%);
+  width: 210px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  width: 100%;
-  padding: 0 15px;
-}
-
-.music-button {
-  border: 1px solid rgba(255,255,255,.6);
-  border-radius: 30px;
-  background: rgba(255,255,255,.1);
-  color: white;
-  padding: 10px 22px;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 16px;
-  letter-spacing: 1px;
-  cursor: pointer;
-}
-
-.music-note {
-  font-size: 12px;
-  letter-spacing: .4px;
-  color: rgba(255,255,255,.75);
-  text-align: center;
 }
 
 #youtube-player {
-  position: fixed;
-  width: 1px;
-  height: 1px;
-  opacity: .01;
-  pointer-events: none;
-  left: -10px;
-  bottom: -10px;
+  width: 190px;
+  height: 107px;
+  overflow: hidden;
+  border-radius: 8px;
+  background: rgba(0,0,0,.3);
+  box-shadow: 0 4px 18px rgba(10,5,20,.3);
+}
+
+.music-note {
+  margin-top: 5px;
+  font-size: 11px;
+  letter-spacing: .3px;
+  color: rgba(255,255,255,.75);
+  text-align: center;
 }
 
 /* SMALL SCREENS */
@@ -317,8 +303,11 @@ body {
     width: 78px;
     height: 98px;
   }
-}
 
+  #music-area {
+    bottom: 8px;
+  }
+}
 </style>
 </head>
 
@@ -371,19 +360,17 @@ body {
     </svg>
   </div>
 
-  <div class="music-control">
-    <button class="music-button" id="music-button">
-      Play Song ♫
-    </button>
+  <!-- RESTORED VISIBLE MUSIC PLAYER -->
 
+  <div id="music-area">
+    <div id="youtube-player"></div>
     <div class="music-note">
-      If music doesn't start automatically, tap Play Song ♫
+      The song is set to start when you open the surprise.
+      If playback doesn't start, tap the play button.
     </div>
   </div>
 
 </div>
-
-<div id="youtube-player"></div>
 
 <script>
 
@@ -573,7 +560,7 @@ function createFallingPhoto() {
 
   const rotation = -16 + Math.random() * 32;
 
-  // Each photo now takes 35–45 seconds to fall
+  // Photo falls slowly for 35–45 seconds
   const duration = 35 + Math.random() * 10;
 
   const drift = -65 + Math.random() * 130;
@@ -606,14 +593,14 @@ function createFallingPhoto() {
   img.src = "./" + encodeURIComponent(filename);
 }
 
-/* SLOWER PHOTO START */
+/* PHOTO START SEQUENCE */
 
 function startPhotos() {
   if (photoStarted) return;
 
   photoStarted = true;
 
-  // Only 3 photos during the opening
+  // 3 opening photos
   createFallingPhoto();
 
   setTimeout(createFallingPhoto, 1500);
@@ -623,12 +610,12 @@ function startPhotos() {
   setTimeout(() => {
     createFallingPhoto();
 
-    // Then one photo every 5 seconds
+    // One photo every 5 seconds thereafter
     photoTimer = setInterval(createFallingPhoto, 5000);
   }, 8000);
 }
 
-/* YOUTUBE MUSIC */
+/* YOUTUBE PLAYER */
 
 let player;
 let playerReady = false;
@@ -658,14 +645,17 @@ function createPlayer() {
   if (player || !window.YT || !window.YT.Player) return;
 
   player = new YT.Player("youtube-player", {
-    height: "1",
-    width: "1",
+    height: "107",
+    width: "190",
     videoId: videoId,
     playerVars: {
       autoplay: 0,
-      controls: 0,
+      controls: 1,
       playsinline: 1,
-      rel: 0
+      modestbranding: 1,
+      rel: 0,
+      loop: 1,
+      playlist: videoId
     },
     events: {
       onReady: function() {
@@ -712,20 +702,6 @@ openButton.addEventListener("click", function() {
     startPhotos();
     playMusic();
   }, 1000);
-});
-
-/* MANUAL MUSIC BUTTON */
-
-document.getElementById("music-button").addEventListener("click", function() {
-  if (playerReady && player) {
-    playMusic();
-  } else {
-    loadYouTubeAPI();
-
-    setTimeout(() => {
-      playMusic();
-    }, 1500);
-  }
 });
 
 </script>
