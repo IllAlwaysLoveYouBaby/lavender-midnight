@@ -11,9 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 html, body {
   margin: 0;
@@ -25,17 +23,15 @@ html, body {
 body {
   font-family: 'Nunito', sans-serif;
   color: white;
-  background:
-    radial-gradient(ellipse at 50% 20%, #a987a9 0%, transparent 55%),
-    linear-gradient(180deg, #92758f 0%, #705b78 48%, #483d59 100%);
+  background: linear-gradient(180deg,#967b96,#705c7a 55%,#483d59);
 }
 
-/* OPENING SCREEN */
+/* OPENING */
 
 #opening {
   position: fixed;
   inset: 0;
-  z-index: 10;
+  z-index: 20;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -43,8 +39,8 @@ body {
   text-align: center;
   padding: 24px;
   background:
-    radial-gradient(ellipse at 50% 25%, #b493b1 0%, transparent 58%),
-    linear-gradient(180deg, #967b96 0%, #705c7a 55%, #51445f 100%);
+    radial-gradient(ellipse at 50% 25%,#b493b1 0%,transparent 58%),
+    linear-gradient(180deg,#967b96 0%,#705c7a 55%,#51445f 100%);
   transition: opacity 1.2s ease, visibility 1.2s ease;
 }
 
@@ -59,13 +55,11 @@ body {
   letter-spacing: 4px;
   font-weight: 600;
   margin-bottom: 24px;
-  opacity: .9;
 }
 
 .opening-title {
   font-family: 'Allura', cursive;
-  font-size: clamp(3.2rem, 12vw, 5.5rem);
-  font-weight: 400;
+  font-size: clamp(3.2rem,12vw,5.5rem);
   line-height: 1.05;
   text-shadow: 0 0 20px rgba(255,255,255,.35);
 }
@@ -84,21 +78,24 @@ body {
   border-radius: 30px;
   background: rgba(255,255,255,.12);
   color: white;
-  font-family: 'Nunito', sans-serif;
-  font-size: 13px;
+  font: 13px 'Nunito',sans-serif;
   letter-spacing: 1px;
   cursor: pointer;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-  transition: background .3s ease, transform .3s ease;
 }
 
-.open-button:active {
-  transform: scale(.96);
-  background: rgba(255,255,255,.25);
+.open-button:disabled {
+  opacity: .55;
+  cursor: wait;
 }
 
-/* MAIN EXPERIENCE */
+#loading-message {
+  margin-top: 14px;
+  min-height: 18px;
+  font-size: 10px;
+  opacity: .8;
+}
+
+/* MAIN */
 
 #main {
   position: fixed;
@@ -107,13 +104,11 @@ body {
   opacity: 0;
   transition: opacity 1.8s ease;
   background:
-    radial-gradient(ellipse at 50% 25%, #987c9b 0%, transparent 55%),
-    linear-gradient(180deg, #806983 0%, #62516f 55%, #433a54 100%);
+    radial-gradient(ellipse at 50% 25%,#987c9b 0%,transparent 55%),
+    linear-gradient(180deg,#806983 0%,#62516f 55%,#433a54 100%);
 }
 
-#main.visible {
-  opacity: 1;
-}
+#main.visible { opacity: 1; }
 
 /* STARS */
 
@@ -137,17 +132,11 @@ body {
 }
 
 @keyframes twinkle {
-  from {
-    opacity: .2;
-    transform: scale(.7);
-  }
-  to {
-    opacity: .95;
-    transform: scale(1.35);
-  }
+  from { opacity: .2; transform: scale(.7); }
+  to { opacity: .95; transform: scale(1.35); }
 }
 
-/* CRESCENT MOON */
+/* MOON */
 
 .moon {
   position: absolute;
@@ -173,28 +162,26 @@ body {
   background: #89708d;
 }
 
-/* CENTER MESSAGE */
+/* MESSAGE */
 
 #message {
   position: absolute;
   z-index: 5;
-  top: 48%;
+  top: 45%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%,-50%);
   width: 96%;
   text-align: center;
   white-space: nowrap;
-  font-family: 'Allura', cursive;
-  font-size: clamp(1.4rem, 7vw, 4.2rem);
-  font-weight: 400;
-  color: #fff;
-  text-shadow:
-    0 0 8px rgba(255,255,255,.75),
-    0 0 22px rgba(255,255,255,.4);
+  font-family: 'Allura',cursive;
+  font-size: clamp(1.4rem,7vw,4.2rem);
+  color: white;
+  text-shadow: 0 0 8px rgba(255,255,255,.75),
+               0 0 22px rgba(255,255,255,.4);
   pointer-events: none;
 }
 
-/* FALLING POLAROID PHOTOS */
+/* FALLING PHOTOS */
 
 #photos {
   position: absolute;
@@ -214,59 +201,50 @@ body {
   padding: 4px;
   border: 1px solid rgba(255,255,255,.65);
   border-radius: 3px;
-  background: rgba(255,255,255,.88);
+  background: rgba(255,255,255,.9);
   box-shadow: 0 4px 18px rgba(20,10,30,.25);
   opacity: 0;
   visibility: hidden;
   animation: fall var(--fall-duration) linear forwards;
-  will-change: transform, opacity;
 }
 
 @keyframes fall {
   0% {
     opacity: 0;
-    transform: translate3d(0, 0, 0) rotate(var(--rotation));
+    transform: translateY(0) rotate(var(--rotation));
   }
-
-  10% {
-    opacity: .85;
-  }
-
-  85% {
-    opacity: .8;
-  }
-
+  10% { opacity: .85; }
+  85% { opacity: .8; }
   100% {
     opacity: 0;
     transform:
-      translate3d(var(--drift), 115vh, 0)
+      translate(var(--drift),115vh)
       rotate(calc(var(--rotation) + 35deg));
   }
 }
 
-/* MUSIC PLAYER AND INSTRUCTION */
+/* MUSIC AREA */
 
 #music-area {
   position: absolute;
-  z-index: 7;
-  bottom: 10px;
+  z-index: 10;
+  bottom: 9px;
   left: 50%;
   transform: translateX(-50%);
-  width: 210px;
+  width: min(92%,260px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
 }
 
 #music-player {
   width: 190px;
   height: 107px;
-  border-radius: 8px;
   overflow: hidden;
-  opacity: .9;
-  box-shadow: 0 3px 18px rgba(20,10,30,.25);
+  border-radius: 8px;
   background: rgba(255,255,255,.08);
+  box-shadow: 0 3px 18px rgba(20,10,30,.25);
 }
 
 #music-player iframe {
@@ -276,79 +254,92 @@ body {
   border: 0;
 }
 
-.music-note {
-  width: 100%;
+#play-song {
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 22px;
+  padding: 7px 20px;
+  background: rgba(255,255,255,.16);
+  color: white;
+  font: 11px 'Nunito',sans-serif;
+  letter-spacing: .6px;
+  cursor: pointer;
+}
+
+#play-song:disabled {
+  opacity: .5;
+  cursor: wait;
+}
+
+#music-note {
   margin: 0;
-  color: rgba(255,255,255,.78);
-  font-family: 'Nunito', sans-serif;
+  width: 100%;
+  color: rgba(255,255,255,.9);
   font-size: 9px;
   line-height: 1.45;
   font-weight: 300;
   text-align: center;
-  text-shadow: 0 1px 5px rgba(20,10,30,.4);
+  text-shadow: 0 1px 5px rgba(20,10,30,.5);
 }
 
-/* SMALL SCREENS */
+#music-status {
+  min-height: 12px;
+  margin: 0;
+  font-size: 9px;
+  text-align: center;
+  color: rgba(255,255,255,.8);
+}
+
+#youtube-fallback {
+  display: none;
+  color: white;
+  font-size: 10px;
+  text-decoration: underline;
+}
+
+/* MOBILE */
 
 @media (max-width: 380px) {
   #message {
-    font-size: clamp(1.35rem, 6.5vw, 2.2rem);
+    font-size: clamp(1.35rem,6.5vw,2.2rem);
   }
 
-  .falling-photo {
-    max-height: 115px;
-  }
-
-  #music-area {
-    width: 180px;
-  }
+  .falling-photo { max-height: 115px; }
 
   #music-player {
     width: 160px;
     height: 90px;
   }
 
-  .music-note {
-    font-size: 8.5px;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .star {
-    animation: none;
-  }
+  #music-area { bottom: 7px; }
+  #music-note { font-size: 8.5px; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- OPENING SCREEN -->
-
 <div id="opening">
   <div class="eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
 
-  <div class="opening-title">
-    Under the Shooting Stars
-  </div>
+  <div class="opening-title">Under the Shooting Stars</div>
 
   <div class="subtitle">
     Some things are worth taking a moment for...
   </div>
 
-  <button class="open-button" id="openButton" type="button">
-    Open Your Surprise ♡
+  <button class="open-button" id="openButton" disabled>
+    Preparing Your Surprise...
   </button>
-</div>
 
-<!-- MAIN SCREEN -->
+  <div id="loading-message">
+    Getting the music ready ♡
+  </div>
+</div>
 
 <main id="main">
 
   <div id="stars"></div>
-
   <div class="moon"></div>
-
   <div id="photos"></div>
 
   <div id="message">
@@ -356,18 +347,33 @@ body {
   </div>
 
   <div id="music-area">
+
     <div id="music-player"></div>
-    <p class="music-note">
+
+    <button id="play-song" disabled>
+      Play Song ♫
+    </button>
+
+    <p id="music-note">
       The song is set to start when you open the surprise.
       If your iPhone blocks playback, tap Play here.
     </p>
-  </div>
 
+    <p id="music-status"></p>
+
+    <a id="youtube-fallback"
+       href="https://www.youtube.com/watch?v=yLZoVTayvxY"
+       target="_blank"
+       rel="noopener">
+      Open song on YouTube
+    </a>
+
+  </div>
 </main>
 
 <script>
 
-/* ALL 61 PHOTOS */
+/* PHOTO FILES */
 
 const photoFiles = [
   "Picture_36_Original_Original.jpeg",
@@ -429,6 +435,7 @@ const photoFiles = [
   "IMG_0911_Original.jpeg",
   "IMG_5759_Original.jpeg",
   "IMG_3926_Original.jpeg",
+  "9F274428-57F9-4635-8F59-2F71D23A9E15_Original.jpeg",
   "wedding-photo-1.jpg",
   "wedding-photo-2.jpg",
   "wedding-photo-3.png",
@@ -442,33 +449,48 @@ const photoFiles = [
 
 const opening = document.getElementById("opening");
 const main = document.getElementById("main");
+const openButton = document.getElementById("openButton");
+const loadingMessage = document.getElementById("loading-message");
+const playSongButton = document.getElementById("play-song");
+const musicStatus = document.getElementById("music-status");
+const youtubeFallback = document.getElementById("youtube-fallback");
 const photos = document.getElementById("photos");
 
-let photoDeck = [];
-let lastPhoto = null;
-let photoTimer = null;
-
-/* YOUTUBE PLAYER STATE */
+const videoId = "yLZoVTayvxY";
 
 let player = null;
 let playerReady = false;
 let openingTapped = false;
+let photoDeck = [];
+let lastPhoto = null;
+let photoTimer = null;
+let availablePhotoFiles = [];
 
-const videoId = "yLZoVTayvxY";
+/* MUSIC PLAYER */
+
+function setMusicStatus(message) {
+  musicStatus.textContent = message;
+}
 
 /*
-  Load the YouTube API BEFORE the visitor taps
-  the opening button.
+  The YouTube API is loaded before the opening button
+  is enabled. This is important: the visitor's tap
+  can then call playVideo() on an already-ready player.
 */
 
-const youtubeScript = document.createElement("script");
-youtubeScript.src = "https://www.youtube.com/iframe_api";
-document.head.appendChild(youtubeScript);
+function enableOpening() {
+  openButton.disabled = false;
+  openButton.textContent = "Open Your Surprise ♡";
+  loadingMessage.textContent = "Your surprise is ready ♡";
+}
 
-/*
-  YouTube calls this function when its API is ready.
-  The player is created in advance, not after the tap.
-*/
+function showMusicFallback() {
+  openButton.disabled = false;
+  openButton.textContent = "Open Your Surprise ♡";
+  loadingMessage.textContent = "Your surprise is ready ♡";
+  youtubeFallback.style.display = "block";
+  setMusicStatus("If the player doesn't load, open the song on YouTube.");
+}
 
 window.onYouTubeIframeAPIReady = function() {
 
@@ -479,48 +501,153 @@ window.onYouTubeIframeAPIReady = function() {
 
     playerVars: {
       autoplay: 0,
-      playsinline: 1,
       controls: 1,
-      modestbranding: 1,
+      playsinline: 1,
       rel: 0,
+      modestbranding: 1,
       loop: 1,
-      playlist: videoId
+      playlist: videoId,
+      enablejsapi: 1
     },
 
     events: {
 
-      onReady: function(event) {
+      onReady: function() {
+
         playerReady = true;
 
+        playSongButton.disabled = false;
+
+        enableOpening();
+
         /*
-          If the visitor already tapped the opening
-          button while the player was loading,
-          attempt playback as soon as it is ready.
+          If the visitor tapped while the player
+          was still initializing, try playback now.
         */
 
         if (openingTapped) {
+          startPlayback();
+        }
+      },
+
+      onStateChange: function(event) {
+
+        if (event.data === YT.PlayerState.PLAYING) {
+          setMusicStatus("Now playing ♡");
+        }
+
+        if (event.data === YT.PlayerState.PAUSED) {
+          setMusicStatus("Song paused");
+        }
+
+        if (event.data === YT.PlayerState.ENDED) {
           try {
-            event.target.playVideo();
+            player.playVideo();
           } catch (error) {
-            console.log("Playback needs a manual tap.", error);
+            console.log(error);
           }
         }
       },
 
       onError: function(event) {
         console.warn("YouTube player error:", event.data);
+        setMusicStatus("Playback unavailable. Try opening the song on YouTube.");
+        youtubeFallback.style.display = "block";
       }
-
     }
   });
 
 };
 
-/* TWINKLING STARS */
+/* LOAD YOUTUBE API */
+
+const youtubeScript = document.createElement("script");
+youtubeScript.src = "https://www.youtube.com/iframe_api";
+
+youtubeScript.onerror = function() {
+  showMusicFallback();
+};
+
+document.head.appendChild(youtubeScript);
+
+/*
+  Safety fallback: don't leave the opening screen
+  permanently disabled if the YouTube API cannot load.
+*/
+
+setTimeout(function() {
+  if (!playerReady) {
+    showMusicFallback();
+  }
+}, 12000);
+
+/* PLAYBACK */
+
+function startPlayback() {
+
+  if (!playerReady || !player) {
+    setMusicStatus("The music player is still getting ready.");
+    return;
+  }
+
+  try {
+
+    /*
+      Explicitly request normal-volume playback.
+      No forced mute is applied.
+    */
+
+    player.unMute();
+    player.setVolume(100);
+    player.playVideo();
+
+    setMusicStatus("Starting your song ♡");
+
+  } catch (error) {
+
+    console.warn("Playback request failed:", error);
+
+    setMusicStatus("If playback is blocked, tap Play Song ♫.");
+  }
+}
+
+/* OPENING BUTTON */
+
+openButton.addEventListener("click", function() {
+
+  openingTapped = true;
+
+  /*
+    Call the player directly from the visitor's tap,
+    before changing screens.
+  */
+
+  if (playerReady) {
+    startPlayback();
+  }
+
+  opening.classList.add("hidden");
+  main.classList.add("visible");
+
+  startPhotos();
+});
+
+/* MANUAL PLAY BUTTON */
+
+playSongButton.addEventListener("click", function() {
+
+  if (playerReady) {
+    startPlayback();
+  } else {
+    setMusicStatus("The player is still loading. Please try again shortly.");
+  }
+});
+
+/* STAR FIELD */
 
 function makeStars() {
 
-  const starContainer = document.getElementById("stars");
+  const container = document.getElementById("stars");
 
   for (let i = 0; i < 85; i++) {
 
@@ -529,14 +656,14 @@ function makeStars() {
     star.className = "star";
     star.style.left = Math.random() * 100 + "%";
     star.style.top = Math.random() * 100 + "%";
-    star.style.animationDelay = (Math.random() * 4) + "s";
-    star.style.animationDuration = (2 + Math.random() * 4) + "s";
+    star.style.animationDelay = Math.random() * 4 + "s";
+    star.style.animationDuration = 2 + Math.random() * 4 + "s";
 
-    starContainer.appendChild(star);
+    container.appendChild(star);
   }
 }
 
-/* RANDOM SHUFFLE */
+/* SHUFFLE */
 
 function shuffle(array) {
 
@@ -552,13 +679,51 @@ function shuffle(array) {
   return result;
 }
 
-/* NO REPEATS UNTIL ALL PHOTOS HAVE APPEARED */
+/* VALIDATE PHOTOS BEFORE DISPLAYING */
+
+function validatePhotos() {
+
+  const checks = photoFiles.map(function(filename) {
+
+    return new Promise(function(resolve) {
+
+      const testImage = new Image();
+
+      testImage.onload = function() {
+        resolve(filename);
+      };
+
+      testImage.onerror = function() {
+        console.warn("Photo not found or unable to load:", filename);
+        resolve(null);
+      };
+
+      testImage.src = "./" + encodeURIComponent(filename);
+    });
+  });
+
+  return Promise.all(checks).then(function(results) {
+
+    availablePhotoFiles = results.filter(Boolean);
+
+    console.log(
+      "Successfully validated photos:",
+      availablePhotoFiles.length,
+      "of",
+      photoFiles.length
+    );
+
+    return availablePhotoFiles;
+  });
+}
+
+/* PHOTO DECK: NO REPEATS UNTIL CYCLE ENDS */
 
 function getNextPhoto() {
 
   if (photoDeck.length === 0) {
 
-    photoDeck = shuffle(photoFiles);
+    photoDeck = shuffle(availablePhotoFiles);
 
     if (
       photoDeck.length > 1 &&
@@ -574,12 +739,13 @@ function getNextPhoto() {
   return lastPhoto;
 }
 
-/* CREATE FALLING PHOTOS */
+/* CREATE FALLING PHOTO */
 
 function createFallingPhoto() {
 
-  const filename = getNextPhoto();
+  if (availablePhotoFiles.length === 0) return;
 
+  const filename = getNextPhoto();
   const img = document.createElement("img");
 
   const width = 52 + Math.random() * 43;
@@ -591,42 +757,23 @@ function createFallingPhoto() {
   img.alt = "";
   img.draggable = false;
 
-  img.src = "./" + encodeURIComponent(filename);
   img.style.left = (3 + Math.random() * 88) + "%";
 
-  img.style.setProperty(
-    "--photo-width",
-    width + "px"
-  );
-
-  img.style.setProperty(
-    "--rotation",
-    rotation + "deg"
-  );
-
-  img.style.setProperty(
-    "--fall-duration",
-    duration + "s"
-  );
-
-  img.style.setProperty(
-    "--drift",
-    drift + "px"
-  );
-
-  /*
-    Only reveal a photo after it successfully loads.
-    This prevents blank white photo cards.
-  */
+  img.style.setProperty("--photo-width", width + "px");
+  img.style.setProperty("--rotation", rotation + "deg");
+  img.style.setProperty("--fall-duration", duration + "s");
+  img.style.setProperty("--drift", drift + "px");
 
   img.onload = function() {
     img.style.visibility = "visible";
   };
 
   img.onerror = function() {
-    console.warn("Could not load photo:", filename);
+    console.warn("Could not display photo:", filename);
     img.remove();
   };
+
+  img.src = "./" + encodeURIComponent(filename);
 
   img.addEventListener("animationend", function() {
     img.remove();
@@ -635,62 +782,31 @@ function createFallingPhoto() {
   photos.appendChild(img);
 }
 
-/* START PHOTO ANIMATION */
+/* START PHOTOS */
 
 function startPhotos() {
 
   if (photoTimer) return;
 
-  for (let i = 0; i < 4; i++) {
-    setTimeout(createFallingPhoto, i * 850);
-  }
+  validatePhotos().then(function() {
 
-  photoTimer = setInterval(
-    createFallingPhoto,
-    2300
-  );
-}
-
-/* OPEN THE SURPRISE */
-
-document.getElementById("openButton").addEventListener("click", function() {
-
-  /*
-    Record the visitor's tap.
-    This is the same playback approach used
-    on the older surprise website.
-  */
-
-  openingTapped = true;
-
-  /*
-    If YouTube is already ready, attempt playback
-    immediately from the button interaction.
-  */
-
-  if (playerReady && player) {
-
-    try {
-      player.playVideo();
-    } catch (error) {
-      console.log("Playback needs a manual tap.", error);
+    if (availablePhotoFiles.length === 0) {
+      console.warn("No photos could be loaded.");
+      return;
     }
 
-  }
+    for (let i = 0; i < 4; i++) {
+      setTimeout(createFallingPhoto, i * 850);
+    }
 
-  opening.classList.add("hidden");
+    photoTimer = setInterval(createFallingPhoto, 2300);
+  });
+}
 
-  main.classList.add("visible");
-
-  startPhotos();
-
-});
-
-/* INITIALIZE STARS */
+/* START */
 
 makeStars();
 
 </script>
-
 </body>
 </html>
