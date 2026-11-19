@@ -178,7 +178,7 @@ body {
   pointer-events: none;
 }
 
-/* POLAROID PHOTOS - TIGHTER WHITE FRAME */
+/* POLAROID PHOTOS */
 
 .falling-photo {
   position: absolute;
@@ -501,36 +501,41 @@ function getNextPhoto() {
   return photoDeck.shift();
 }
 
-/* RANDOMIZED PHOTO SIZE WITH TIGHT FRAME */
+/* RANDOMIZED PHOTO SIZE - NATURAL IMAGE PROPORTIONS */
 
 function getRandomPhotoSize(img) {
   const originalWidth = img.naturalWidth;
   const originalHeight = img.naturalHeight;
 
   if (!originalWidth || !originalHeight) {
-    return { width: 95, height: 120 };
+    return { width: 85, height: 105 };
   }
 
-  // Each photograph gets its own randomized size.
-  const scale = 0.24 + Math.random() * 0.18;
+  // Preserve the original small Polaroid size, with gentle variation.
+  const randomScale = 0.85 + Math.random() * 0.35;
 
-  // Keep cards within reasonable screen dimensions.
-  const maxPhotoWidth = Math.min(window.innerWidth * 0.48, 200);
-  const maxPhotoHeight = Math.min(window.innerHeight * 0.38, 240);
+  const isSmallPhone = window.innerWidth <= 380;
 
-  const fitScale = Math.min(
-    scale,
-    maxPhotoWidth / originalWidth,
-    maxPhotoHeight / originalHeight
+  const baseWidth = isSmallPhone ? 78 : 85;
+  const baseHeight = isSmallPhone ? 98 : 105;
+
+  const maxWidth = baseWidth * randomScale;
+  const maxHeight = baseHeight * randomScale;
+
+  // Fit the actual photograph into the randomized size.
+  // This preserves portrait and landscape proportions.
+  const imageScale = Math.min(
+    (maxWidth - 8) / originalWidth,
+    (maxHeight - 8) / originalHeight
   );
 
-  const photoWidth = originalWidth * fitScale;
-  const photoHeight = originalHeight * fitScale;
+  const imageWidth = originalWidth * imageScale;
+  const imageHeight = originalHeight * imageScale;
 
-  // Tight frame: 3px padding on each side and 1px border.
+  // Add only the small white frame around the image.
   return {
-    width: Math.round(photoWidth + 8),
-    height: Math.round(photoHeight + 8)
+    width: Math.round(imageWidth + 8),
+    height: Math.round(imageHeight + 8)
   };
 }
 
@@ -605,7 +610,7 @@ function startPhotos() {
 }
 
 /* HIDDEN YOUTUBE PLAYER WITH AUTOPLAY AND LOOP */
-/* PRESERVED FROM THE PREVIOUS WORKING VERSION */
+/* PRESERVED FROM YOUR PROVIDED VERSION */
 
 const videoId = "yLZoVTayvxY";
 
