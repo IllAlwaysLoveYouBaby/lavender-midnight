@@ -237,7 +237,7 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
 }
 
-/* NEW: BOTTOM LYRICS */
+/* SYNCHRONIZED LYRICS — NEW */
 
 #lyrics {
   position: absolute;
@@ -346,7 +346,7 @@ body {
     </svg>
   </div>
 
-  <!-- NEW: LYRICS DISPLAY -->
+  <!-- SYNCHRONIZED LYRICS — NEW -->
 
   <div id="lyrics" aria-live="polite">
     <span id="lyrics-text"></span>
@@ -405,7 +405,7 @@ const photoFiles = [
   "IMG_0581_Original.jpeg",
   "IMG_0578_Original.jpeg",
   "IMG_0287_Original.jpeg",
-  "IMG_0242_Original.jpeg,
+  "IMG_0242_Original.jpeg",
   "FBC1621D-16B5-47FD-8211-F0C568D772B5_Original.jpeg",
   "F7343407-203D-45D6-8BB2-4D16D2D8D40A_Original.jpeg",
   "D41356E5-D304-4600-A436-F31E1A256817_Original.jpeg",
@@ -494,7 +494,7 @@ let failedPhotos = new Set();
 let photoStarted = false;
 let photoTimer = null;
 
-/* TRACK PHOTOS THAT ARE STILL LOADING */
+/* NEW: TRACK PHOTOS THAT ARE STILL LOADING */
 let pendingPhotos = 0;
 
 function shuffle(array) {
@@ -590,11 +590,11 @@ function createFallingPhoto() {
   img.style.setProperty("--fall-duration", duration + "s");
   img.style.setProperty("--drift", drift + "px");
 
-  /* COUNT THIS PHOTO WHILE IT LOADS */
+  /* NEW: COUNT THIS PHOTO WHILE IT LOADS */
   pendingPhotos++;
 
   img.onload = () => {
-    /* PHOTO HAS LOADED AND IS NOW DISPLAYED */
+    /* NEW: PHOTO HAS LOADED AND IS NOW DISPLAYED */
     pendingPhotos--;
 
     lastDisplayedPhoto = filename;
@@ -602,7 +602,7 @@ function createFallingPhoto() {
   };
 
   img.onerror = () => {
-    /* FAILED PHOTO DOES NOT BLOCK THE NEXT CYCLE */
+    /* NEW: FAILED PHOTO DOES NOT BLOCK THE NEXT CYCLE */
     pendingPhotos--;
 
     failedPhotos.add(filename);
@@ -642,33 +642,16 @@ let youtubePlayer = null;
 let youtubePlayerReady = false;
 let startMusicWhenReady = false;
 
-/* NEW: LYRIC ELEMENTS AND PLAYER STATE */
-
-const lyricsContainer = document.getElementById("lyrics");
-const lyricsText = document.getElementById("lyrics-text");
-
-let currentPlayerState = -1;
-let lastLyric = "";
-let lyricTimer = null;
-
-/*
-  INITIAL LYRIC TIMELINE
-
-  These timings are initial estimates, not frame-perfect
-  vocal timestamps. They can be fine-tuned after testing.
-
-  Song length: approximately 4:11 (251 seconds).
-*/
+/* SYNCHRONIZED LYRICS — NEW */
 
 const lyricCues = [
-  { start:  7, end: 14, text: "I see deep sorrow in your eyes" },
+  { start: 7, end: 14, text: "I see deep sorrow in your eyes" },
   { start: 14, end: 21, text: "When everything is said and done" },
   { start: 21, end: 28, text: "In the end we will say good-bye" },
   { start: 28, end: 35, text: "But, if only we could go back" },
 
   { start: 36, end: 42, text: "You don't have to runaway" },
   { start: 42, end: 48, text: "You don't have to try to me" },
-
   { start: 49, end: 56, text: "I just wanna love you as you are" },
   { start: 56, end: 63, text: "Hold you close and never let you stray" },
   { start: 63, end: 70, text: "Even if the world turns its back" },
@@ -707,7 +690,24 @@ const lyricCues = [
   { start: 267, end: 275, text: "I will stay with you" }
 ];
 
-/* NEW: SHOW THE CURRENT LYRIC */
+const lyricsContainer = document.getElementById("lyrics");
+const lyricsText = document.getElementById("lyrics-text");
+
+let currentPlayerState = -1;
+let lastLyric = "";
+let lyricTimer = null;
+let lyricFadeTimeout = null;
+
+function hideLyrics() {
+  lastLyric = "";
+  lyricsContainer.style.opacity = "0";
+  lyricsText.textContent = "";
+
+  if (lyricFadeTimeout) {
+    clearTimeout(lyricFadeTimeout);
+    lyricFadeTimeout = null;
+  }
+}
 
 function updateLyrics() {
   if (
@@ -733,27 +733,23 @@ function updateLyrics() {
 
   lyricsContainer.style.opacity = "0";
 
-  setTimeout(() => {
+  if (lyricFadeTimeout) {
+    clearTimeout(lyricFadeTimeout);
+  }
+
+  lyricFadeTimeout = setTimeout(() => {
     if (lastLyric === newLyric) {
       lyricsText.textContent = newLyric;
       lyricsContainer.style.opacity = newLyric ? "1" : "0";
     }
+    lyricFadeTimeout = null;
   }, 350);
 }
-
-/* NEW: HIDE LYRICS */
-
-function hideLyrics() {
-  lastLyric = "";
-  lyricsContainer.style.opacity = "0";
-  lyricsText.textContent = "";
-}
-
-/* NEW: CHECK SONG POSITION REGULARLY */
 
 function startLyricSync() {
   if (lyricTimer) return;
 
+  updateLyrics();
   lyricTimer = setInterval(updateLyrics, 250);
 }
 
@@ -765,8 +761,6 @@ function stopLyricSync() {
 
   hideLyrics();
 }
-
-/* YOUTUBE PLAYER */
 
 function onYouTubeIframeAPIReady() {
   youtubePlayer = new YT.Player("youtube-player", {
