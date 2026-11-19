@@ -178,14 +178,12 @@ body {
   pointer-events: none;
 }
 
-/* PHOTO CARDS */
+/* RANDOM-SIZED POLAROID PHOTO CARDS */
 
 .falling-photo {
   position: absolute;
-  top: -130px;
-  width: 85px;
-  height: 105px;
-  object-fit: cover;
+  top: -160px;
+  object-fit: contain;
   object-position: center;
   padding: 4px;
   border: 1px solid rgba(255,255,255,.75);
@@ -274,11 +272,6 @@ body {
   .opening-eyebrow {
     font-size: 11px;
     letter-spacing: 4px;
-  }
-
-  .falling-photo {
-    width: 78px;
-    height: 98px;
   }
 }
 </style>
@@ -520,6 +513,32 @@ function getNextPhoto() {
   return photoDeck.shift();
 }
 
+/* RANDOM PHOTO DIMENSIONS */
+
+function getRandomPhotoSize() {
+  const sizes = [
+    { width: 78, height: 98 },
+    { width: 88, height: 110 },
+    { width: 98, height: 122 },
+    { width: 108, height: 135 },
+    { width: 118, height: 148 },
+    { width: 128, height: 160 }
+  ];
+
+  const selected = sizes[
+    Math.floor(Math.random() * sizes.length)
+  ];
+
+  // Keep wider cards within the available screen width.
+  const maxWidth = Math.max(70, window.innerWidth - 20);
+  const scale = Math.min(1, maxWidth / selected.width);
+
+  return {
+    width: Math.round(selected.width * scale),
+    height: Math.round(selected.height * scale)
+  };
+}
+
 function createFallingPhoto() {
   const filename = getNextPhoto();
 
@@ -530,13 +549,20 @@ function createFallingPhoto() {
   const rotation = -16 + Math.random() * 32;
   const duration = 35 + Math.random() * 10;
   const drift = -65 + Math.random() * 130;
+  const size = getRandomPhotoSize();
 
   img.className = "falling-photo";
   img.alt = "";
   img.draggable = false;
   img.loading = "eager";
 
-  img.style.left = (3 + Math.random() * 88) + "%";
+  img.style.width = size.width + "px";
+  img.style.height = size.height + "px";
+
+  // Randomize horizontal placement while keeping the whole card on screen.
+  const availableWidth = Math.max(0, window.innerWidth - size.width);
+  img.style.left = (Math.random() * availableWidth) + "px";
+
   img.style.setProperty("--rotation", rotation + "deg");
   img.style.setProperty("--fall-duration", duration + "s");
   img.style.setProperty("--drift", drift + "px");
@@ -622,7 +648,7 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-/* LOAD YOUTUBE API BEFORE THE OPENING BUTTON IS TAPPED */
+/* LOAD YOUTUBE API */
 
 (function loadYouTubeAPI() {
   const tag = document.createElement("script");
@@ -640,7 +666,7 @@ const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
 
-  // Start the hidden song directly from the user's tap
+  // Start the hidden song from the opening-button interaction.
   if (youtubePlayer && youtubePlayerReady) {
     youtubePlayer.playVideo();
   } else {
