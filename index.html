@@ -5,251 +5,583 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lavender Midnight ♡</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-* { box-sizing: border-box; }
-html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   font-family: 'Nunito', sans-serif;
   color: white;
-  background: radial-gradient(ellipse at 50% 20%, #a987a9 0%, transparent 55%),
+  background:
+    radial-gradient(ellipse at 50% 20%, #a987a9 0%, transparent 55%),
     linear-gradient(180deg, #92758f 0%, #705b78 48%, #483d59 100%);
 }
+
+/* OPENING SCREEN */
+
 #opening {
-  position: fixed; inset: 0; z-index: 10; display: flex; flex-direction: column;
-  justify-content: center; align-items: center; text-align: center; padding: 24px;
-  background: radial-gradient(ellipse at 50% 25%, #b493b1 0%, transparent 58%),
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 24px;
+  background:
+    radial-gradient(ellipse at 50% 25%, #b493b1 0%, transparent 58%),
     linear-gradient(180deg, #967b96 0%, #705c7a 55%, #51445f 100%);
   transition: opacity 1.2s ease, visibility 1.2s ease;
 }
-#opening.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-.eyebrow { font-size: 10px; letter-spacing: 4px; font-weight: 600; margin-bottom: 24px; opacity: .9; }
-.opening-title {
-  font-family: 'Allura', cursive; font-size: clamp(3.2rem, 12vw, 5.5rem);
-  font-weight: 400; line-height: 1.05; text-shadow: 0 0 20px rgba(255,255,255,.35);
-}
-.subtitle { font-size: 13px; letter-spacing: 1px; margin-top: 18px; opacity: .9; }
-.open-button {
-  margin-top: 42px; padding: 13px 28px; border: 1px solid rgba(255,255,255,.75);
-  border-radius: 30px; background: rgba(255,255,255,.12); color: white;
-  font-family: 'Nunito', sans-serif; font-size: 13px; letter-spacing: 1px;
-  cursor: pointer; backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-  transition: background .3s ease, transform .3s ease;
-}
-.open-button:active { transform: scale(.96); background: rgba(255,255,255,.25); }
-#main {
-  position: fixed; inset: 0; overflow: hidden; opacity: 0; transition: opacity 1.8s ease;
-  background: radial-gradient(ellipse at 50% 25%, #987c9b 0%, transparent 55%),
-    linear-gradient(180deg, #806983 0%, #62516f 55%, #433a54 100%);
-}
-#main.visible { opacity: 1; }
-#stars { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-.star {
-  position: absolute; width: 2px; height: 2px; border-radius: 50%; background: white;
-  opacity: .5; box-shadow: 0 0 7px 2px rgba(255,255,255,.35);
-  animation: twinkle 3s ease-in-out infinite alternate;
-}
-@keyframes twinkle {
-  from { opacity: .2; transform: scale(.7); }
-  to { opacity: .95; transform: scale(1.35); }
-}
-.moon {
-  position: absolute; top: 8%; right: 12%; width: 48px; height: 48px;
-  border-radius: 50%; background: #f5e9f4; box-shadow: 0 0 24px rgba(255,240,255,.5);
-  opacity: .85; z-index: 1;
-}
-.moon::after {
-  content: ""; position: absolute; top: -7px; left: 14px; width: 47px; height: 47px;
-  border-radius: 50%; background: #89708d;
-}
-#message {
-  position: absolute; z-index: 5; top: 48%; left: 50%; transform: translate(-50%, -50%);
-  width: 96%; text-align: center; white-space: nowrap; font-family: 'Allura', cursive;
-  font-size: clamp(1.4rem, 7vw, 4.2rem); font-weight: 400; color: #fff;
-  text-shadow: 0 0 8px rgba(255,255,255,.75), 0 0 22px rgba(255,255,255,.4);
+
+#opening.hidden {
+  opacity: 0;
+  visibility: hidden;
   pointer-events: none;
 }
-#photos { position: absolute; inset: 0; z-index: 2; overflow: hidden; pointer-events: none; }
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 4px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  opacity: .9;
+}
+
+.opening-title {
+  font-family: 'Allura', cursive;
+  font-size: clamp(3.2rem, 12vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.05;
+  text-shadow: 0 0 20px rgba(255,255,255,.35);
+}
+
+.subtitle {
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-top: 18px;
+  opacity: .9;
+}
+
+.open-button {
+  margin-top: 42px;
+  padding: 13px 28px;
+  border: 1px solid rgba(255,255,255,.75);
+  border-radius: 30px;
+  background: rgba(255,255,255,.12);
+  color: white;
+  font-family: 'Nunito', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background .3s ease, transform .3s ease;
+}
+
+.open-button:active {
+  transform: scale(.96);
+  background: rgba(255,255,255,.25);
+}
+
+/* MAIN EXPERIENCE */
+
+#main {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 1.8s ease;
+  background:
+    radial-gradient(ellipse at 50% 25%, #987c9b 0%, transparent 55%),
+    linear-gradient(180deg, #806983 0%, #62516f 55%, #433a54 100%);
+}
+
+#main.visible {
+  opacity: 1;
+}
+
+/* STARS */
+
+#stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: white;
+  opacity: .5;
+  box-shadow: 0 0 7px 2px rgba(255,255,255,.35);
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from {
+    opacity: .2;
+    transform: scale(.7);
+  }
+  to {
+    opacity: .95;
+    transform: scale(1.35);
+  }
+}
+
+/* CRESCENT MOON */
+
+.moon {
+  position: absolute;
+  top: 8%;
+  right: 12%;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f5e9f4;
+  box-shadow: 0 0 24px rgba(255,240,255,.5);
+  opacity: .85;
+  z-index: 1;
+}
+
+.moon::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  left: 14px;
+  width: 47px;
+  height: 47px;
+  border-radius: 50%;
+  background: #89708d;
+}
+
+/* CENTER MESSAGE */
+
+#message {
+  position: absolute;
+  z-index: 5;
+  top: 48%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 96%;
+  text-align: center;
+  white-space: nowrap;
+  font-family: 'Allura', cursive;
+  font-size: clamp(1.4rem, 7vw, 4.2rem);
+  font-weight: 400;
+  color: #fff;
+  text-shadow:
+    0 0 8px rgba(255,255,255,.75),
+    0 0 22px rgba(255,255,255,.4);
+  pointer-events: none;
+}
+
+/* FALLING POLAROID PHOTOS */
+
+#photos {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  overflow: hidden;
+  pointer-events: none;
+}
+
 .falling-photo {
-  position: absolute; top: -180px; width: var(--photo-width); height: auto;
-  max-height: 145px; object-fit: cover; padding: 4px;
-  border: 1px solid rgba(255,255,255,.65); border-radius: 3px;
-  background: rgba(255,255,255,.88); box-shadow: 0 4px 18px rgba(20,10,30,.25);
-  opacity: 0; animation: fall var(--fall-duration) linear forwards;
+  position: absolute;
+  top: -180px;
+  width: var(--photo-width);
+  height: auto;
+  max-height: 145px;
+  object-fit: cover;
+  padding: 4px;
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 3px;
+  background: rgba(255,255,255,.88);
+  box-shadow: 0 4px 18px rgba(20,10,30,.25);
+  opacity: 0;
+  visibility: hidden;
+  animation: fall var(--fall-duration) linear forwards;
   will-change: transform, opacity;
 }
+
 @keyframes fall {
-  0% { opacity: 0; transform: translate3d(0,0,0) rotate(var(--rotation)); }
-  10% { opacity: .85; }
-  85% { opacity: .8; }
-  100% { opacity: 0; transform: translate3d(var(--drift),115vh,0) rotate(calc(var(--rotation) + 35deg)); }
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(var(--rotation));
+  }
+
+  10% {
+    opacity: .85;
+  }
+
+  85% {
+    opacity: .8;
+  }
+
+  100% {
+    opacity: 0;
+    transform:
+      translate3d(var(--drift), 115vh, 0)
+      rotate(calc(var(--rotation) + 35deg));
+  }
 }
+
+/* MUSIC PLAYER AND INSTRUCTION */
+
+#music-area {
+  position: absolute;
+  z-index: 7;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 210px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+}
+
 #music-player {
-  position: absolute; z-index: 7; bottom: 12px; left: 50%; transform: translateX(-50%);
-  width: 190px; height: 107px; border-radius: 8px; overflow: hidden; opacity: .82;
-  box-shadow: 0 3px 18px rgba(20,10,30,.25); background: rgba(255,255,255,.08);
+  width: 190px;
+  height: 107px;
+  border-radius: 8px;
+  overflow: hidden;
+  opacity: .9;
+  box-shadow: 0 3px 18px rgba(20,10,30,.25);
+  background: rgba(255,255,255,.08);
 }
-#music-player iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+#music-player iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.music-note {
+  width: 100%;
+  margin: 0;
+  color: rgba(255,255,255,.78);
+  font-family: 'Nunito', sans-serif;
+  font-size: 9px;
+  line-height: 1.45;
+  font-weight: 300;
+  text-align: center;
+  text-shadow: 0 1px 5px rgba(20,10,30,.4);
+}
+
+/* SMALL SCREENS */
+
 @media (max-width: 380px) {
-  #message { font-size: clamp(1.35rem, 6.5vw, 2.2rem); }
-  .falling-photo { max-height: 115px; }
-  #music-player { width: 160px; height: 90px; }
+  #message {
+    font-size: clamp(1.35rem, 6.5vw, 2.2rem);
+  }
+
+  .falling-photo {
+    max-height: 115px;
+  }
+
+  #music-area {
+    width: 180px;
+  }
+
+  #music-player {
+    width: 160px;
+    height: 90px;
+  }
+
+  .music-note {
+    font-size: 8.5px;
+  }
 }
-@media (prefers-reduced-motion: reduce) { .star { animation: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .star {
+    animation: none;
+  }
+}
 </style>
 </head>
+
 <body>
+
+<!-- OPENING SCREEN -->
+
 <div id="opening">
   <div class="eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
-  <div class="opening-title">Under the Shooting Stars</div>
-  <div class="subtitle">Some things are worth taking a moment for...</div>
-  <button class="open-button" id="openButton">Open Your Surprise ♡</button>
+
+  <div class="opening-title">
+    Under the Shooting Stars
+  </div>
+
+  <div class="subtitle">
+    Some things are worth taking a moment for...
+  </div>
+
+  <button class="open-button" id="openButton" type="button">
+    Open Your Surprise ♡
+  </button>
 </div>
+
+<!-- MAIN SCREEN -->
+
 <main id="main">
+
   <div id="stars"></div>
+
   <div class="moon"></div>
+
   <div id="photos"></div>
-  <div id="message">I'll Always Choose You ♥</div>
-  <div id="music-player"></div>
+
+  <div id="message">
+    I'll Always Choose You ♥
+  </div>
+
+  <div id="music-area">
+    <div id="music-player"></div>
+    <p class="music-note">
+      The song is set to start when you open the surprise.
+      If your iPhone blocks playback, tap Play here.
+    </p>
+  </div>
+
 </main>
+
 <script>
-/* ALL 59 IMAGE FILES CURRENTLY IN THE REPOSITORY */
+
+/* ALL 61 PHOTOS */
+
 const photoFiles = [
-  "090320F3-BD17-477A-9EE2-FDBC2A765FB8_Original.jpeg",
-  "1663_Original_Original_Original.jpeg",
-  "7E11638B-414A-405A-83F5-AEB1AB1D56B3_Original.jpeg",
-  "8F12514D-A331-489B-B427-AEFD392EAAB6_Original.jpeg",
-  "948A11A9-4C71-4F70-B5D5-367342B0C1FA_Original.jpeg",
-  "9F274428-57F9-4635-8F59-2F71D23A9E15_Original.jpeg",
-  "D41356E5-D304-4600-A436-F31E1A256817_Original.jpeg",
-  "F7343407-203D-45D6-8BB2-4D16D2D8D40A_Original.jpeg",
-  "FBC1621D-16B5-47FD-8211-F0C568D772B5_Original.jpeg",
-  "IMG_0242_Original.jpeg",
-  "IMG_0287_Original.jpeg",
-  "IMG_0578_Original.jpeg",
-  "IMG_0581_Original.jpeg",
-  "IMG_0586_Original.jpeg",
-  "IMG_0668_Original.jpeg",
-  "IMG_0710_Original.jpeg",
+  "Picture_36_Original_Original.jpeg",
+  "PXL_20201225_045227157.NIGHT_Original_Original.jpeg",
+  "IMG_9485_Original.jpeg",
+  "IMG_9411_Original.jpeg",
+  "IMG_8192_Original.jpeg",
+  "IMG_7911_Original.jpeg",
+  "IMG_7612_Original.jpeg",
+  "IMG_7552_Original.jpeg",
+  "IMG_7431_Original.jpeg",
+  "IMG_6943_Original.jpeg",
+  "IMG_6928_Original.jpeg",
+  "IMG_6913_Original.jpeg",
+  "IMG_6013_Original.jpeg",
+  "IMG_5882_Original.jpeg",
+  "IMG_5283_Original.jpeg",
+  "IMG_4910_Original.jpeg",
+  "IMG_4477_Original.jpeg",
+  "IMG_4423_Original.jpeg",
+  "IMG_4418_Original.jpeg",
+  "IMG_4376_Original.jpeg",
+  "IMG_4248_Original.jpeg",
+  "IMG_4101_Original.jpeg",
+  "IMG_3861_Original.jpeg",
+  "IMG_3852_Original.jpeg",
+  "IMG_3568_Original.jpeg",
+  "IMG_3386_Original.jpeg",
+  "IMG_3251_Original.jpeg",
+  "IMG_3146_Original.jpeg",
+  "IMG_2786_Original.jpeg",
+  "IMG_2670_Original.jpeg",
+  "IMG_2457_Original.jpeg",
+  "IMG_2126_Original.jpeg",
+  "IMG_1766_Original.jpeg",
+  "IMG_1707_Original.jpeg",
+  "IMG_1671_Original.jpeg",
+  "IMG_1637_Original.jpeg",
+  "IMG_1611_Original.jpeg",
+  "IMG_1572_Original.jpeg",
+  "IMG_1475_Original.jpeg",
   "IMG_0866_Original.jpeg",
   "IMG_0880_Original.jpeg",
+  "IMG_0710_Original.jpeg",
+  "IMG_0668_Original.jpeg",
+  "IMG_0586_Original.jpeg",
+  "IMG_0581_Original.jpeg",
+  "IMG_0578_Original.jpeg",
+  "IMG_0287_Original.jpeg",
+  "IMG_0242_Original.jpeg",
+  "FBC1621D-16B5-47FD-8211-F0C568D772B5_Original.jpeg",
+  "F7343407-203D-45D6-8BB2-4D16D2D8D40A_Original.jpeg",
+  "D41356E5-D304-4600-A436-F31E1A256817_Original.jpeg",
+  "948A11A9-4C71-4F70-B5D5-367342B0C1FA_Original.jpeg",
+  "8F12514D-A331-489B-B427-AEFD392EAAB6_Original.jpeg",
+  "7E11638B-414A-405A-83F5-AEB1AB1D56B3_Original.jpeg",
+  "1663_Original_Original_Original.jpeg",
+  "090320F3-BD17-477A-9EE2-FDBC2A765FB8_Original.jpeg",
   "IMG_0911_Original.jpeg",
-  "IMG_1475_Original.jpeg",
-  "IMG_1572_Original.jpeg",
-  "IMG_1611_Original.jpeg",
-  "IMG_1637_Original.jpeg",
-  "IMG_1671_Original.jpeg",
-  "IMG_1707_Original.jpeg",
-  "IMG_1766_Original.jpeg",
-  "IMG_2126_Original.jpeg",
-  "IMG_2457_Original.jpeg",
-  "IMG_2670_Original.jpeg",
-  "IMG_2786_Original.jpeg",
-  "IMG_3146_Original.jpeg",
-  "IMG_3251_Original.jpeg",
-  "IMG_3386_Original.jpeg",
-  "IMG_3568_Original.jpeg",
-  "IMG_3852_Original.jpeg",
-  "IMG_3861_Original.jpeg",
-  "IMG_3926_Original.jpeg",
-  "IMG_4248_Original.jpeg",
-  "IMG_4376_Original.jpeg",
-  "IMG_4418_Original.jpeg",
-  "IMG_4423_Original.jpeg",
-  "IMG_4477_Original.jpeg",
-  "IMG_4910_Original.jpeg",
-  "IMG_5283_Original.jpeg",
   "IMG_5759_Original.jpeg",
-  "IMG_5882_Original.jpeg",
-  "IMG_6013_Original.jpeg",
-  "IMG_6913_Original.jpeg",
-  "IMG_6928_Original.jpeg",
-  "IMG_6943_Original.jpeg",
-  "IMG_7431_Original.jpeg",
-  "IMG_7552_Original.jpeg",
-  "IMG_7612_Original.jpeg",
-  "IMG_7911_Original.jpeg",
-  "IMG_8192_Original.jpeg",
-  "IMG_9411_Original.jpeg",
-  "IMG_9485_Original.jpeg",
-  "PXL_20201225_045227157.NIGHT_Original_Original.jpeg",
-  "Picture_36_Original_Original.jpeg"
+  "IMG_3926_Original.jpeg",
+  "wedding-photo-1.jpg",
+  "wedding-photo-2.jpg",
+  "wedding-photo-3.png",
+  "wedding-photo-4.png",
+  "wedding-photo-5.png",
+  "wedding-photo-6.png",
+  "wedding-photo-7.png"
 ];
+
+/* ELEMENTS */
 
 const opening = document.getElementById("opening");
 const main = document.getElementById("main");
 const photos = document.getElementById("photos");
-const musicPlayer = document.getElementById("music-player");
 
-let availablePhotoFiles = [];
 let photoDeck = [];
 let lastPhoto = null;
 let photoTimer = null;
 
-/* PRE-CHECK EVERY IMAGE SO FAILED FILES NEVER CREATE BLANK CARDS */
-function validatePhotos() {
-  const checks = photoFiles.map(filename => new Promise(resolve => {
-    const testImage = new Image();
-    testImage.onload = () => resolve(filename);
-    testImage.onerror = () => {
-      console.warn("Skipping image that could not be loaded:", filename);
-      resolve(null);
-    };
-    testImage.src = "./" + encodeURIComponent(filename);
-  }));
+/* YOUTUBE PLAYER STATE */
 
-  return Promise.all(checks).then(results => {
-    availablePhotoFiles = results.filter(Boolean);
-    console.info("Photos ready:", availablePhotoFiles.length, "of", photoFiles.length);
-    return availablePhotoFiles;
+let player = null;
+let playerReady = false;
+let openingTapped = false;
+
+const videoId = "yLZoVTayvxY";
+
+/*
+  Load the YouTube API BEFORE the visitor taps
+  the opening button.
+*/
+
+const youtubeScript = document.createElement("script");
+youtubeScript.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(youtubeScript);
+
+/*
+  YouTube calls this function when its API is ready.
+  The player is created in advance, not after the tap.
+*/
+
+window.onYouTubeIframeAPIReady = function() {
+
+  player = new YT.Player("music-player", {
+    width: "190",
+    height: "107",
+    videoId: videoId,
+
+    playerVars: {
+      autoplay: 0,
+      playsinline: 1,
+      controls: 1,
+      modestbranding: 1,
+      rel: 0,
+      loop: 1,
+      playlist: videoId
+    },
+
+    events: {
+
+      onReady: function(event) {
+        playerReady = true;
+
+        /*
+          If the visitor already tapped the opening
+          button while the player was loading,
+          attempt playback as soon as it is ready.
+        */
+
+        if (openingTapped) {
+          try {
+            event.target.playVideo();
+          } catch (error) {
+            console.log("Playback needs a manual tap.", error);
+          }
+        }
+      },
+
+      onError: function(event) {
+        console.warn("YouTube player error:", event.data);
+      }
+
+    }
   });
-}
-const photosReady = validatePhotos();
+
+};
 
 /* TWINKLING STARS */
+
 function makeStars() {
+
   const starContainer = document.getElementById("stars");
+
   for (let i = 0; i < 85; i++) {
+
     const star = document.createElement("span");
+
     star.className = "star";
     star.style.left = Math.random() * 100 + "%";
     star.style.top = Math.random() * 100 + "%";
     star.style.animationDelay = (Math.random() * 4) + "s";
     star.style.animationDuration = (2 + Math.random() * 4) + "s";
+
     starContainer.appendChild(star);
   }
 }
 
 /* RANDOM SHUFFLE */
+
 function shuffle(array) {
+
   const result = [...array];
+
   for (let i = result.length - 1; i > 0; i--) {
+
     const j = Math.floor(Math.random() * (i + 1));
+
     [result[i], result[j]] = [result[j], result[i]];
   }
+
   return result;
 }
 
-/* NO REPEATS UNTIL EVERY WORKING PHOTO HAS APPEARED */
+/* NO REPEATS UNTIL ALL PHOTOS HAVE APPEARED */
+
 function getNextPhoto() {
+
   if (photoDeck.length === 0) {
-    photoDeck = shuffle(availablePhotoFiles);
-    if (photoDeck.length > 1 && photoDeck[0] === lastPhoto) {
-      [photoDeck[0], photoDeck[1]] = [photoDeck[1], photoDeck[0]];
+
+    photoDeck = shuffle(photoFiles);
+
+    if (
+      photoDeck.length > 1 &&
+      photoDeck[0] === lastPhoto
+    ) {
+      [photoDeck[0], photoDeck[1]] =
+        [photoDeck[1], photoDeck[0]];
     }
   }
+
   lastPhoto = photoDeck.shift();
+
   return lastPhoto;
 }
 
 /* CREATE FALLING PHOTOS */
+
 function createFallingPhoto() {
-  if (availablePhotoFiles.length === 0) return;
 
   const filename = getNextPhoto();
+
   const img = document.createElement("img");
+
   const width = 52 + Math.random() * 43;
   const rotation = -16 + Math.random() * 32;
   const duration = 12 + Math.random() * 8;
@@ -258,47 +590,107 @@ function createFallingPhoto() {
   img.className = "falling-photo";
   img.alt = "";
   img.draggable = false;
-  img.style.left = (3 + Math.random() * 88) + "%";
-  img.style.setProperty("--photo-width", width + "px");
-  img.style.setProperty("--rotation", rotation + "deg");
-  img.style.setProperty("--fall-duration", duration + "s");
-  img.style.setProperty("--drift", drift + "px");
-  img.addEventListener("animationend", () => img.remove());
-  img.onerror = () => img.remove();
+
   img.src = "./" + encodeURIComponent(filename);
+  img.style.left = (3 + Math.random() * 88) + "%";
+
+  img.style.setProperty(
+    "--photo-width",
+    width + "px"
+  );
+
+  img.style.setProperty(
+    "--rotation",
+    rotation + "deg"
+  );
+
+  img.style.setProperty(
+    "--fall-duration",
+    duration + "s"
+  );
+
+  img.style.setProperty(
+    "--drift",
+    drift + "px"
+  );
+
+  /*
+    Only reveal a photo after it successfully loads.
+    This prevents blank white photo cards.
+  */
+
+  img.onload = function() {
+    img.style.visibility = "visible";
+  };
+
+  img.onerror = function() {
+    console.warn("Could not load photo:", filename);
+    img.remove();
+  };
+
+  img.addEventListener("animationend", function() {
+    img.remove();
+  });
+
   photos.appendChild(img);
 }
 
 /* START PHOTO ANIMATION */
+
 function startPhotos() {
+
   if (photoTimer) return;
+
   for (let i = 0; i < 4; i++) {
     setTimeout(createFallingPhoto, i * 850);
   }
-  photoTimer = setInterval(createFallingPhoto, 2300);
-}
 
-/* YOUTUBE MUSIC WITH ENDLESS LOOP */
-function startMusic() {
-  if (musicPlayer.querySelector("iframe")) return;
-  const iframe = document.createElement("iframe");
-  iframe.src = "https://www.youtube.com/embed/yLZoVTayvxY?autoplay=1&mute=0&playsinline=1&controls=1&modestbranding=1&rel=0&loop=1&playlist=yLZoVTayvxY";
-  iframe.title = "Us, Now - OHYUL of LNGSHOT";
-  iframe.allow = "autoplay; encrypted-media; picture-in-picture";
-  iframe.referrerPolicy = "strict-origin-when-cross-origin";
-  iframe.allowFullscreen = true;
-  musicPlayer.appendChild(iframe);
+  photoTimer = setInterval(
+    createFallingPhoto,
+    2300
+  );
 }
 
 /* OPEN THE SURPRISE */
-document.getElementById("openButton").addEventListener("click", () => {
-  startMusic();
+
+document.getElementById("openButton").addEventListener("click", function() {
+
+  /*
+    Record the visitor's tap.
+    This is the same playback approach used
+    on the older surprise website.
+  */
+
+  openingTapped = true;
+
+  /*
+    If YouTube is already ready, attempt playback
+    immediately from the button interaction.
+  */
+
+  if (playerReady && player) {
+
+    try {
+      player.playVideo();
+    } catch (error) {
+      console.log("Playback needs a manual tap.", error);
+    }
+
+  }
+
   opening.classList.add("hidden");
+
   main.classList.add("visible");
-  photosReady.then(startPhotos);
+
+  startPhotos();
+
 });
 
+/* INITIALIZE STARS */
+
 makeStars();
+
 </script>
+
 </body>
 </html>
