@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lavender Midnight ♡</title>
+<title>Lavender Midnight</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,9 +23,7 @@ html, body {
 body {
   font-family: 'Nunito', sans-serif;
   color: white;
-  background:
-    radial-gradient(ellipse at 50% 20%, #a987a9 0%, transparent 55%),
-    linear-gradient(180deg, #92758f 0%, #705b78 48%, #483d59 100%);
+  background: linear-gradient(180deg, #92758f, #705b78 48%, #483d59);
 }
 
 /* OPENING SCREEN */
@@ -87,7 +85,6 @@ body {
   cursor: pointer;
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
-  transition: background .3s ease, transform .3s ease;
 }
 
 .open-button:active {
@@ -182,11 +179,9 @@ body {
   pointer-events: none;
 }
 
-#message-text {
-  white-space: nowrap;
-}
+#message-text { white-space: nowrap; }
 
-/* FIXED WHITE SVG HEART */
+/* SOLID WHITE SVG HEART */
 .white-heart {
   display: inline-block;
   flex: 0 0 auto;
@@ -197,7 +192,7 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.65));
 }
 
-/* FALLING POLAROID PHOTOS */
+/* FALLING PHOTOS: SAME SIZE FOR EVERY PHOTO */
 #photos {
   position: absolute;
   inset: 0;
@@ -208,16 +203,21 @@ body {
 
 .falling-photo {
   position: absolute;
-  top: -180px;
-  width: var(--photo-width);
-  height: auto;
-  max-height: 145px;
-  object-fit: cover;
+  top: -45px;
+
+  /* Uniform Polaroid card dimensions */
+  width: 85px;
+  height: 105px;
+
+  /* Keep the entire original photo visible */
+  object-fit: contain;
+
   padding: 4px;
   border: 1px solid rgba(255,255,255,.65);
   border-radius: 3px;
-  background: rgba(255,255,255,.88);
+  background: #ffffff;
   box-shadow: 0 4px 18px rgba(20,10,30,.25);
+
   opacity: 0;
   animation: fall var(--fall-duration) linear forwards;
   will-change: transform, opacity;
@@ -228,7 +228,7 @@ body {
     opacity: 0;
     transform: translate3d(0,0,0) rotate(var(--rotation));
   }
-  10% { opacity: .85; }
+  3% { opacity: .85; }
   85% { opacity: .8; }
   100% {
     opacity: 0;
@@ -238,7 +238,7 @@ body {
   }
 }
 
-/* YOUTUBE PLAYER AND BACKUP PLAY BUTTON */
+/* MUSIC */
 #music-area {
   position: absolute;
   z-index: 7;
@@ -296,8 +296,6 @@ body {
     font-size: clamp(1.25rem, 6.2vw, 2.2rem);
   }
 
-  .falling-photo { max-height: 115px; }
-
   #music-player {
     width: 160px;
     height: 90px;
@@ -315,23 +313,13 @@ body {
 <!-- OPENING SCREEN -->
 <div id="opening">
   <div class="eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
-
-  <div class="opening-title">
-    Under the Shooting Stars
-  </div>
-
-  <div class="subtitle">
-    Some things are worth taking a moment for...
-  </div>
-
-  <button class="open-button" id="openButton">
-    Open Your Surprise ♡
-  </button>
+  <div class="opening-title">Under the Shooting Stars</div>
+  <div class="subtitle">Some things are worth taking a moment for...</div>
+  <button class="open-button" id="openButton">Open Your Surprise ♡</button>
 </div>
 
 <!-- MAIN SCREEN -->
 <main id="main">
-
   <div id="stars"></div>
   <div class="moon"></div>
   <div id="photos"></div>
@@ -355,7 +343,6 @@ body {
       If your iPhone blocks playback, tap Play here.
     </div>
   </div>
-
 </main>
 
 <script>
@@ -421,6 +408,7 @@ const photoFiles = [
   "IMG_0911_Original.jpeg",
   "IMG_5759_Original.jpeg",
   "IMG_3926_Original.jpeg",
+  "9F274428-57F9-4635-8F59-2F71D23A9E15_Original.jpeg",
 
   "wedding-photo-1.jpg",
   "wedding-photo-2.jpg",
@@ -469,12 +457,9 @@ const photoFiles = [
   "IMG_0842_Original.jpeg"
 ];
 
-/* ELEMENTS */
-
 const opening = document.getElementById("opening");
 const main = document.getElementById("main");
 const photos = document.getElementById("photos");
-const musicPlayer = document.getElementById("music-player");
 
 let photoDeck = [];
 let lastPhoto = null;
@@ -483,10 +468,10 @@ let player = null;
 let playerReady = false;
 let musicRequested = false;
 
-/* TWINKLING STARS */
+/* STARS */
 
 function makeStars() {
-  const starContainer = document.getElementById("stars");
+  const container = document.getElementById("stars");
 
   for (let i = 0; i < 85; i++) {
     const star = document.createElement("span");
@@ -495,11 +480,11 @@ function makeStars() {
     star.style.top = Math.random() * 100 + "%";
     star.style.animationDelay = Math.random() * 4 + "s";
     star.style.animationDuration = (2 + Math.random() * 4) + "s";
-    starContainer.appendChild(star);
+    container.appendChild(star);
   }
 }
 
-/* RANDOM SHUFFLE */
+/* SHUFFLE */
 
 function shuffle(array) {
   const result = [...array];
@@ -511,8 +496,6 @@ function shuffle(array) {
 
   return result;
 }
-
-/* NO REPEATS UNTIL ALL PHOTOS HAVE BEEN ATTEMPTED */
 
 function getNextPhoto() {
   if (photoDeck.length === 0) {
@@ -528,15 +511,16 @@ function getNextPhoto() {
   return lastPhoto;
 }
 
-/* CREATE FALLING PHOTOS */
+/* FALLING PHOTOS */
 
 function createFallingPhoto() {
   const filename = getNextPhoto();
   const img = document.createElement("img");
 
-  const width = 52 + Math.random() * 43;
+  /* Rotation and falling speed remain randomized.
+     Card dimensions are fixed for every photo. */
   const rotation = -16 + Math.random() * 32;
-  const duration = 12 + Math.random() * 8;
+  const duration = 10 + Math.random() * 6;
   const drift = -65 + Math.random() * 130;
 
   img.className = "falling-photo";
@@ -545,7 +529,6 @@ function createFallingPhoto() {
   img.loading = "eager";
 
   img.style.left = (3 + Math.random() * 88) + "%";
-  img.style.setProperty("--photo-width", width + "px");
   img.style.setProperty("--rotation", rotation + "deg");
   img.style.setProperty("--fall-duration", duration + "s");
   img.style.setProperty("--drift", drift + "px");
@@ -566,19 +549,22 @@ function createFallingPhoto() {
   });
 }
 
-/* START PHOTO ANIMATION */
+/* QUICKER INITIAL PHOTO ENTRANCE */
 
 function startPhotos() {
   if (photoTimer) return;
 
-  for (let i = 0; i < 4; i++) {
-    setTimeout(createFallingPhoto, i * 850);
-  }
+  createFallingPhoto();
 
-  photoTimer = setInterval(createFallingPhoto, 2300);
+  setTimeout(createFallingPhoto, 400);
+  setTimeout(createFallingPhoto, 800);
+  setTimeout(createFallingPhoto, 1200);
+  setTimeout(createFallingPhoto, 1600);
+
+  photoTimer = setInterval(createFallingPhoto, 1900);
 }
 
-/* YOUTUBE IFRAME API */
+/* YOUTUBE PLAYER */
 
 function loadYouTubeAPI() {
   if (window.YT && window.YT.Player) {
@@ -588,10 +574,12 @@ function loadYouTubeAPI() {
 
   window.onYouTubeIframeAPIReady = createYouTubePlayer;
 
-  const tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-  tag.async = true;
-  document.head.appendChild(tag);
+  if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    tag.async = true;
+    document.head.appendChild(tag);
+  }
 }
 
 function createYouTubePlayer() {
@@ -638,7 +626,7 @@ function playMusic() {
   }
 }
 
-/* OPEN THE SURPRISE */
+/* OPEN SURPRISE */
 
 document.getElementById("openButton").addEventListener("click", () => {
   musicRequested = true;
@@ -657,7 +645,7 @@ document.getElementById("openButton").addEventListener("click", () => {
   }
 });
 
-/* BACKUP MUSIC BUTTON */
+/* BACKUP PLAY BUTTON */
 
 document.getElementById("play-song").addEventListener("click", () => {
   musicRequested = true;
@@ -675,6 +663,5 @@ makeStars();
 loadYouTubeAPI();
 
 </script>
-
 </body>
 </html>
