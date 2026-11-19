@@ -247,38 +247,20 @@ body {
   filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
 }
 
-/* VISIBLE MUSIC PLAYER */
+/* MUSIC CONTROL */
 
 .music-control {
   position: absolute;
   z-index: 20;
   left: 50%;
-  bottom: 18px;
+  bottom: 25px;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 0 12px;
-}
-
-.music-player-frame {
-  width: 280px;
-  max-width: 90vw;
-  height: 158px;
-  overflow: hidden;
-  border-radius: 12px;
-  background: rgba(15,10,25,.75);
-  border: 1px solid rgba(255,255,255,.3);
-  box-shadow: 0 4px 20px rgba(0,0,0,.3);
-}
-
-.music-player-frame iframe {
-  display: block;
-  width: 100%;
-  height: 100%;
-  border: 0;
+  padding: 0 15px;
 }
 
 .music-button {
@@ -311,28 +293,38 @@ body {
   text-align: center;
 }
 
+/* HIDDEN YOUTUBE PLAYER */
+
+#youtube-player {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  opacity: .01;
+  pointer-events: none;
+  left: -10px;
+  bottom: -10px;
+  overflow: hidden;
+}
+
+#youtube-player iframe {
+  width: 1px;
+  height: 1px;
+  border: 0;
+}
+
 /* SMALL SCREENS */
 
 @media (max-width: 380px) {
   .opening-subtitle { font-size: 17px; }
-
   .opening-eyebrow {
     font-size: 11px;
     letter-spacing: 4px;
   }
-
   .falling-photo {
     width: 78px;
     height: 98px;
   }
-
-  .music-control {
-    bottom: 12px;
-  }
-
-  .music-player-frame {
-    height: 145px;
-  }
+  .music-control { bottom: 20px; }
 }
 </style>
 </head>
@@ -373,8 +365,6 @@ body {
 
   <div id="photos"></div>
 
-  <!-- CENTER MESSAGE -->
-
   <div class="center-message">
     <span class="message-text">I'll Always Choose You</span>
 
@@ -383,18 +373,13 @@ body {
       2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
       C13.09 3.81 14.76 3 16.5 3
       19.58 3 22 5.42 22 8.5
-      c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      c3.78 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
     </svg>
   </div>
 
-  <!-- VISIBLE YOUTUBE PLAYER -->
+  <!-- VISIBLE PLAY BUTTON -->
 
   <div class="music-control">
-
-    <div class="music-player-frame" id="music-player-frame">
-      <!-- YouTube player will be inserted here after opening -->
-    </div>
-
     <button class="music-button" id="music-button">
       Play Song ♫
     </button>
@@ -404,6 +389,10 @@ body {
     </div>
   </div>
 </div>
+
+<!-- YOUTUBE PLAYER -->
+
+<div id="youtube-player"></div>
 
 <script>
 
@@ -641,31 +630,103 @@ function startPhotos() {
   }, 8000);
 }
 
-/* VISIBLE YOUTUBE PLAYER */
+/* YOUTUBE MUSIC PLAYER - RESTORED API VERSION */
+
+let player = null;
+let playerReady = false;
+let playbackRequested = false;
+let playerCreationStarted = false;
 
 const videoId = "yLZoVTayvxY";
-const musicFrameContainer = document.getElementById("music-player-frame");
 
-function loadMusicPlayer(autoplay = true) {
-  musicFrameContainer.innerHTML = "";
+function loadYouTubeAPI() {
+  if (window.YT && window.YT.Player) {
+    createPlayer();
+    return;
+  }
 
-  const iframe = document.createElement("iframe");
+  if (document.getElementById("youtube-api")) return;
 
-  iframe.title = "OHYUL of LNGSHOT - Us, Now";
-  iframe.allow = "autoplay; encrypted-media; picture-in-picture";
-  iframe.setAttribute("allowfullscreen", "");
+  const tag = document.createElement("script");
+  tag.id = "youtube-api";
+  tag.src = "https://www.youtube.com/iframe_api";
 
-  iframe.src =
-    "https://www.youtube.com/embed/" + videoId +
-    "?autoplay=" + (autoplay ? "1" : "0") +
-    "&controls=1" +
-    "&playsinline=1" +
-    "&rel=0" +
-    "&loop=1" +
-    "&playlist=" + videoId;
-
-  musicFrameContainer.appendChild(iframe);
+  document.body.appendChild(tag);
 }
+
+window.onYouTubeIframeAPIReady = function() {
+  createPlayer();
+};
+
+function createPlayer() {
+  if (playerCreationStarted || !window.YT || !window.YT.Player) return;
+
+  playerCreationStarted = true;
+
+  player = new YT.Player("youtube-player", {
+    height: "1",
+    width: "1",
+    videoId: videoId,
+
+    playerVars: {
+      autoplay: 0,
+      controls: 0,
+      playsinline: 1,
+      rel: 0,
+      loop: 1,
+      playlist: videoId,
+      enablejsapi: 1
+    },
+
+    events: {
+      onReady: function(event) {
+        playerReady = true;
+
+        event.target.setVolume(100);
+        event.target.unMute();
+
+        // If the user already tapped, attempt playback now.
+        if (playbackRequested) {
+          startPlayback();
+        }
+      },
+
+      onStateChange: function(event) {
+        if (event.data === YT.PlayerState.ENDED) {
+          player.playVideo();
+        }
+      }
+    }
+  });
+}
+
+function startPlayback() {
+  if (!playerReady || !player) return;
+
+  try {
+    player.setVolume(100);
+    player.unMute();
+    player.playVideo();
+  } catch (error) {
+    console.log("Playback unavailable:", error);
+  }
+}
+
+function playMusic() {
+  playbackRequested = true;
+
+  // If the player is already ready, play immediately from this tap.
+  if (playerReady && player) {
+    startPlayback();
+    return;
+  }
+
+  // Player is still loading; retain the request.
+  loadYouTubeAPI();
+}
+
+// Load and initialize the player before the opening-screen tap.
+loadYouTubeAPI();
 
 /* OPEN SURPRISE */
 
@@ -674,9 +735,8 @@ const main = document.getElementById("main");
 const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
-
-  // Create visible YouTube player immediately after the tap
-  loadMusicPlayer(true);
+  // Trigger playback directly from the user's interaction.
+  playMusic();
 
   opening.style.opacity = "0";
 
@@ -692,10 +752,10 @@ openButton.addEventListener("click", function() {
   }, 1000);
 });
 
-/* MANUAL PLAY BUTTON */
+/* MANUAL MUSIC BUTTON */
 
 document.getElementById("music-button").addEventListener("click", function() {
-  loadMusicPlayer(true);
+  playMusic();
 });
 
 </script>
