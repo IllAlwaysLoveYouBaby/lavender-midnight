@@ -6,113 +6,40 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lavender Midnight</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Allura&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 html, body {
   margin: 0;
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background: #21182f;
 }
 
 body {
-  font-family: 'Nunito', sans-serif;
+  font-family: 'Cormorant Garamond', serif;
   color: white;
-  background: linear-gradient(180deg, #92758f, #705b78 48%, #483d59);
 }
 
-/* OPENING SCREEN */
-#opening {
-  position: fixed;
-  inset: 0;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 24px;
-  background:
-    radial-gradient(ellipse at 50% 25%, #b493b1 0%, transparent 58%),
-    linear-gradient(180deg, #967b96 0%, #705c7a 55%, #51445f 100%);
-  transition: opacity 1.2s ease, visibility 1.2s ease;
-}
-
-#opening.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-.eyebrow {
-  font-size: 10px;
-  letter-spacing: 4px;
-  font-weight: 600;
-  margin-bottom: 24px;
-  opacity: .9;
-}
-
-.opening-title {
-  font-family: 'Allura', cursive;
-  font-size: clamp(3.2rem, 12vw, 5.5rem);
-  font-weight: 400;
-  line-height: 1.05;
-  text-shadow: 0 0 20px rgba(255,255,255,.35);
-}
-
-.subtitle {
-  font-size: 13px;
-  letter-spacing: 1px;
-  margin-top: 18px;
-  opacity: .9;
-}
-
-.open-button {
-  margin-top: 42px;
-  padding: 13px 28px;
-  border: 1px solid rgba(255,255,255,.75);
-  border-radius: 30px;
-  background: rgba(255,255,255,.12);
-  color: white;
-  font-family: 'Nunito', sans-serif;
-  font-size: 13px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
-
-.open-button:active {
-  transform: scale(.96);
-  background: rgba(255,255,255,.25);
-}
-
-/* MAIN EXPERIENCE */
-#main {
+.screen {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  opacity: 0;
-  transition: opacity 1.8s ease;
   background:
-    radial-gradient(ellipse at 50% 25%, #987c9b 0%, transparent 55%),
-    linear-gradient(180deg, #806983 0%, #62516f 55%, #433a54 100%);
+    radial-gradient(ellipse at 50% 25%, #81709e 0%, #55466e 35%, #322541 68%, #21182f 100%);
 }
-
-#main.visible { opacity: 1; }
 
 /* STARS */
-#stars {
+
+.stars {
   position: absolute;
   inset: 0;
-  overflow: hidden;
   pointer-events: none;
-  z-index: 0;
 }
 
 .star {
@@ -121,209 +48,316 @@ body {
   height: 2px;
   border-radius: 50%;
   background: white;
-  opacity: .5;
-  box-shadow: 0 0 7px 2px rgba(255,255,255,.35);
-  animation: twinkle 3s ease-in-out infinite alternate;
+  box-shadow: 0 0 6px rgba(255,255,255,.7);
+  animation: twinkle 3s ease-in-out infinite;
 }
 
 @keyframes twinkle {
-  from { opacity: .2; transform: scale(.7); }
-  to { opacity: .95; transform: scale(1.35); }
+  0%, 100% { opacity: .25; transform: scale(.8); }
+  50% { opacity: 1; transform: scale(1.4); }
 }
 
-/* CRESCENT MOON */
-.moon {
+/* SHOOTING STARS */
+
+.shooting-star {
   position: absolute;
-  top: 8%;
-  right: 12%;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #f5e9f4;
-  box-shadow: 0 0 24px rgba(255,240,255,.5);
-  opacity: .85;
-  z-index: 1;
+  width: 130px;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);
+  transform: rotate(-35deg);
+  opacity: 0;
+  animation: shooting 7s linear infinite;
 }
 
-.moon::after {
+.shooting-star::after {
   content: "";
   position: absolute;
-  top: -7px;
-  left: 14px;
-  width: 47px;
-  height: 47px;
+  right: 0;
+  top: -2px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: #89708d;
+  background: white;
+  box-shadow: 0 0 10px 3px rgba(255,255,255,.6);
 }
 
-/* CENTER MESSAGE */
-#message {
-  position: absolute;
-  z-index: 5;
-  top: 48%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 96%;
+@keyframes shooting {
+  0% {
+    transform: translate(0,0) rotate(-35deg);
+    opacity: 0;
+  }
+  5% { opacity: 1; }
+  15% { opacity: 0; }
+  100% {
+    transform: translate(-550px,350px) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+/* OPENING SCREEN */
+
+#opening {
+  z-index: 10;
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: .12em;
-  white-space: nowrap;
+  justify-content: center;
+  text-align: center;
+  transition: opacity 1.5s ease;
+}
+
+.opening-content {
+  position: relative;
+  z-index: 2;
+  padding: 25px;
+  width: 100%;
+  max-width: 500px;
+}
+
+.opening-eyebrow {
+  font-size: 13px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.75);
+  margin-bottom: 30px;
+}
+
+.moon {
+  font-size: 50px;
+  margin-bottom: 15px;
+  filter: drop-shadow(0 0 15px rgba(255,255,255,.35));
+}
+
+.opening-title {
   font-family: 'Allura', cursive;
-  font-size: clamp(1.35rem, 6.5vw, 4.2rem);
+  font-size: clamp(48px, 13vw, 76px);
+  line-height: 1.1;
   font-weight: 400;
   color: #fff;
-  text-shadow:
-    0 0 8px rgba(255,255,255,.75),
-    0 0 22px rgba(255,255,255,.4);
-  pointer-events: none;
+  text-shadow: 0 0 15px rgba(255,255,255,.15);
 }
 
-#message-text { white-space: nowrap; }
-
-/* SOLID WHITE SVG HEART */
-.white-heart {
-  display: inline-block;
-  flex: 0 0 auto;
-  width: .53em;
-  height: .53em;
-  fill: #ffffff;
-  overflow: visible;
-  filter: drop-shadow(0 0 5px rgba(255,255,255,.65));
+.opening-subtitle {
+  margin-top: 18px;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  color: rgba(255,255,255,.85);
 }
 
-/* UNIFORM FALLING PHOTO CARDS */
+.open-button {
+  margin-top: 40px;
+  padding: 15px 28px;
+  border: 1px solid rgba(255,255,255,.65);
+  border-radius: 40px;
+  background: rgba(255,255,255,.08);
+  color: white;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 18px;
+  letter-spacing: 1px;
+  cursor: pointer;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  transition: background .3s ease, transform .3s ease;
+}
+
+.open-button:active {
+  transform: scale(.96);
+  background: rgba(255,255,255,.18);
+}
+
+/* MAIN SCREEN */
+
+#main {
+  display: none;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
 #photos {
   position: absolute;
   inset: 0;
-  z-index: 2;
   overflow: hidden;
   pointer-events: none;
 }
 
 .falling-photo {
   position: absolute;
-  top: -45px;
+  top: -130px;
   width: 85px;
   height: 105px;
   object-fit: cover;
   object-position: center;
   padding: 4px;
-  border: 1px solid rgba(255,255,255,.65);
+  border: 1px solid rgba(255,255,255,.75);
   border-radius: 3px;
-  background: #ffffff;
+  background: white;
   box-shadow: 0 4px 18px rgba(20,10,30,.25);
   opacity: 0;
   animation: fall var(--fall-duration) linear forwards;
-  will-change: transform, opacity;
+  will-change: transform;
 }
 
 @keyframes fall {
   0% {
     opacity: 0;
-    transform: translate3d(0,0,0) rotate(var(--rotation));
+    transform: translate3d(0,-10px,0) rotate(var(--rotation));
   }
 
-  3% { opacity: .85; }
+  3% {
+    opacity: 1;
+  }
 
-  85% { opacity: .8; }
+  85% {
+    opacity: 1;
+  }
 
   100% {
     opacity: 0;
-    transform:
-      translate3d(var(--drift),115vh,0)
-      rotate(calc(var(--rotation) + 35deg));
+    transform: translate3d(var(--drift),110vh,0) rotate(calc(var(--rotation) + 25deg));
   }
 }
 
-/* MUSIC */
-#music-area {
+/* CENTER MESSAGE */
+
+.center-message {
   position: absolute;
-  z-index: 7;
-  bottom: 12px;
+  z-index: 5;
   left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  padding: 0 8px;
+  text-align: center;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  pointer-events: none;
+}
+
+.message-text {
+  font-family: 'Allura', cursive;
+  font-size: clamp(34px, 8.8vw, 55px);
+  font-weight: 400;
+  color: white;
+  text-shadow: 0 0 12px rgba(255,255,255,.25);
+}
+
+.white-heart {
+  width: clamp(22px, 5.5vw, 33px);
+  height: auto;
+  flex-shrink: 0;
+  fill: white;
+  filter: drop-shadow(0 0 5px rgba(255,255,255,.2));
+}
+
+/* MUSIC */
+
+.music-control {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: 25px;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 7px;
-  width: 220px;
-}
-
-#music-player {
-  width: 190px;
-  height: 107px;
-  border-radius: 8px;
-  overflow: hidden;
-  opacity: .82;
-  box-shadow: 0 3px 18px rgba(20,10,30,.25);
-  background: rgba(255,255,255,.08);
-}
-
-#music-player iframe {
-  display: block;
+  gap: 8px;
   width: 100%;
-  height: 100%;
-  border: 0;
+  padding: 0 15px;
 }
 
-#play-song {
-  padding: 7px 17px;
-  border: 1px solid rgba(255,255,255,.65);
-  border-radius: 20px;
-  background: rgba(255,255,255,.12);
+.music-button {
+  border: 1px solid rgba(255,255,255,.6);
+  border-radius: 30px;
+  background: rgba(255,255,255,.1);
   color: white;
-  font-family: 'Nunito', sans-serif;
-  font-size: 11px;
+  padding: 10px 22px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
   letter-spacing: 1px;
   cursor: pointer;
 }
 
-#music-note {
-  max-width: 215px;
+.music-note {
+  font-size: 12px;
+  letter-spacing: .4px;
+  color: rgba(255,255,255,.75);
   text-align: center;
-  font-size: 9px;
-  line-height: 1.4;
-  letter-spacing: .3px;
-  color: rgba(255,255,255,.85);
+}
+
+#youtube-player {
+  position: fixed;
+  width: 1px;
+  height: 1px;
+  opacity: .01;
+  pointer-events: none;
+  left: -10px;
+  bottom: -10px;
 }
 
 /* SMALL SCREENS */
+
 @media (max-width: 380px) {
-  #message {
-    font-size: clamp(1.25rem, 6.2vw, 2.2rem);
+  .opening-subtitle {
+    font-size: 17px;
   }
 
-  #music-player {
-    width: 160px;
-    height: 90px;
+  .opening-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+  }
+
+  .falling-photo {
+    width: 78px;
+    height: 98px;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .star { animation: none; }
-}
 </style>
 </head>
 
 <body>
 
-<!-- OPENING SCREEN -->
-<div id="opening">
-  <div class="eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
-  <div class="opening-title">Under the Shooting Stars</div>
-  <div class="subtitle">Some things are worth taking a moment for...</div>
-  <button class="open-button" id="openButton">Open Your Surprise ♡</button>
+<div class="screen" id="opening">
+
+  <div class="stars" id="opening-stars"></div>
+
+  <div class="shooting-star" style="top:18%;left:85%;animation-delay:1s"></div>
+  <div class="shooting-star" style="top:42%;left:100%;animation-delay:4s"></div>
+  <div class="shooting-star" style="top:70%;left:75%;animation-delay:6s"></div>
+
+  <div class="opening-content">
+    <div class="opening-eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
+    <div class="moon">☾</div>
+
+    <div class="opening-title">Under the Shooting Stars</div>
+
+    <div class="opening-subtitle">
+      Some things are worth taking a moment for...
+    </div>
+
+    <button class="open-button" id="open-button">
+      Open Your Surprise ♡
+    </button>
+  </div>
+
 </div>
 
-<!-- MAIN SCREEN -->
-<main id="main">
-  <div id="stars"></div>
-  <div class="moon"></div>
+<div class="screen" id="main">
+
+  <div class="stars" id="main-stars"></div>
+
+  <div class="shooting-star" style="top:12%;left:95%;animation-delay:2s"></div>
+  <div class="shooting-star" style="top:35%;left:100%;animation-delay:5s"></div>
+  <div class="shooting-star" style="top:60%;left:85%;animation-delay:8s"></div>
+
   <div id="photos"></div>
 
-  <div id="message">
-    <span id="message-text">I'll Always Choose You</span>
+  <div class="center-message">
+    <span class="message-text">I'll Always Choose You</span>
+
     <svg class="white-heart" viewBox="0 0 24 24" aria-label="White heart" role="img">
       <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
       2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
@@ -333,19 +367,25 @@ body {
     </svg>
   </div>
 
-  <div id="music-area">
-    <div id="music-player"></div>
-    <button id="play-song" type="button">Play Song ♫</button>
-    <div id="music-note">
-      The song is set to start when you open the surprise.
-      If your iPhone blocks playback, tap Play here.
+  <div class="music-control">
+    <button class="music-button" id="music-button">
+      Play Song ♫
+    </button>
+
+    <div class="music-note">
+      If music doesn't start automatically, tap Play Song ♫
     </div>
   </div>
-</main>
+
+</div>
+
+<div id="youtube-player"></div>
 
 <script>
 
-/* PHOTO COLLECTION */
+/* ---------------------------------
+   PHOTO FILES
+---------------------------------- */
 
 const photoFiles = [
   "Picture_36_Original_Original.jpeg",
@@ -408,7 +448,6 @@ const photoFiles = [
   "IMG_5759_Original.jpeg",
   "IMG_3926_Original.jpeg",
   "9F274428-57F9-4635-8F59-2F71D23A9E15_Original.jpeg",
-
   "wedding-photo-1.jpg",
   "wedding-photo-2.jpg",
   "wedding-photo-3.png",
@@ -426,7 +465,6 @@ const photoFiles = [
   "wedding-photo-15.png",
   "wedding-photo-16.png",
   "wedding-photo-17.png",
-
   "IMG_0340_Original.jpeg",
   "IMG_0300_Original.jpeg",
   "IMG_0337_Original.jpeg",
@@ -456,37 +494,38 @@ const photoFiles = [
   "IMG_0842_Original.jpeg"
 ];
 
-const opening = document.getElementById("opening");
-const main = document.getElementById("main");
-const photos = document.getElementById("photos");
+/* ---------------------------------
+   STARS
+---------------------------------- */
 
-let photoDeck = [];
-let lastDisplayedPhoto = null;
-let failedPhotos = new Set();
-let photoTimer = null;
-let photoStarted = false;
+function createStars(containerId, count) {
+  const container = document.getElementById(containerId);
 
-let player = null;
-let playerReady = false;
-let musicRequested = false;
-
-/* STARS */
-
-function makeStars() {
-  const container = document.getElementById("stars");
-
-  for (let i = 0; i < 85; i++) {
-    const star = document.createElement("span");
+  for (let i = 0; i < count; i++) {
+    const star = document.createElement("div");
     star.className = "star";
     star.style.left = Math.random() * 100 + "%";
     star.style.top = Math.random() * 100 + "%";
-    star.style.animationDelay = Math.random() * 4 + "s";
+    star.style.animationDelay = Math.random() * 5 + "s";
     star.style.animationDuration = (2 + Math.random() * 4) + "s";
     container.appendChild(star);
   }
 }
 
-/* SHUFFLE PHOTO COLLECTION */
+createStars("opening-stars", 100);
+createStars("main-stars", 110);
+
+/* ---------------------------------
+   PHOTO SHUFFLE / NO REPEATS
+---------------------------------- */
+
+const photos = document.getElementById("photos");
+
+let photoDeck = [];
+let lastDisplayedPhoto = null;
+let failedPhotos = new Set();
+let photoStarted = false;
+let photoTimer = null;
 
 function shuffle(array) {
   const result = [...array];
@@ -499,8 +538,6 @@ function shuffle(array) {
   return result;
 }
 
-/* CREATE A NEW CYCLE ONLY AFTER THE CURRENT ONE IS EMPTY */
-
 function startNewPhotoCycle() {
   const availablePhotos = photoFiles.filter(
     filename => !failedPhotos.has(filename)
@@ -508,8 +545,6 @@ function startNewPhotoCycle() {
 
   photoDeck = shuffle(availablePhotos);
 
-  /* Prevent the next cycle from starting with
-     the same photo that ended the previous cycle. */
   if (
     photoDeck.length > 1 &&
     photoDeck[0] === lastDisplayedPhoto
@@ -531,22 +566,15 @@ function getNextPhoto() {
   return photoDeck.shift();
 }
 
-/* FALLING PHOTOS */
-
 function createFallingPhoto() {
   const filename = getNextPhoto();
 
-  if (!filename) {
-    console.warn("No available photos to display.");
-    return;
-  }
+  if (!filename) return;
 
   const img = document.createElement("img");
 
-  /* Random rotation and drift; fixed card size;
-     slower falling animation. */
   const rotation = -16 + Math.random() * 32;
-  const duration = 12 + Math.random() * 6;
+  const duration = 18 + Math.random() * 6;
   const drift = -65 + Math.random() * 130;
 
   img.className = "falling-photo";
@@ -577,126 +605,137 @@ function createFallingPhoto() {
   img.src = "./" + encodeURIComponent(filename);
 }
 
-/* PHOTO STARTUP */
+/* ---------------------------------
+   SLOWER PHOTO START
+---------------------------------- */
 
 function startPhotos() {
   if (photoStarted) return;
 
   photoStarted = true;
 
-  /* Initial entrance: five photos close together. */
+  // Opening: only 3 photos
   createFallingPhoto();
 
-  setTimeout(createFallingPhoto, 400);
-  setTimeout(createFallingPhoto, 800);
-  setTimeout(createFallingPhoto, 1200);
-  setTimeout(createFallingPhoto, 1600);
+  setTimeout(createFallingPhoto, 1500);
+  setTimeout(createFallingPhoto, 3000);
 
-  /* After the initial entrance, wait three seconds
-     before starting the slower repeating sequence. */
+  // Wait until 8 seconds total before regular drops begin
   setTimeout(() => {
-    photoTimer = setInterval(createFallingPhoto, 3000);
-  }, 1600);
+    createFallingPhoto();
+
+    // Thereafter, one photo every 5 seconds
+    photoTimer = setInterval(createFallingPhoto, 5000);
+  }, 8000);
 }
 
-/* YOUTUBE PLAYER */
+/* ---------------------------------
+   YOUTUBE MUSIC
+---------------------------------- */
+
+let player;
+let playerReady = false;
+
+const videoId = "yLZoVTayvxY";
 
 function loadYouTubeAPI() {
   if (window.YT && window.YT.Player) {
-    createYouTubePlayer();
+    createPlayer();
     return;
   }
 
-  window.onYouTubeIframeAPIReady = createYouTubePlayer;
+  if (document.getElementById("youtube-api")) return;
 
-  if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
-    const tag = document.createElement("script");
-    tag.src = "https://www.youtube.com/iframe_api";
-    tag.async = true;
-    document.head.appendChild(tag);
-  }
+  const tag = document.createElement("script");
+  tag.id = "youtube-api";
+  tag.src = "https://www.youtube.com/iframe_api";
+
+  document.body.appendChild(tag);
 }
 
-function createYouTubePlayer() {
-  if (player) return;
+window.onYouTubeIframeAPIReady = function() {
+  createPlayer();
+};
 
-  player = new YT.Player("music-player", {
-    width: "190",
-    height: "107",
-    videoId: "yLZoVTayvxY",
+function createPlayer() {
+  if (player || !window.YT || !window.YT.Player) return;
+
+  player = new YT.Player("youtube-player", {
+    height: "1",
+    width: "1",
+    videoId: videoId,
     playerVars: {
       autoplay: 0,
-      controls: 1,
+      controls: 0,
       playsinline: 1,
-      modestbranding: 1,
-      rel: 0,
-      loop: 1,
-      playlist: "yLZoVTayvxY"
+      rel: 0
     },
     events: {
-      onReady: function(event) {
+      onReady: function() {
         playerReady = true;
-        event.target.setVolume(100);
-
-        if (musicRequested) {
-          playMusic();
-        }
-      },
-      onError: function(event) {
-        console.warn("YouTube player error:", event.data);
       }
     }
   });
 }
 
 function playMusic() {
-  if (!playerReady || !player) return;
+  if (!playerReady || !player) {
+    loadYouTubeAPI();
+    return;
+  }
 
   try {
     player.unMute();
     player.setVolume(100);
     player.playVideo();
   } catch (error) {
-    console.warn("Playback could not start:", error);
+    console.log("Playback could not start automatically.");
   }
 }
 
-/* OPEN SURPRISE */
+loadYouTubeAPI();
 
-document.getElementById("openButton").addEventListener("click", () => {
-  musicRequested = true;
+/* ---------------------------------
+   OPEN SURPRISE
+---------------------------------- */
 
-  if (playerReady) {
+const opening = document.getElementById("opening");
+const main = document.getElementById("main");
+const openButton = document.getElementById("open-button");
+
+openButton.addEventListener("click", function() {
+  opening.style.opacity = "0";
+
+  setTimeout(() => {
+    opening.style.display = "none";
+    main.style.display = "block";
+
+    requestAnimationFrame(() => {
+      main.style.opacity = "1";
+    });
+
+    startPhotos();
     playMusic();
-  }
-
-  opening.classList.add("hidden");
-  main.classList.add("visible");
-
-  startPhotos();
-
-  if (!player) {
-    loadYouTubeAPI();
-  }
+  }, 1000);
 });
 
-/* BACKUP MUSIC BUTTON */
+/* ---------------------------------
+   MANUAL MUSIC BUTTON
+---------------------------------- */
 
-document.getElementById("play-song").addEventListener("click", () => {
-  musicRequested = true;
-
-  if (playerReady) {
+document.getElementById("music-button").addEventListener("click", function() {
+  if (playerReady && player) {
     playMusic();
   } else {
     loadYouTubeAPI();
+
+    setTimeout(() => {
+      playMusic();
+    }, 1500);
   }
 });
 
-/* INITIALIZE */
-
-makeStars();
-loadYouTubeAPI();
-
 </script>
+
 </body>
 </html>
