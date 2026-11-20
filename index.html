@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -248,6 +247,27 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
     animation-duration:1ms !important;
   }
 }
+
+/* Only appears if the initial music request does not start playback */
+.music-retry {
+  position:fixed;
+  z-index:50;
+  left:50%;
+  bottom:24px;
+  transform:translateX(-50%);
+  border:1px solid rgba(230,210,255,.65);
+  border-radius:30px;
+  padding:9px 18px;
+  background:rgba(32,19,48,.88);
+  color:#fff;
+  font-family:'Cormorant Garamond',serif;
+  font-size:15px;
+  letter-spacing:1px;
+  box-shadow:0 0 16px rgba(178,142,224,.25);
+  display:none;
+  white-space:nowrap;
+}
+.music-retry.visible { display:block; }
 </style>
 </head>
 <body>
@@ -293,12 +313,12 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   </div>
 </section>
 
-<!-- YouTube requires a player viewport of at least 200x200.
-     It remains offscreen rather than display:none so playback can initialize. -->
 <div id="youtube-player-container" aria-hidden="true"
      style="position:fixed;left:-220px;top:0;width:200px;height:200px;overflow:hidden;">
   <div id="youtube-player" style="width:200px;height:200px;"></div>
 </div>
+
+<button id="music-retry" class="music-retry" type="button">♫ Tap here to play music</button>
 
 <script>
 const photoFiles = [
@@ -511,7 +531,6 @@ const stripSizes = [[94,286],[100,302],[106,318],[112,334],[118,350]];
 let activePhotoCount = 0;
 const MAX_ACTIVE_PHOTOS = 13;
 
-/* Load and decode each image before allowing its strip to appear */
 function loadPhotoImage(filename) {
   return new Promise((resolve,reject) => {
     const image = new Image();
@@ -560,7 +579,6 @@ function loadPhotoImage(filename) {
   });
 }
 
-/* Create a complete strip, then animate it only after insertion */
 async function createFallingPhoto(attempt=0) {
   if (activePhotoCount >= MAX_ACTIVE_PHOTOS) return;
 
@@ -587,7 +605,6 @@ async function createFallingPhoto(attempt=0) {
     return;
   }
 
-  /* Recheck the limit after asynchronous image loading */
   if (activePhotoCount >= MAX_ACTIVE_PHOTOS) return;
 
   const frame = document.createElement("div");
@@ -629,7 +646,6 @@ async function createFallingPhoto(attempt=0) {
   frame.appendChild(stripImages);
   frame.appendChild(decoration);
 
-  /* Keep the strip hidden until its animation is ready */
   frame.style.visibility = "hidden";
   frame.style.animation = "none";
 
@@ -637,20 +653,19 @@ async function createFallingPhoto(attempt=0) {
   activePhotoCount++;
 
   let removed = false;
+  let cleanupTimer;
 
   function removeFrame() {
     if (removed) return;
     removed = true;
+    clearTimeout(cleanupTimer);
     frame.remove();
     activePhotoCount = Math.max(0,activePhotoCount-1);
   }
 
   frame.addEventListener("animationend",removeFrame,{once:true});
+  cleanupTimer = setTimeout(removeFrame,(duration+3)*1000);
 
-  /* Fallback cleanup in case a browser misses animationend */
-  const cleanupTimer = setTimeout(removeFrame,(duration+3)*1000);
-
-  /* Force layout, then start the animation on the next frame */
   frame.getBoundingClientRect();
 
   requestAnimationFrame(() => {
@@ -683,23 +698,65 @@ const videoId = "QIhhWlfvPy0";
 
 let youtubePlayer = null;
 let youtubeReady = false;
+let videoCued = false;
 let musicRequested = false;
+let musicRetryTimer = null;
 let youtubePlayerCreating = false;
 
-/* This function is called directly by the opening-button tap */
-function startMusicFromTap() {
-  musicRequested = true;
+const musicRetryButton = document.getElementById("music-retry");
 
-  if (!youtubeReady || !youtubePlayer) return;
+function showMusicRetry() {
+  musicRetryButton.classList.add("visible");
+}
+
+function hideMusicRetry() {
+  musicRetryButton.classList.remove("visible");
+}
+
+function attemptMusicPlayback() {
+  if (!youtubePlayer || !youtubeReady) {
+    showMusicRetry();
+    return;
+  }
 
   try {
     youtubePlayer.playVideo();
   } catch (error) {
-    console.warn("Music playback could not start:",error);
+    console.warn("Music playback request failed:",error);
+    showMusicRetry();
   }
 }
 
-/* YouTube calls this global function when its API has loaded */
+/* Called directly from the opening-button tap */
+function startMusicFromTap() {
+  musicRequested = true;
+  hideMusicRetry();
+
+  if (musicRetryTimer) {
+    clearTimeout(musicRetryTimer);
+  }
+
+  if (youtubeReady && videoCued) {
+    attemptMusicPlayback();
+  } else if (youtubeReady && youtubePlayer) {
+    /* The video may still be preparing; try playback immediately too. */
+    youtubePlayer.playVideo();
+  }
+
+  /* If playback has not begun, reveal a second direct user-gesture option. */
+  musicRetryTimer = setTimeout(() => {
+    if (!youtubePlayer || !youtubeReady) {
+      showMusicRetry();
+      return;
+    }
+
+    if (youtubePlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
+      showMusicRetry();
+    }
+  },2500);
+}
+
+/* YouTube calls this global function after the IFrame API loads */
 function onYouTubeIframeAPIReady() {
   if (youtubePlayerCreating || youtubePlayer) return;
   youtubePlayerCreating = true;
@@ -725,33 +782,57 @@ function onYouTubeIframeAPIReady() {
       onReady:function(event) {
         youtubeReady = true;
 
-        /* Cue the video in advance so the tap only needs to play it */
+        event.target.mute();
+        event.target.setVolume(100);
+        event.target.unMute();
+
         event.target.cueVideoById({
           videoId:videoId,
           startSeconds:0
         });
-
-        /* Fallback if the user tapped before the player was ready */
-        if (musicRequested) {
-          event.target.playVideo();
-        }
       },
 
       onStateChange:function(event) {
+        if (event.data === YT.PlayerState.CUED) {
+          videoCued = true;
+
+          if (musicRequested) {
+            attemptMusicPlayback();
+          }
+        }
+
+        if (event.data === YT.PlayerState.PLAYING) {
+          hideMusicRetry();
+
+          if (musicRetryTimer) {
+            clearTimeout(musicRetryTimer);
+            musicRetryTimer = null;
+          }
+        }
+
         if (event.data === YT.PlayerState.ENDED) {
           event.target.seekTo(0,true);
           event.target.playVideo();
+        }
+
+        if (event.data === YT.PlayerState.PAUSED && musicRequested) {
+          showMusicRetry();
         }
       },
 
       onError:function(event) {
         console.warn("YouTube player error:",event.data);
+        showMusicRetry();
+      },
+
+      onAutoplayBlocked:function() {
+        showMusicRetry();
       }
     }
   });
 }
 
-/* Load YouTube's player API as soon as the page opens */
+/* Load the YouTube IFrame API immediately */
 (function loadYouTubeAPI() {
   if (window.YT && window.YT.Player) {
     onYouTubeIframeAPIReady();
@@ -775,9 +856,32 @@ function onYouTubeIframeAPIReady() {
   }
 })();
 
+/* Retry button: a fresh, direct user gesture */
+musicRetryButton.addEventListener("click",function() {
+  musicRequested = true;
+  hideMusicRetry();
+
+  if (youtubePlayer && youtubeReady) {
+    try {
+      if (videoCued) {
+        youtubePlayer.playVideo();
+      } else {
+        youtubePlayer.loadVideoById({
+          videoId:videoId,
+          startSeconds:0
+        });
+      }
+    } catch (error) {
+      console.warn("Music retry failed:",error);
+      showMusicRetry();
+    }
+  } else {
+    showMusicRetry();
+  }
+});
+
 /* Opening button */
 document.getElementById("open-button").addEventListener("click",function() {
-  /* Request music immediately during the user's tap */
   startMusicFromTap();
 
   document.getElementById("opening").classList.add("hidden");
