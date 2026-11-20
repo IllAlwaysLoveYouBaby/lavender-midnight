@@ -161,8 +161,9 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   padding:8px 7px 17px; background:#fff; border-radius:2px;
   box-shadow:0 5px 18px rgba(0,0,0,.32),0 0 12px rgba(229,211,255,.18);
   transform:rotate(var(--rotation));
-  animation:photoFall var(--fall-duration) linear forwards;
-  will-change:transform; overflow:hidden;
+  will-change:transform;
+  overflow:hidden;
+  animation:none;
 }
 .photo-strip-images {
   width:100%; height:100%; display:grid;
@@ -435,6 +436,7 @@ const unavailablePhotos = new Set([
 function createStars(containerId, count) {
   const container = document.getElementById(containerId);
   if (!container) return;
+
   for (let i=0; i<count; i++) {
     const star = document.createElement("span");
     star.className = "star";
@@ -448,6 +450,7 @@ function createStars(containerId, count) {
     if (size > 3) star.classList.add("large");
     container.appendChild(star);
   }
+
   const sparkleCount = Math.floor(count/24);
   for (let i=0; i<sparkleCount; i++) {
     const sparkle = document.createElement("span");
@@ -458,25 +461,28 @@ function createStars(containerId, count) {
     container.appendChild(sparkle);
   }
 }
+
 createStars("opening-stars",125);
 createStars("main-stars",175);
 
-/* Subtle star patterns on the photobooth borders */
 const frameDecorations = [
   '<span class="frame-star bright top-a">✦</span><span class="frame-star small top-b">✧</span><span class="frame-star medium top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✧</span><span class="frame-star small bottom-b">✦</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>',
   '<span class="frame-star medium top-a">✧</span><span class="frame-star small top-b">✦</span><span class="frame-star bright top-c">✦</span><span class="frame-star small side-a">✦</span><span class="frame-star small side-b">✧</span><span class="frame-star small bottom-a">✦</span><span class="frame-star bright bottom-b">✦</span><span class="frame-star medium bottom-c">✧</span><span class="frame-star small bottom-d">✦</span>',
   '<span class="frame-star bright top-a">✦</span><span class="frame-star medium top-b">✧</span><span class="frame-star small top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✦</span><span class="frame-star small bottom-b">✧</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>'
 ];
 
+/* Randomized photo deck */
 let photoDeck = [];
 let photoDeckIndex = 0;
 
 function shuffleArray(array) {
   const result = [...array];
+
   for (let i=result.length-1; i>0; i--) {
     const j = Math.floor(Math.random()*(i+1));
     [result[i],result[j]] = [result[j],result[i]];
   }
+
   return result;
 }
 
@@ -492,82 +498,75 @@ function nextPhoto() {
 
 refillPhotoDeck();
 
-/* Preload the first four images while the opening screen is visible */
-let preloadedFirstStrip = null;
+const photosContainer = document.getElementById("photos");
+const stripSizes = [[94,286],[100,302],[106,318],[112,334],[118,350]];
 
-function preloadFirstStrip() {
-  if (preloadedFirstStrip) return;
+let activePhotoCount = 0;
+const MAX_ACTIVE_PHOTOS = 13;
 
-  const filenames = [nextPhoto(),nextPhoto(),nextPhoto(),nextPhoto()];
-  const images = filenames.map(() => new Image());
-  const preload = {filenames,images,loaded:0,ready:false};
+/* Load an image before allowing its strip to appear */
+function loadPhotoImage(filename) {
+  return new Promise((resolve,reject) => {
+    const image = new Image();
 
-  preloadedFirstStrip = preload;
-
-  images.forEach((image) => {
     image.onload = () => {
-      preload.loaded++;
-      if (preload.loaded === images.length) preload.ready = true;
+      if (image.naturalWidth > 0) {
+        resolve(image);
+      } else {
+        reject(new Error("Image could not be decoded: " + filename));
+      }
     };
 
     image.onerror = () => {
-      if (preloadedFirstStrip === preload) preloadedFirstStrip = null;
+      reject(new Error("Image failed to load: " + filename));
     };
-  });
 
-  images.forEach((image,index) => {
-    image.src = "./" + encodeURIComponent(filenames[index]);
+    image.src = "./" + encodeURIComponent(filename);
+
+    if (image.complete && image.naturalWidth > 0) {
+      resolve(image);
+    }
   });
 }
 
-preloadFirstStrip();
+/* Create a complete strip, then animate it only after insertion */
+async function createFallingPhoto(attempt=0) {
+  if (activePhotoCount >= MAX_ACTIVE_PHOTOS) return;
 
-const photosContainer = document.getElementById("photos");
-const stripSizes = [[94,286],[100,302],[106,318],[112,334],[118,350]];
-let activePhotoCount = 0;
-let waitingForFirstStrip = false;
+  const filenames = [
+    nextPhoto(),
+    nextPhoto(),
+    nextPhoto(),
+    nextPhoto()
+  ];
 
-function createFallingPhoto(attempt=0) {
-  if (activePhotoCount >= 13) return;
+  let images;
 
-  let filenames, images;
+  try {
+    images = await Promise.all(
+      filenames.map(filename => loadPhotoImage(filename))
+    );
+  } catch (error) {
+    console.warn(error);
 
-  if (preloadedFirstStrip && preloadedFirstStrip.ready) {
-    filenames = preloadedFirstStrip.filenames;
-    images = preloadedFirstStrip.images;
-    preloadedFirstStrip = null;
-  } else {
-    if (preloadedFirstStrip && !preloadedFirstStrip.ready) {
-      if (!waitingForFirstStrip) {
-        waitingForFirstStrip = true;
-
-        const waitForPreload = () => {
-          if (preloadedFirstStrip && !preloadedFirstStrip.ready) {
-            setTimeout(waitForPreload,150);
-            return;
-          }
-
-          waitingForFirstStrip = false;
-          createFallingPhoto(attempt);
-        };
-
-        setTimeout(waitForPreload,150);
-      }
-      return;
+    if (attempt < 2) {
+      createFallingPhoto(attempt + 1);
     }
 
-    filenames = [nextPhoto(),nextPhoto(),nextPhoto(),nextPhoto()];
-    images = filenames.map(() => document.createElement("img"));
+    return;
   }
 
-  if (filenames.some(name => !name)) return;
+  /* Recheck the limit after asynchronous image loading */
+  if (activePhotoCount >= MAX_ACTIVE_PHOTOS) return;
 
   const frame = document.createElement("div");
   const stripImages = document.createElement("div");
   const decoration = document.createElement("div");
 
   const size = stripSizes[Math.floor(Math.random()*stripSizes.length)];
-  const width = size[0], height = size[1];
+  const width = size[0];
+  const height = size[1];
+
   const left = Math.random()*Math.max(0,window.innerWidth-width);
   const rotation = -13 + Math.random()*26;
   const drift = -65 + Math.random()*130;
@@ -586,7 +585,7 @@ function createFallingPhoto(attempt=0) {
 
   stripImages.className = "photo-strip-images";
 
-  images.forEach((image) => {
+  images.forEach(image => {
     image.className = "falling-photo-image";
     image.alt = "";
     image.draggable = false;
@@ -599,79 +598,64 @@ function createFallingPhoto(attempt=0) {
   frame.appendChild(stripImages);
   frame.appendChild(decoration);
 
-  let loadedCount = 0;
-  let failed = false;
+  /* Add only the fully loaded strip */
+  photosContainer.appendChild(frame);
+  activePhotoCount++;
 
-  const showLoadedStrip = () => {
-    if (failed || frame.isConnected || loadedCount !== images.length) return;
+  /* Force the browser to register the initial position */
+  frame.getBoundingClientRect();
 
-    activePhotoCount++;
-    photosContainer.appendChild(frame);
+  /* Start the falling animation on the next rendering frame */
+  requestAnimationFrame(() => {
+    if (!frame.isConnected) return;
 
-    frame.addEventListener("animationend",() => {
-      frame.remove();
-      activePhotoCount = Math.max(0,activePhotoCount-1);
-    },{once:true});
-  };
-
-  images.forEach((image,index) => {
-    if (image.complete && image.naturalWidth > 0) {
-      loadedCount++;
-    } else {
-      image.onload = () => {
-        loadedCount++;
-        showLoadedStrip();
-      };
-
-      image.onerror = () => {
-        if (failed) return;
-        failed = true;
-        frame.remove();
-        if (attempt < 2) createFallingPhoto(attempt+1);
-      };
-
-      if (!image.src) {
-        image.src = "./"+encodeURIComponent(filenames[index]);
-      }
-    }
+    frame.style.animation =
+      "photoFall " + duration + "s linear forwards";
   });
 
-  showLoadedStrip();
+  frame.addEventListener("animationend",() => {
+    frame.remove();
+    activePhotoCount = Math.max(0,activePhotoCount-1);
+  },{once:true});
 }
 
-/* ORIGINAL PHOTO-STRIP DROP SEQUENCE — RESTORED */
+/* ORIGINAL PHOTO-STRIP DROP SEQUENCE */
 let photoTimersStarted = false;
 
 function startPhotos() {
   if (photoTimersStarted) return;
+
   photoTimersStarted = true;
 
   createFallingPhoto();
-  setTimeout(createFallingPhoto,750);
-  setTimeout(createFallingPhoto,1500);
-  setTimeout(createFallingPhoto,3000);
-  setInterval(createFallingPhoto,5000);
+
+  setTimeout(() => createFallingPhoto(),750);
+  setTimeout(() => createFallingPhoto(),1500);
+  setTimeout(() => createFallingPhoto(),3000);
+
+  setInterval(() => createFallingPhoto(),5000);
 }
 
-/* YouTube music player */
+/* YouTube music player — latest requested video */
 const videoId = "QIhhWlfvPy0";
 
 let youtubePlayer = null;
 let youtubeReady = false;
 let musicRequested = false;
-let musicStarted = false;
 
-function startMusic() {
-  if (!youtubeReady || !youtubePlayer || !musicRequested || musicStarted) return;
+function startMusicFromTap() {
+  if (!youtubeReady || !youtubePlayer || !musicRequested) return;
 
-  musicStarted = true;
+  try {
+    youtubePlayer.loadVideoById({
+      videoId:videoId,
+      startSeconds:0
+    });
 
-  youtubePlayer.loadVideoById({
-    videoId:videoId,
-    startSeconds:0
-  });
-
-  youtubePlayer.playVideo();
+    youtubePlayer.playVideo();
+  } catch (error) {
+    console.warn("Music playback could not start:",error);
+  }
 }
 
 function onYouTubeIframeAPIReady() {
@@ -695,19 +679,14 @@ function onYouTubeIframeAPIReady() {
         youtubeReady = true;
 
         if (musicRequested) {
-          startMusic();
+          startMusicFromTap();
         } else {
           event.target.cueVideoById(videoId);
         }
       },
 
       onStateChange:function(event) {
-        if (event.data === YT.PlayerState.PLAYING) {
-          musicStarted = true;
-        }
-
         if (event.data === YT.PlayerState.ENDED) {
-          musicStarted = false;
           event.target.seekTo(0);
           event.target.playVideo();
         }
@@ -715,13 +694,12 @@ function onYouTubeIframeAPIReady() {
 
       onError:function(event) {
         console.warn("YouTube player error:",event.data);
-        musicStarted = false;
       }
     }
   });
 }
 
-/* Load the YouTube API */
+/* Load YouTube's player API */
 (function loadYouTubeAPI() {
   if (window.YT && window.YT.Player) {
     onYouTubeIframeAPIReady();
@@ -735,12 +713,16 @@ function onYouTubeIframeAPIReady() {
   firstScript.parentNode.insertBefore(tag,firstScript);
 })();
 
-/* Opening button: request music directly from the user's tap */
+/* Opening button */
 document.getElementById("open-button").addEventListener("click",function() {
   musicRequested = true;
 
+  /*
+    If the player is already ready, request playback immediately
+    within the user's button interaction.
+  */
   if (youtubeReady && youtubePlayer) {
-    startMusic();
+    startMusicFromTap();
   }
 
   document.getElementById("opening").classList.add("hidden");
