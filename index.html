@@ -286,9 +286,7 @@ body {
   position:absolute;
   top:-260px;
   left:0;
-  width:var(--photo-width);
-  height:var(--photo-height);
-  padding:8px 8px 27px;
+  padding:0;
   background:#fff;
   border-radius:2px;
   box-shadow:0 5px 18px rgba(0,0,0,.32),0 0 12px rgba(229,211,255,.18);
@@ -299,17 +297,27 @@ body {
   visibility:hidden;
 }
 
-/* Keep the complete original photograph visible */
+/*
+  Dedicated photo window:
+  8px white border at top and sides,
+  27px white Polaroid border at bottom.
+  The image is contained inside this exact area.
+*/
 .falling-photo-image {
+  position:absolute;
   display:block;
-  width:100%;
-  height:100%;
+  top:8px;
+  left:8px;
+  width:calc(100% - 16px);
+  height:calc(100% - 35px);
   object-fit:contain;
   object-position:center center;
   background:#fff;
   border:0;
   padding:0;
   margin:0;
+  max-width:none;
+  max-height:none;
 }
 
 .photo-decoration-layer {
@@ -690,21 +698,6 @@ refillPhotoDeck();
 
 const photosContainer = document.getElementById("photos");
 
-/*
-  More noticeable randomized Polaroid sizes.
-  Each entry is [frame width, frame height].
-*/
-const polaroidSizes = [
-  [104,142],
-  [116,158],
-  [128,174],
-  [140,190],
-  [152,206],
-  [164,222],
-  [122,194],
-  [146,218]
-];
-
 let activePhotoCount = 0;
 const MAX_ACTIVE_PHOTOS = 13;
 
@@ -780,9 +773,14 @@ async function createFallingPhoto(attempt=0) {
   const frame = document.createElement("div");
   const decoration = document.createElement("div");
 
-  const size = polaroidSizes[Math.floor(Math.random()*polaroidSizes.length)];
-  const width = size[0];
-  const height = size[1];
+  /*
+    Generate a fresh random scale for every individual Polaroid.
+    The width and height stay proportional, preserving the frame shape.
+    This creates a much more noticeable size range.
+  */
+  const scale = 0.78 + Math.random()*0.44;
+  const width = Math.round(136*scale);
+  const height = Math.round(184*scale);
 
   const left = Math.random()*Math.max(0,window.innerWidth-width);
   const rotation = -13 + Math.random()*26;
@@ -792,9 +790,12 @@ async function createFallingPhoto(attempt=0) {
   const design = Math.floor(Math.random()*frameDecorations.length);
 
   frame.className = "falling-photo-frame";
+
+  /* Apply actual dimensions directly to the frame */
+  frame.style.width = width+"px";
+  frame.style.height = height+"px";
   frame.style.left = left+"px";
-  frame.style.setProperty("--photo-width",width+"px");
-  frame.style.setProperty("--photo-height",height+"px");
+
   frame.style.setProperty("--rotation",rotation+"deg");
   frame.style.setProperty("--drift",drift+"px");
   frame.style.setProperty("--spin",spin+"deg");
