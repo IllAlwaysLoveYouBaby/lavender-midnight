@@ -96,21 +96,13 @@ body {
 }
 
 @keyframes nebulaFloatA {
-  from {
-    transform: translate3d(-2%,1%,0) scale(.98);
-  }
-  to {
-    transform: translate3d(3%,-2%,0) scale(1.08);
-  }
+  from { transform: translate3d(-2%,1%,0) scale(.98); }
+  to { transform: translate3d(3%,-2%,0) scale(1.08); }
 }
 
 @keyframes nebulaFloatB {
-  from {
-    transform: translate3d(2%,-1%,0) rotate(-3deg);
-  }
-  to {
-    transform: translate3d(-3%,2%,0) rotate(4deg);
-  }
+  from { transform: translate3d(2%,-1%,0) rotate(-3deg); }
+  to { transform: translate3d(-3%,2%,0) rotate(4deg); }
 }
 
 .nebula-ribbon {
@@ -173,14 +165,8 @@ body {
 }
 
 @keyframes twinkle {
-  0%,100% {
-    opacity: .28;
-    transform: scale(.75);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.3);
-  }
+  0%,100% { opacity: .28; transform: scale(.75); }
+  50% { opacity: 1; transform: scale(1.3); }
 }
 
 .sparkle {
@@ -236,13 +222,11 @@ body {
   height: 1.5px;
   border-radius: 50%;
   opacity: 0;
-
   background:
     linear-gradient(90deg,
       transparent,
       rgba(218,195,255,.18) 25%,
       rgba(255,255,255,.95) 100%);
-
   filter: drop-shadow(0 0 5px rgba(224,203,255,.9));
   transform: rotate(-32deg);
   animation: shootingStar 7s linear infinite;
@@ -266,9 +250,7 @@ body {
     opacity: 0;
     transform: translate(0,0) rotate(-32deg);
   }
-  5% {
-    opacity: .95;
-  }
+  5% { opacity: .95; }
   14%,100% {
     opacity: 0;
     transform: translate(-260px,170px) rotate(-32deg);
@@ -296,14 +278,8 @@ body {
 }
 
 @keyframes openingAppear {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .opening-eyebrow {
@@ -332,12 +308,10 @@ body {
   font-weight: 400;
   line-height: 1.05;
   color: #fff;
-
   text-shadow:
     0 0 8px rgba(255,255,255,.7),
     0 0 22px rgba(208,177,255,.8),
     0 0 42px rgba(164,116,220,.6);
-
   margin: 0 0 16px;
 }
 
@@ -360,11 +334,9 @@ body {
   font-size: 16px;
   letter-spacing: 1.5px;
   cursor: pointer;
-
   box-shadow:
     0 0 16px rgba(178,142,224,.2),
     inset 0 0 14px rgba(220,199,255,.08);
-
   transition: .3s ease;
 }
 
@@ -397,20 +369,15 @@ body {
   position: absolute;
   top: -180px;
   left: 0;
-
   width: var(--photo-width);
   height: var(--photo-height);
-
   padding: 9px 8px 24px;
-
   background: #fff;
   border: 1px solid rgba(232,225,240,.95);
   border-radius: 1px;
-
   box-shadow:
     0 6px 20px rgba(0,0,0,.34),
     0 0 13px rgba(229,211,255,.2);
-
   transform: rotate(var(--rotation));
   animation: photoFall var(--fall-duration) linear forwards;
   will-change: transform;
@@ -429,11 +396,9 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-
   padding: 2px;
   background: #f7f5f9;
   border: 1px solid #e5deeb;
@@ -445,10 +410,8 @@ body {
   height: 100%;
   min-height: 0;
   min-width: 0;
-
   object-fit: contain;
   object-position: center center;
-
   background: #fff;
   border: 0;
   padding: 0;
@@ -471,101 +434,32 @@ body {
   display: block;
   color: #b49aca;
   line-height: 1;
-
   text-shadow: 0 0 3px rgba(176,145,207,.35);
   font-family: Georgia,serif;
   user-select: none;
 }
 
-.frame-star.small {
-  font-size: 6px;
-  opacity: .8;
-}
+.frame-star.small { font-size: 6px; opacity: .8; }
+.frame-star.medium { font-size: 9px; opacity: .9; }
+.frame-star.bright { font-size: 12px; opacity: .95; }
 
-.frame-star.medium {
-  font-size: 9px;
-  opacity: .9;
-}
+.frame-star.top-a { left: 12%; top: 1px; }
+.frame-star.top-b { left: 43%; top: 2px; }
+.frame-star.top-c { right: 12%; top: 1px; }
+.frame-star.side-a { left: 1px; top: 36%; font-size: 6px; }
+.frame-star.side-b { right: 1px; top: 54%; font-size: 6px; }
+.frame-star.bottom-a { left: 14%; bottom: 5px; }
+.frame-star.bottom-b { left: 38%; bottom: 4px; }
+.frame-star.bottom-c { right: 14%; bottom: 5px; }
+.frame-star.bottom-d { right: 42%; bottom: 3px; }
 
-.frame-star.bright {
-  font-size: 12px;
-  opacity: .95;
-}
-
-.frame-star.top-a {
-  left: 12%;
-  top: 1px;
-}
-
-.frame-star.top-b {
-  left: 43%;
-  top: 2px;
-}
-
-.frame-star.top-c {
-  right: 12%;
-  top: 1px;
-}
-
-.frame-star.side-a {
-  left: 1px;
-  top: 36%;
-  font-size: 6px;
-}
-
-.frame-star.side-b {
-  right: 1px;
-  top: 54%;
-  font-size: 6px;
-}
-
-.frame-star.bottom-a {
-  left: 14%;
-  bottom: 5px;
-}
-
-.frame-star.bottom-b {
-  left: 38%;
-  bottom: 4px;
-}
-
-.frame-star.bottom-c {
-  right: 14%;
-  bottom: 5px;
-}
-
-.frame-star.bottom-d {
-  right: 42%;
-  bottom: 3px;
-}
-
-.frame-star.design-shift-1 .top-a {
-  left: 20%;
-}
-
-.frame-star.design-shift-1 .top-c {
-  right: 22%;
-}
-
-.frame-star.design-shift-1 .bottom-a {
-  left: 28%;
-}
-
-.frame-star.design-shift-1 .bottom-c {
-  right: 28%;
-}
-
-.frame-star.design-shift-2 .top-b {
-  left: 65%;
-}
-
-.frame-star.design-shift-2 .bottom-b {
-  left: 18%;
-}
-
-.frame-star.design-shift-2 .bottom-d {
-  right: 20%;
-}
+.frame-star.design-shift-1 .top-a { left: 20%; }
+.frame-star.design-shift-1 .top-c { right: 22%; }
+.frame-star.design-shift-1 .bottom-a { left: 28%; }
+.frame-star.design-shift-1 .bottom-c { right: 28%; }
+.frame-star.design-shift-2 .top-b { left: 65%; }
+.frame-star.design-shift-2 .bottom-b { left: 18%; }
+.frame-star.design-shift-2 .bottom-d { right: 20%; }
 
 /* =========================
    CENTER MESSAGE + HEART
@@ -574,18 +468,14 @@ body {
 .center-message {
   position: absolute;
   z-index: 5;
-
   left: 50%;
   top: 50%;
   transform: translate(-50%,-50%);
-
   width: calc(100% - 20px);
   max-width: 520px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   text-align: center;
   pointer-events: none;
 }
@@ -594,11 +484,9 @@ body {
   display: inline-flex;
   flex-direction: row;
   flex-wrap: nowrap;
-
   align-items: center;
   justify-content: center;
   gap: 6px;
-
   max-width: 100%;
   white-space: nowrap;
 }
@@ -610,7 +498,6 @@ body {
   line-height: 1.12;
   white-space: nowrap;
   color: #fff;
-
   text-shadow:
     0 0 5px rgba(255,255,255,.95),
     0 0 14px rgba(224,207,255,.95),
@@ -623,15 +510,12 @@ body {
   height: 23px;
   margin: 0;
   flex: 0 0 auto;
-
   filter:
     drop-shadow(0 0 5px rgba(255,255,255,.95))
     drop-shadow(0 0 13px rgba(211,187,255,.9));
 }
 
-.message-heart path {
-  fill: #fff;
-}
+.message-heart path { fill: #fff; }
 
 /* =========================
    FALLING ANIMATION
@@ -641,7 +525,6 @@ body {
   0% {
     transform: translate3d(0,0,0) rotate(var(--rotation));
   }
-
   100% {
     transform: translate3d(var(--drift),calc(100vh + 240px),0)
                rotate(calc(var(--rotation) + var(--spin)));
@@ -663,17 +546,9 @@ body {
     margin: 0;
   }
 
-  .opening-subtitle {
-    font-size: 15px;
-  }
-
-  .nebula-clouds::before {
-    filter: blur(19px);
-  }
-
-  .nebula-clouds::after {
-    filter: blur(23px);
-  }
+  .opening-subtitle { font-size: 15px; }
+  .nebula-clouds::before { filter: blur(19px); }
+  .nebula-clouds::after { filter: blur(23px); }
 }
 
 @media (prefers-reduced-motion:reduce) {
@@ -690,9 +565,7 @@ body {
 
 <body>
 
-<!-- =========================
-     OPENING SCREEN
-========================= -->
+<!-- OPENING SCREEN -->
 
 <section id="opening" class="screen">
 
@@ -737,9 +610,7 @@ body {
 </section>
 
 
-<!-- =========================
-     MAIN EXPERIENCE
-========================= -->
+<!-- MAIN EXPERIENCE -->
 
 <section id="main-screen" class="screen hidden">
 
@@ -774,9 +645,7 @@ body {
 </section>
 
 
-<!-- =========================
-     HIDDEN MUSIC PLAYER
-========================= -->
+<!-- HIDDEN MUSIC PLAYER -->
 
 <div
   id="youtube-player-container"
@@ -927,9 +796,7 @@ const photoFiles = [
 ];
 
 
-/* =========================
-   EXCLUDED PHOTOS
-========================= */
+/* EXCLUDED PHOTOS */
 
 const unavailablePhotos = new Set([
   "IMG_4101_Original.jpeg",
@@ -980,11 +847,9 @@ function createStars(containerId,count) {
   for (let i=0; i<sparkleCount; i++) {
     const sparkle = document.createElement("span");
     sparkle.className = "sparkle";
-
     sparkle.style.left = Math.random()*100 + "%";
     sparkle.style.top = Math.random()*100 + "%";
     sparkle.style.animationDelay = Math.random()*5 + "s";
-
     container.appendChild(sparkle);
   }
 }
@@ -994,7 +859,7 @@ createStars("main-stars",175);
 
 
 /* =========================
-   POLAROID DECORATIONS
+   PHOTOBOOTH DECORATIONS
 ========================= */
 
 const frameDecorations = [
@@ -1059,17 +924,43 @@ const stripSizes = [
   [136,428]
 ];
 
-/* Multiple strips can fall at the same time. */
-
 let photoTimersStarted = false;
 let cascadeStarted = false;
 
 
 /* =========================
-   CREATE ONE PHOTO STRIP
+   PRELOAD PHOTO
+   Wait until each image is ready.
 ========================= */
 
-function createFallingPhoto() {
+function preloadPhoto(filename) {
+  return new Promise(resolve => {
+    const image = new Image();
+
+    image.onload = function() {
+      resolve(image);
+    };
+
+    image.onerror = function() {
+      resolve(null);
+    };
+
+    image.src = "./" + encodeURIComponent(filename);
+
+    if (image.complete && image.naturalWidth > 0) {
+      resolve(image);
+    }
+  });
+}
+
+
+/* =========================
+   CREATE ONE PHOTO STRIP
+   The strip is only inserted after
+   its four images have loaded.
+========================= */
+
+async function createFallingPhoto() {
 
   const filenames = [
     nextPhoto(),
@@ -1078,9 +969,13 @@ function createFallingPhoto() {
     nextPhoto()
   ];
 
-  const images = filenames.map(() => document.createElement("img"));
+  const loadedImages = await Promise.all(
+    filenames.map(filename => preloadPhoto(filename))
+  );
 
-  if (filenames.some(name => !name)) {
+  /* If any photo failed, don't display a blank strip. */
+  if (loadedImages.some(image => !image)) {
+    console.warn("A photo strip was skipped because an image failed to load.");
     return;
   }
 
@@ -1105,7 +1000,6 @@ function createFallingPhoto() {
   const design = Math.floor(Math.random()*frameDecorations.length);
 
   frame.className = "falling-photo-frame";
-
   frame.style.left = left+"px";
 
   frame.style.setProperty("--photo-width",width+"px");
@@ -1113,12 +1007,11 @@ function createFallingPhoto() {
   frame.style.setProperty("--rotation",rotation+"deg");
   frame.style.setProperty("--drift",drift+"px");
   frame.style.setProperty("--spin",spin+"deg");
-
   frame.style.setProperty("--fall-duration",duration+"s");
 
   stripImages.className = "photo-strip-images";
 
-  images.forEach((image,index) => {
+  loadedImages.forEach(image => {
 
     const cell = document.createElement("div");
     cell.className = "photo-cell";
@@ -1126,9 +1019,6 @@ function createFallingPhoto() {
     image.className = "falling-photo-image";
     image.alt = "";
     image.draggable = false;
-
-    /* Photos begin loading immediately; no preload waiting. */
-    image.src = "./"+encodeURIComponent(filenames[index]);
 
     cell.appendChild(image);
     stripImages.appendChild(cell);
@@ -1140,69 +1030,66 @@ function createFallingPhoto() {
   frame.appendChild(stripImages);
   frame.appendChild(decoration);
 
+  /* Only now does the complete strip enter the screen. */
   photosContainer.appendChild(frame);
-
 }
 
 
 /* =========================
-   OPENING: FIRST TWO STRIPS
+   FIRST TWO PHOTO STRIPS
 ========================= */
 
 function startOpeningPhotoSequence() {
 
-  if (photoTimersStarted) {
-    return;
-  }
+  if (photoTimersStarted) return;
 
   photoTimersStarted = true;
 
-  /* Strip #1 begins immediately. */
+  /* First strip: start loading immediately. */
   createFallingPhoto();
 
-  /* Strip #2 begins separately after 3 seconds. */
+  /* Second strip: follows after approximately 1 second. */
   setTimeout(function() {
 
     createFallingPhoto();
 
-    /* After the second strip, begin the cascade. */
-    setTimeout(startPhotoCascade,3000);
+    /* Begin the group cascade shortly after strip two. */
+    setTimeout(startPhotoCascade,900);
 
-  },3000);
-
+  },1000);
 }
 
 
 /* =========================
-   CASCADING PHOTO SEQUENCE
+   FAST OVERLAPPING CASCADE
 ========================= */
 
 function startPhotoCascade() {
 
-  if (cascadeStarted) {
-    return;
-  }
+  if (cascadeStarted) return;
 
   cascadeStarted = true;
 
-  /* Begin the cascading sequence. */
+  /* First strip of the cascade. */
   createFallingPhoto();
 
-  /* Continue adding strips every 3 seconds.
-     Previous strips remain falling, creating the cascade. */
+  /* Quick staggered burst so several strips enter together. */
+  setTimeout(createFallingPhoto,250);
+  setTimeout(createFallingPhoto,500);
+  setTimeout(createFallingPhoto,750);
+
+  /* Continue the cascade with short gaps.
+     Earlier strips keep falling while new ones appear. */
   function continueCascade() {
 
-    if (!cascadeStarted) {
-      return;
-    }
+    if (!cascadeStarted) return;
 
     createFallingPhoto();
 
-    setTimeout(continueCascade,3000);
+    setTimeout(continueCascade,700);
   }
 
-  setTimeout(continueCascade,3000);
-
+  setTimeout(continueCascade,1000);
 }
 
 
@@ -1218,8 +1105,6 @@ function startPhotos() {
 /* =========================
    YOUTUBE BACKGROUND MUSIC
 ========================= */
-
-/* UPDATED VIDEO */
 
 const videoId = "QIhhWlfvPy0";
 
