@@ -20,6 +20,8 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 }
 .hidden { display:none !important; }
 
+/* Visible soft galaxy clouds: these are painted above the screen background,
+   but below stars, photos, and text. No negative z-index or blend dependency. */
 .nebula-clouds {
   position:absolute; inset:-12%; z-index:0; overflow:hidden;
   pointer-events:none; opacity:1;
@@ -52,6 +54,8 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   from { transform:translate3d(2%,-1%,0) rotate(-3deg); }
   to { transform:translate3d(-3%,2%,0) rotate(4deg); }
 }
+
+/* A little extra cloud definition, still soft rather than hard-edged. */
 .nebula-ribbon {
   position:absolute; width:70vw; height:30vw; min-height:190px;
   border-radius:50%; filter:blur(32px); opacity:.45;
@@ -92,6 +96,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   0%,100% { opacity:.25; transform:scale(.7) rotate(0deg); }
   50% { opacity:.95; transform:scale(1.25) rotate(45deg); }
 }
+
 .shooting-star {
   position:absolute; z-index:2; width:105px; height:1.5px; border-radius:50%;
   opacity:0;
@@ -153,6 +158,9 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 #photos {
   position:absolute; inset:0; z-index:3; overflow:hidden; pointer-events:none;
 }
+
+/* Polaroid outer card: the image viewport is separately sized below.
+   This prevents padding from shrinking/cropping the photo unexpectedly. */
 .falling-photo-frame {
   position:absolute; top:-190px; left:0;
   width:var(--photo-width); height:var(--photo-height);
@@ -169,6 +177,8 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   display:block; object-fit:contain; object-position:center center;
   background:#fff; border:0; padding:0; margin:0;
 }
+
+/* Simple scattered stars and sparkles, restricted to the white frame edges. */
 .photo-decoration-layer {
   position:absolute; inset:0; width:100%; height:100%;
   pointer-events:none; overflow:hidden;
@@ -190,6 +200,13 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 .frame-star.bottom-b { left:38%; bottom:4px; }
 .frame-star.bottom-c { right:14%; bottom:5px; }
 .frame-star.bottom-d { right:42%; bottom:3px; }
+.frame-star.design-shift-1 .top-a { left:20%; }
+.frame-star.design-shift-1 .top-c { right:22%; }
+.frame-star.design-shift-1 .bottom-a { left:28%; }
+.frame-star.design-shift-1 .bottom-c { right:28%; }
+.frame-star.design-shift-2 .top-b { left:65%; }
+.frame-star.design-shift-2 .bottom-b { left:18%; }
+.frame-star.design-shift-2 .bottom-d { right:20%; }
 
 .center-message {
   position:absolute; z-index:5; left:50%; top:50%;
@@ -200,7 +217,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 .message-line {
   display:inline-flex; flex-direction:row; flex-wrap:nowrap;
   align-items:center; justify-content:center; gap:6px;
-  white-space:nowrap; max-width:100%;
+  max-width:100%; white-space:nowrap;
 }
 .message-text {
   font-family:'Allura',cursive; font-size:clamp(25px,7.1vw,48px);
@@ -209,8 +226,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
     0 0 28px rgba(184,145,237,.85),0 0 48px rgba(155,112,216,.55);
 }
 .message-heart {
-  display:block; flex:0 0 auto;
-  width:23px; height:23px; margin:0;
+  width:23px; height:23px; margin:0; flex:0 0 auto;
   filter:drop-shadow(0 0 5px rgba(255,255,255,.95)) drop-shadow(0 0 13px rgba(211,187,255,.9));
 }
 .message-heart path { fill:#fff; }
@@ -221,7 +237,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 }
 @media (max-width:600px) {
   .message-text { font-size:clamp(23px,6.9vw,27px); }
-  .message-heart { width:19px; height:19px; }
+  .message-heart { width:19px; height:19px; margin:0; }
   .opening-subtitle { font-size:15px; }
   .nebula-clouds::before { filter:blur(19px); }
   .nebula-clouds::after { filter:blur(23px); }
@@ -266,7 +282,6 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   <div class="shooting-star" style="top:63%;left:95%;animation-delay:2.5s"></div>
   <div class="shooting-star" style="top:82%;left:65%;animation-delay:6s"></div>
   <div id="photos"></div>
-
   <div class="center-message">
     <div class="message-line">
       <span class="message-text">I'll Always Choose You</span>
@@ -450,6 +465,7 @@ function createStars(containerId, count) {
 createStars("opening-stars",125);
 createStars("main-stars",175);
 
+/* A small set of stars scattered around the white frame, not over the image. */
 const frameDecorations = [
   '<span class="frame-star bright top-a">✦</span><span class="frame-star small top-b">✧</span><span class="frame-star medium top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✧</span><span class="frame-star small bottom-b">✦</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>',
   '<span class="frame-star medium top-a">✧</span><span class="frame-star small top-b">✦</span><span class="frame-star bright top-c">✦</span><span class="frame-star small side-a">✦</span><span class="frame-star small side-b">✧</span><span class="frame-star small bottom-a">✦</span><span class="frame-star bright bottom-b">✦</span><span class="frame-star medium bottom-c">✧</span><span class="frame-star small bottom-d">✦</span>',
@@ -536,14 +552,14 @@ function startPhotos() {
   if (photoTimersStarted) return;
   photoTimersStarted = true;
   createFallingPhoto();
+  setTimeout(createFallingPhoto,750);
   setTimeout(createFallingPhoto,1500);
   setTimeout(createFallingPhoto,3000);
-  setTimeout(createFallingPhoto,8000);
   setInterval(createFallingPhoto,5000);
 }
 
 /* Hidden YouTube player; starts from the opening-button tap and loops. */
-const videoId = "yLZoVTayvxY";
+const videoId = "hYLJtUzyUDo";
 let youtubePlayer = null;
 let youtubeReady = false;
 let musicRequested = false;
