@@ -200,13 +200,6 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 .frame-star.bottom-b { left:38%; bottom:4px; }
 .frame-star.bottom-c { right:14%; bottom:5px; }
 .frame-star.bottom-d { right:42%; bottom:3px; }
-.frame-star.design-shift-1 .top-a { left:20%; }
-.frame-star.design-shift-1 .top-c { right:22%; }
-.frame-star.design-shift-1 .bottom-a { left:28%; }
-.frame-star.design-shift-1 .bottom-c { right:28%; }
-.frame-star.design-shift-2 .top-b { left:65%; }
-.frame-star.design-shift-2 .bottom-b { left:18%; }
-.frame-star.design-shift-2 .bottom-d { right:20%; }
 
 .center-message {
   position:absolute; z-index:5; left:50%; top:50%;
@@ -653,7 +646,7 @@ async function createFallingPhoto(attempt=0) {
   });
 }
 
-/* ORIGINAL PHOTO-STRIP DROP SEQUENCE */
+/* Original photo-strip drop sequence */
 let photoTimersStarted = false;
 
 function startPhotos() {
@@ -670,15 +663,14 @@ function startPhotos() {
   setInterval(() => createFallingPhoto(),5000);
 }
 
-/* ORIGINAL WORKING YOUTUBE PLAYER SETUP */
-const videoId = "yLZoVTayvxY";
+/* Original hidden YouTube player setup with your requested song */
+const videoId = "D9KbfXysjd0";
 
 let youtubePlayer = null;
 let youtubeReady = false;
 let musicRequested = false;
 let youtubePlayerCreating = false;
 
-/* Playback is requested directly from the opening-button tap */
 function startMusicFromTap() {
   musicRequested = true;
 
@@ -691,7 +683,6 @@ function startMusicFromTap() {
   }
 }
 
-/* YouTube calls this after the IFrame API loads */
 function onYouTubeIframeAPIReady() {
   if (youtubePlayerCreating || youtubePlayer) return;
   youtubePlayerCreating = true;
@@ -741,7 +732,7 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-/* Load the YouTube IFrame API immediately */
+/* Load YouTube IFrame API immediately */
 (function loadYouTubeAPI() {
   if (window.YT && window.YT.Player) {
     onYouTubeIframeAPIReady();
