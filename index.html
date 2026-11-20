@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -394,7 +395,9 @@ body {
 
 .falling-photo-frame {
   position: absolute;
-  top: -430px;
+
+  /* CHANGED: Start much closer to the screen */
+  top: -180px;
   left: 0;
 
   width: var(--photo-width);
@@ -637,8 +640,12 @@ body {
 ========================= */
 
 @keyframes photoFall {
+
+  /* CHANGED: No extra -430px translation.
+     The strip starts at its top position above the screen
+     and begins falling immediately. */
   0% {
-    transform: translate3d(0,-430px,0) rotate(var(--rotation));
+    transform: translate3d(0,0,0) rotate(var(--rotation));
   }
 
   100% {
@@ -1000,9 +1007,7 @@ const frameDecorations = [
 
 '<span class="frame-star bright top-a">✦</span><span class="frame-star small top-b">✧</span><span class="frame-star medium top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✧</span><span class="frame-star small bottom-b">✦</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>',
 
-
 '<span class="frame-star medium top-a">✧</span><span class="frame-star small top-b">✦</span><span class="frame-star bright top-c">✦</span><span class="frame-star small side-a">✦</span><span class="frame-star small side-b">✧</span><span class="frame-star small bottom-a">✦</span><span class="frame-star bright bottom-b">✦</span><span class="frame-star medium bottom-c">✧</span><span class="frame-star small bottom-d">✦</span>',
-
 
 '<span class="frame-star bright top-a">✦</span><span class="frame-star medium top-b">✧</span><span class="frame-star small top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✦</span><span class="frame-star small bottom-b">✧</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>'
 
@@ -1119,7 +1124,6 @@ function createFallingPhoto() {
   frame.style.setProperty("--drift",drift+"px");
   frame.style.setProperty("--spin",spin+"deg");
 
-  /* Corrected syntax */
   frame.style.setProperty("--fall-duration",duration+"s");
 
   stripImages.className = "photo-strip-images";
