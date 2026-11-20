@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -171,19 +172,18 @@ body {
   pointer-events: none;
 }
 
-/* RANDOM-SIZED FLOATING PHOTOS */
+/* RANDOM-SIZED POLAROID PHOTO CARDS */
 
 .falling-photo {
   position: absolute;
   top: -160px;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
-  border: none;
-  outline: none;
-  padding: 0;
-  background: transparent;
-  border-radius: 0;
-  box-shadow: none;
+  padding: 4px;
+  border: 1px solid rgba(255,255,255,.75);
+  border-radius: 3px;
+  background: white;
+  box-shadow: 0 4px 18px rgba(20,10,30,.25);
   opacity: 0;
   animation: fall var(--fall-duration) linear forwards;
   will-change: transform;
