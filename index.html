@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -505,9 +506,19 @@ let lastDisplayedPhoto = null;
 let failedPhotos = new Set();
 let photoStarted = false;
 let photoTimer = null;
-
-/* NEW: TRACK PHOTOS THAT ARE STILL LOADING */
 let pendingPhotos = 0;
+
+/* THESE TWO FILES FAILED THE PHOTO CHECKER */
+
+const unavailablePhotos = new Set([
+  "IMG_4101_Original.jpeg",
+  "wedding-photo-12.png"
+]);
+
+/* RETRY TEMPORARY LOADING FAILURES */
+
+const photoRetryCounts = new Map();
+const MAX_PHOTO_RETRIES = 2;
 
 function shuffle(array) {
   const result = [...array];
@@ -521,7 +532,9 @@ function shuffle(array) {
 
 function startNewPhotoCycle() {
   const availablePhotos = photoFiles.filter(
-    filename => !failedPhotos.has(filename)
+    filename =>
+      !unavailablePhotos.has(filename) &&
+      !failedPhotos.has(filename)
   );
 
   photoDeck = shuffle(availablePhotos);
@@ -533,13 +546,21 @@ function startNewPhotoCycle() {
     [photoDeck[0], photoDeck[1]] =
       [photoDeck[1], photoDeck[0]];
   }
+
+  photoRetryCounts.clear();
+
+  console.log(
+    "Starting photo cycle with",
+    photoDeck.length,
+    "available photos."
+  );
 }
 
 function getNextPhoto() {
   if (photoDeck.length === 0) {
 
-    /* WAIT UNTIL ALL PHOTOS FROM THE PREVIOUS
-       CYCLE HAVE FINISHED LOADING AND APPEARED. */
+    /* DO NOT REPEAT UNTIL ALL PHOTOS IN THIS CYCLE
+       HAVE FINISHED LOADING OR FAILED THEIR RETRIES. */
 
     if (pendingPhotos > 0) return null;
 
@@ -566,7 +587,7 @@ function getRandomPhotoSize() {
   const selected = sizes[
     Math.floor(Math.random() * sizes.length)
   ];
-  // Keep wider cards within the available screen width.
+
   const maxWidth = Math.max(70, window.innerWidth - 20);
   const scale = Math.min(1, maxWidth / selected.width);
 
@@ -594,7 +615,7 @@ function createFallingPhoto() {
 
   img.style.width = size.width + "px";
   img.style.height = size.height + "px";
-  // Randomize horizontal placement while keeping the whole card on screen.
+
   const availableWidth = Math.max(0, window.innerWidth - size.width);
   img.style.left = (Math.random() * availableWidth) + "px";
 
@@ -602,24 +623,52 @@ function createFallingPhoto() {
   img.style.setProperty("--fall-duration", duration + "s");
   img.style.setProperty("--drift", drift + "px");
 
-  /* NEW: COUNT THIS PHOTO WHILE IT LOADS */
   pendingPhotos++;
 
   img.onload = () => {
-    /* NEW: PHOTO HAS LOADED AND IS NOW DISPLAYED */
     pendingPhotos--;
 
+    photoRetryCounts.delete(filename);
     lastDisplayedPhoto = filename;
+
+    /* THE PHOTO IS ONLY COUNTED AS DISPLAYED
+       AFTER IT HAS SUCCESSFULLY LOADED. */
+
     photos.appendChild(img);
+
+    console.log("Photo displayed:", filename);
   };
 
   img.onerror = () => {
-    /* NEW: FAILED PHOTO DOES NOT BLOCK THE NEXT CYCLE */
     pendingPhotos--;
 
-    failedPhotos.add(filename);
+    const retries = photoRetryCounts.get(filename) || 0;
+
+    if (retries < MAX_PHOTO_RETRIES) {
+      photoRetryCounts.set(filename, retries + 1);
+
+      /* PUT IT BACK AT THE END OF THE CURRENT CYCLE
+         SO OTHER PHOTOS CAN CONTINUE FIRST. */
+
+      photoDeck.push(filename);
+
+      console.warn(
+        "Retrying photo:",
+        filename,
+        "Attempt:",
+        retries + 1
+      );
+    } else {
+      failedPhotos.add(filename);
+      photoRetryCounts.delete(filename);
+
+      console.warn(
+        "Skipping photo after retries:",
+        filename
+      );
+    }
+
     img.remove();
-    console.warn("Skipping unavailable photo:", filename);
   };
 
   img.addEventListener("animationend", () => {
@@ -640,6 +689,7 @@ function startPhotos() {
 
   setTimeout(createFallingPhoto, 1500);
   setTimeout(createFallingPhoto, 3000);
+
   setTimeout(() => {
     createFallingPhoto();
     photoTimer = setInterval(createFallingPhoto, 5000);
@@ -707,7 +757,8 @@ const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
 
-  // Start the hidden song from the opening-button interaction.
+  /* START THE HIDDEN SONG FROM THE OPENING BUTTON TAP. */
+
   if (youtubePlayer && youtubePlayerReady) {
     youtubePlayer.playVideo();
   } else {
@@ -715,6 +766,7 @@ openButton.addEventListener("click", function() {
   }
 
   opening.style.opacity = "0";
+
   setTimeout(() => {
     opening.style.display = "none";
     main.style.display = "block";
