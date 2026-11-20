@@ -19,8 +19,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 }
 .hidden { display:none !important; }
 
-/* Visible soft galaxy clouds: these are painted above the screen background,
-   but below stars, photos, and text. No negative z-index or blend dependency. */
+/* Visible soft galaxy clouds */
 .nebula-clouds {
   position:absolute; inset:-12%; z-index:0; overflow:hidden;
   pointer-events:none; opacity:1;
@@ -53,8 +52,6 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   from { transform:translate3d(2%,-1%,0) rotate(-3deg); }
   to { transform:translate3d(-3%,2%,0) rotate(4deg); }
 }
-
-/* A little extra cloud definition, still soft rather than hard-edged. */
 .nebula-ribbon {
   position:absolute; width:70vw; height:30vw; min-height:190px;
   border-radius:50%; filter:blur(32px); opacity:.45;
@@ -114,7 +111,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   14%,100% { opacity:0; transform:translate(-260px,170px) rotate(-32deg); }
 }
 
-/* Opening */
+/* Opening screen */
 #opening { z-index:20; display:flex; align-items:center; justify-content:center; }
 .opening-content {
   position:relative; z-index:5; width:min(90%,460px); text-align:center;
@@ -158,26 +155,27 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   position:absolute; inset:0; z-index:3; overflow:hidden; pointer-events:none;
 }
 
-/* Polaroid outer card: the image viewport is separately sized below.
-   This prevents padding from shrinking/cropping the photo unexpectedly. */
+/* Four-picture photobooth strips */
 .falling-photo-frame {
-  position:absolute; top:-190px; left:0;
+  position:absolute; top:-370px; left:0;
   width:var(--photo-width); height:var(--photo-height);
-  padding:0; background:#fff; border-radius:2px;
+  padding:8px 7px 17px; background:#fff; border-radius:2px;
   box-shadow:0 5px 18px rgba(0,0,0,.32),0 0 12px rgba(229,211,255,.18);
   transform:rotate(var(--rotation));
   animation:photoFall var(--fall-duration) linear forwards;
   will-change:transform; overflow:hidden;
 }
+.photo-strip-images {
+  width:100%; height:100%; display:grid;
+  grid-template-rows:repeat(4,minmax(0,1fr)); gap:3px;
+}
 .falling-photo-image {
-  position:absolute; left:7px; top:7px;
-  width:calc(100% - 14px);
-  height:calc(100% - 32px);
-  display:block; object-fit:contain; object-position:center center;
+  display:block; width:100%; height:100%; min-height:0; min-width:0;
+  object-fit:contain; object-position:center center;
   background:#fff; border:0; padding:0; margin:0;
 }
 
-/* Simple scattered stars and sparkles, restricted to the white frame edges. */
+/* Tiny lavender stars stay on the white strip border */
 .photo-decoration-layer {
   position:absolute; inset:0; width:100%; height:100%;
   pointer-events:none; overflow:hidden;
@@ -464,7 +462,7 @@ function createStars(containerId, count) {
 createStars("opening-stars",125);
 createStars("main-stars",175);
 
-/* A small set of stars scattered around the white frame, not over the image. */
+/* Subtle star patterns on the photobooth borders */
 const frameDecorations = [
   '<span class="frame-star bright top-a">✦</span><span class="frame-star small top-b">✧</span><span class="frame-star medium top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✧</span><span class="frame-star small bottom-b">✦</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>',
   '<span class="frame-star medium top-a">✧</span><span class="frame-star small top-b">✦</span><span class="frame-star bright top-c">✦</span><span class="frame-star small side-a">✦</span><span class="frame-star small side-b">✧</span><span class="frame-star small bottom-a">✦</span><span class="frame-star bright bottom-b">✦</span><span class="frame-star medium bottom-c">✧</span><span class="frame-star small bottom-d">✦</span>',
@@ -491,46 +489,72 @@ function nextPhoto() {
 }
 refillPhotoDeck();
 
-/* Preload the very first photo while the opening screen is still visible.
-   This avoids waiting for the first full-size image request after the button tap. */
-let preloadedFirstPhoto = null;
-function preloadFirstPhoto() {
-  if (preloadedFirstPhoto) return;
-  const filename = nextPhoto();
-  const image = new Image();
-  preloadedFirstPhoto = { filename, image, ready: false };
-  image.onload = () => { preloadedFirstPhoto.ready = true; };
-  image.onerror = () => { preloadedFirstPhoto = null; };
-  image.src = "./" + encodeURIComponent(filename);
+/* Preload the first four images while the opening screen is visible */
+let preloadedFirstStrip = null;
+function preloadFirstStrip() {
+  if (preloadedFirstStrip) return;
+  const filenames = [nextPhoto(),nextPhoto(),nextPhoto(),nextPhoto()];
+  const images = filenames.map(() => new Image());
+  const preload = {filenames,images,loaded:0,ready:false};
+  preloadedFirstStrip = preload;
+  images.forEach((image) => {
+    image.onload = () => {
+      preload.loaded++;
+      if (preload.loaded === images.length) preload.ready = true;
+    };
+    image.onerror = () => {
+      if (preloadedFirstStrip === preload) preloadedFirstStrip = null;
+    };
+  });
+  images.forEach((image,index) => {
+    image.src = "./" + encodeURIComponent(filenames[index]);
+  });
 }
-preloadFirstPhoto();
+preloadFirstStrip();
 
 const photosContainer = document.getElementById("photos");
-const photoSizes = [[78,98],[88,110],[98,122],[108,135],[118,148],[128,160]];
+const stripSizes = [[94,286],[100,302],[106,318],[112,334],[118,350]];
 let activePhotoCount = 0;
+let waitingForFirstStrip = false;
 
 function createFallingPhoto(attempt=0) {
   if (activePhotoCount >= 13) return;
-  let filename;
-  let preloadedImage = null;
-  if (preloadedFirstPhoto) {
-    filename = preloadedFirstPhoto.filename;
-    preloadedImage = preloadedFirstPhoto.image;
-    preloadedFirstPhoto = null;
+
+  let filenames, images;
+  if (preloadedFirstStrip && preloadedFirstStrip.ready) {
+    filenames = preloadedFirstStrip.filenames;
+    images = preloadedFirstStrip.images;
+    preloadedFirstStrip = null;
   } else {
-    filename = nextPhoto();
+    if (preloadedFirstStrip && !preloadedFirstStrip.ready) {
+      if (!waitingForFirstStrip) {
+        waitingForFirstStrip = true;
+        const waitForPreload = () => {
+          if (preloadedFirstStrip && !preloadedFirstStrip.ready) {
+            setTimeout(waitForPreload,150);
+            return;
+          }
+          waitingForFirstStrip = false;
+          createFallingPhoto(attempt);
+        };
+        setTimeout(waitForPreload,150);
+      }
+      return;
+    }
+    filenames = [nextPhoto(),nextPhoto(),nextPhoto(),nextPhoto()];
+    images = filenames.map(() => document.createElement("img"));
   }
-  if (!filename) return;
+  if (filenames.some(name => !name)) return;
 
   const frame = document.createElement("div");
-  const image = preloadedImage || document.createElement("img");
+  const stripImages = document.createElement("div");
   const decoration = document.createElement("div");
-  const size = photoSizes[Math.floor(Math.random()*photoSizes.length)];
+  const size = stripSizes[Math.floor(Math.random()*stripSizes.length)];
   const width = size[0], height = size[1];
   const left = Math.random()*Math.max(0,window.innerWidth-width);
-  const rotation = -16 + Math.random()*32;
+  const rotation = -13 + Math.random()*26;
   const drift = -65 + Math.random()*130;
-  const spin = -12 + Math.random()*24;
+  const spin = -10 + Math.random()*20;
   const duration = 35 + Math.random()*10;
   const design = Math.floor(Math.random()*frameDecorations.length);
 
@@ -543,18 +567,22 @@ function createFallingPhoto(attempt=0) {
   frame.style.setProperty("--spin",spin+"deg");
   frame.style.setProperty("--fall-duration",duration+"s");
 
-  image.className = "falling-photo-image";
-  image.alt = "";
-  image.draggable = false;
-
+  stripImages.className = "photo-strip-images";
+  images.forEach((image) => {
+    image.className = "falling-photo-image";
+    image.alt = "";
+    image.draggable = false;
+    stripImages.appendChild(image);
+  });
   decoration.className = "photo-decoration-layer";
   decoration.innerHTML = frameDecorations[design];
-
-  frame.appendChild(image);
+  frame.appendChild(stripImages);
   frame.appendChild(decoration);
 
-  const showLoadedPhoto = () => {
-    if (frame.isConnected) return;
+  let loadedCount = 0;
+  let failed = false;
+  const showLoadedStrip = () => {
+    if (failed || frame.isConnected || loadedCount !== images.length) return;
     activePhotoCount++;
     photosContainer.appendChild(frame);
     frame.addEventListener("animationend",() => {
@@ -562,16 +590,24 @@ function createFallingPhoto(attempt=0) {
       activePhotoCount = Math.max(0,activePhotoCount-1);
     },{once:true});
   };
-  image.onload = showLoadedPhoto;
-  image.onerror = () => {
-    frame.remove();
-    if (attempt < 2) createFallingPhoto(attempt+1);
-  };
-  if (preloadedImage && image.complete && image.naturalWidth > 0) {
-    showLoadedPhoto();
-  } else if (!preloadedImage) {
-    image.src = "./"+encodeURIComponent(filename);
-  }
+  images.forEach((image,index) => {
+    if (image.complete && image.naturalWidth > 0) {
+      loadedCount++;
+    } else {
+      image.onload = () => {
+        loadedCount++;
+        showLoadedStrip();
+      };
+      image.onerror = () => {
+        if (failed) return;
+        failed = true;
+        frame.remove();
+        if (attempt < 2) createFallingPhoto(attempt+1);
+      };
+      if (!image.src) image.src = "./"+encodeURIComponent(filenames[index]);
+    }
+  });
+  showLoadedStrip();
 }
 
 let photoTimersStarted = false;
@@ -585,8 +621,8 @@ function startPhotos() {
   setInterval(createFallingPhoto,5000);
 }
 
-/* Hidden YouTube player; starts from the opening-button tap and loops. */
-const videoId = "hYLJtUzyUDo";
+/* Hidden YouTube player; starts from the opening-button tap and loops */
+const videoId = "Qv20J91J7mA";
 let youtubePlayer = null;
 let youtubeReady = false;
 let musicRequested = false;
@@ -601,8 +637,6 @@ function onYouTubeIframeAPIReady() {
     events:{
       onReady:function(event) {
         youtubeReady = true;
-        /* Explicitly cue the selected ID so an older cached player cannot
-           continue with the previous track. Playback still waits for the tap. */
         if (musicRequested) {
           event.target.loadVideoById({videoId:videoId,startSeconds:0});
         } else {
