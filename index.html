@@ -247,27 +247,6 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
     animation-duration:1ms !important;
   }
 }
-
-/* Only appears if the initial music request does not start playback */
-.music-retry {
-  position:fixed;
-  z-index:50;
-  left:50%;
-  bottom:24px;
-  transform:translateX(-50%);
-  border:1px solid rgba(230,210,255,.65);
-  border-radius:30px;
-  padding:9px 18px;
-  background:rgba(32,19,48,.88);
-  color:#fff;
-  font-family:'Cormorant Garamond',serif;
-  font-size:15px;
-  letter-spacing:1px;
-  box-shadow:0 0 16px rgba(178,142,224,.25);
-  display:none;
-  white-space:nowrap;
-}
-.music-retry.visible { display:block; }
 </style>
 </head>
 <body>
@@ -317,8 +296,6 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
      style="position:fixed;left:-220px;top:0;width:200px;height:200px;overflow:hidden;">
   <div id="youtube-player" style="width:200px;height:200px;"></div>
 </div>
-
-<button id="music-retry" class="music-retry" type="button">♫ Tap here to play music</button>
 
 <script>
 const photoFiles = [
@@ -693,67 +670,27 @@ function startPhotos() {
   setInterval(() => createFallingPhoto(),5000);
 }
 
-/* YouTube music player — latest requested video */
-const videoId = "QIhhWlfvPy0";
+/* YouTube music player — updated video */
+const videoId = "D9KbfXysjd0";
 
 let youtubePlayer = null;
 let youtubeReady = false;
-let videoCued = false;
 let musicRequested = false;
-let musicRetryTimer = null;
 let youtubePlayerCreating = false;
-
-const musicRetryButton = document.getElementById("music-retry");
-
-function showMusicRetry() {
-  musicRetryButton.classList.add("visible");
-}
-
-function hideMusicRetry() {
-  musicRetryButton.classList.remove("visible");
-}
-
-function attemptMusicPlayback() {
-  if (!youtubePlayer || !youtubeReady) {
-    showMusicRetry();
-    return;
-  }
-
-  try {
-    youtubePlayer.playVideo();
-  } catch (error) {
-    console.warn("Music playback request failed:",error);
-    showMusicRetry();
-  }
-}
 
 /* Called directly from the opening-button tap */
 function startMusicFromTap() {
   musicRequested = true;
-  hideMusicRetry();
 
-  if (musicRetryTimer) {
-    clearTimeout(musicRetryTimer);
-  }
-
-  if (youtubeReady && videoCued) {
-    attemptMusicPlayback();
-  } else if (youtubeReady && youtubePlayer) {
-    /* The video may still be preparing; try playback immediately too. */
-    youtubePlayer.playVideo();
-  }
-
-  /* If playback has not begun, reveal a second direct user-gesture option. */
-  musicRetryTimer = setTimeout(() => {
-    if (!youtubePlayer || !youtubeReady) {
-      showMusicRetry();
-      return;
+  if (youtubePlayer && youtubeReady) {
+    try {
+      youtubePlayer.unMute();
+      youtubePlayer.setVolume(100);
+      youtubePlayer.playVideo();
+    } catch (error) {
+      console.warn("Music playback request failed:",error);
     }
-
-    if (youtubePlayer.getPlayerState() !== YT.PlayerState.PLAYING) {
-      showMusicRetry();
-    }
-  },2500);
+  }
 }
 
 /* YouTube calls this global function after the IFrame API loads */
@@ -782,51 +719,27 @@ function onYouTubeIframeAPIReady() {
       onReady:function(event) {
         youtubeReady = true;
 
-        event.target.mute();
-        event.target.setVolume(100);
-        event.target.unMute();
-
         event.target.cueVideoById({
           videoId:videoId,
           startSeconds:0
         });
+
+        if (musicRequested) {
+          event.target.unMute();
+          event.target.setVolume(100);
+          event.target.playVideo();
+        }
       },
 
       onStateChange:function(event) {
-        if (event.data === YT.PlayerState.CUED) {
-          videoCued = true;
-
-          if (musicRequested) {
-            attemptMusicPlayback();
-          }
-        }
-
-        if (event.data === YT.PlayerState.PLAYING) {
-          hideMusicRetry();
-
-          if (musicRetryTimer) {
-            clearTimeout(musicRetryTimer);
-            musicRetryTimer = null;
-          }
-        }
-
         if (event.data === YT.PlayerState.ENDED) {
           event.target.seekTo(0,true);
           event.target.playVideo();
-        }
-
-        if (event.data === YT.PlayerState.PAUSED && musicRequested) {
-          showMusicRetry();
         }
       },
 
       onError:function(event) {
         console.warn("YouTube player error:",event.data);
-        showMusicRetry();
-      },
-
-      onAutoplayBlocked:function() {
-        showMusicRetry();
       }
     }
   });
@@ -855,30 +768,6 @@ function onYouTubeIframeAPIReady() {
     document.head.appendChild(tag);
   }
 })();
-
-/* Retry button: a fresh, direct user gesture */
-musicRetryButton.addEventListener("click",function() {
-  musicRequested = true;
-  hideMusicRetry();
-
-  if (youtubePlayer && youtubeReady) {
-    try {
-      if (videoCued) {
-        youtubePlayer.playVideo();
-      } else {
-        youtubePlayer.loadVideoById({
-          videoId:videoId,
-          startSeconds:0
-        });
-      }
-    } catch (error) {
-      console.warn("Music retry failed:",error);
-      showMusicRetry();
-    }
-  } else {
-    showMusicRetry();
-  }
-});
 
 /* Opening button */
 document.getElementById("open-button").addEventListener("click",function() {
