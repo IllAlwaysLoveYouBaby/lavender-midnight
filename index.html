@@ -17,6 +17,7 @@ html, body {
   overflow: hidden;
   background: #21182f;
 }
+
 body {
   font-family: 'Cormorant Garamond', serif;
   color: white;
@@ -37,6 +38,7 @@ body {
   inset: 0;
   pointer-events: none;
 }
+
 .star {
   position: absolute;
   width: 2px;
@@ -75,6 +77,7 @@ body {
   background: white;
   box-shadow: 0 0 10px 3px rgba(255,255,255,.6);
 }
+
 @keyframes shooting {
   0% {
     transform: translate(0,0) rotate(-35deg);
@@ -114,6 +117,7 @@ body {
   color: rgba(255,255,255,.75);
   margin-bottom: 30px;
 }
+
 .moon {
   font-size: 50px;
   margin-bottom: 15px;
@@ -136,6 +140,7 @@ body {
   letter-spacing: 1px;
   color: rgba(255,255,255,.85);
 }
+
 .open-button {
   margin-top: 40px;
   padding: 15px 28px;
@@ -164,6 +169,7 @@ body {
   opacity: 0;
   transition: opacity 1.5s ease;
 }
+
 #photos {
   position: absolute;
   inset: 0;
@@ -172,8 +178,6 @@ body {
 }
 
 /* RANDOM-SIZED FLOATING PHOTOS */
-
-/* PHOTO FRAME - FALL ANIMATION IS ON THE FRAME */
 
 .falling-photo-frame {
   position: absolute;
@@ -199,10 +203,7 @@ body {
   box-shadow: 0 4px 18px rgba(20,10,30,.25);
 }
 
-/* =========================================
-   LAVENDER MIDNIGHT CELESTIAL POLAROID BORDER
-   DECORATIONS ARE POSITIONED ON THE WHITE BORDER
-   ========================================= */
+/* CELESTIAL POLAROID DECORATIONS */
 
 .photo-decoration-layer {
   position: absolute;
@@ -212,41 +213,44 @@ body {
   overflow: hidden;
 }
 
-/* DECORATIVE SYMBOLS */
-
-.frame-star,
-.frame-sparkle,
-.frame-moon {
-  position: absolute;
+.polaroid-celestial-svg {
   display: block;
-  line-height: 1;
-  pointer-events: none;
-  user-select: none;
-  color: #b8a6d5;
-  text-shadow: 0 0 3px rgba(181,160,215,.12);
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
-/* FOUR-POINT STARS */
-
-.frame-star {
-  font-size: 9px;
-  opacity: .58;
+.celestial-line {
+  fill: none;
+  stroke: #a991cf;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .9;
 }
 
-/* SMALLER SPARKLES */
-
-.frame-sparkle {
-  font-size: 8px;
-  color: #c4b4df;
-  opacity: .52;
+.celestial-star {
+  fill: #b9a4dc;
+  stroke: #8e75b8;
+  stroke-width: .65;
+  opacity: .98;
 }
 
-/* OCCASIONAL CRESCENT MOONS */
+.celestial-sparkle {
+  fill: #c8b9e5;
+  opacity: .95;
+}
 
-.frame-moon {
-  font-size: 11px;
-  color: #b6a1d4;
-  opacity: .62;
+.celestial-moon {
+  fill: #bba7dd;
+  stroke: #927ab9;
+  stroke-width: .8;
+  opacity: .98;
+}
+
+.celestial-dot {
+  fill: #a58bcf;
+  opacity: .95;
 }
 
 /* SLOW FALLING PHOTOS */
@@ -324,6 +328,7 @@ body {
   pointer-events: none;
   overflow: hidden;
 }
+
 #youtube-player-container iframe {
   width: 200px;
   height: 200px;
@@ -358,6 +363,7 @@ body {
   <div class="shooting-star" style="top:18%;left:85%;animation-delay:1s"></div>
   <div class="shooting-star" style="top:42%;left:100%;animation-delay:4s"></div>
   <div class="shooting-star" style="top:70%;left:75%;animation-delay:6s"></div>
+
   <div class="opening-content">
     <div class="opening-eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
     <div class="moon">☾</div>
@@ -556,6 +562,7 @@ function createStars(containerId, count) {
     container.appendChild(star);
   }
 }
+
 createStars("opening-stars", 100);
 createStars("main-stars", 110);
 
@@ -589,6 +596,7 @@ function shuffle(array) {
     const j = Math.floor(Math.random() * (i + 1));
     [result[i], result[j]] = [result[j], result[i]];
   }
+
   return result;
 }
 
@@ -620,9 +628,6 @@ function startNewPhotoCycle() {
 
 function getNextPhoto() {
   if (photoDeck.length === 0) {
-
-    /* DO NOT REPEAT UNTIL ALL PHOTOS IN THIS CYCLE
-       HAVE FINISHED LOADING OR FAILED THEIR RETRIES. */
 
     if (pendingPhotos > 0) return null;
 
@@ -662,68 +667,177 @@ function getRandomPhotoSize() {
 /* CELESTIAL BORDER DECORATIONS */
 
 function addPhotoDecorations(layer) {
+  const svgNS = "http://www.w3.org/2000/svg";
 
-  /* WHITE FRAME HAS AN 11PX BORDER AREA:
-     6PX BORDER + 5PX PADDING.
-     DECORATIONS STAY WITHIN THAT WHITE AREA. */
+  const svg = document.createElementNS(svgNS, "svg");
 
-  const starPositions = [
-    { top: "2px", left: "3px" },
-    { top: "2px", right: "3px" },
-    { bottom: "2px", left: "3px" },
-    { bottom: "2px", right: "3px" },
-    { top: "2px", left: "50%", transform: "translateX(-50%)" },
-    { bottom: "2px", left: "50%", transform: "translateX(-50%)" }
-  ];
+  svg.setAttribute("class", "polaroid-celestial-svg");
+  svg.setAttribute("viewBox", "0 0 128 160");
+  svg.setAttribute("preserveAspectRatio", "none");
+  svg.setAttribute("aria-hidden", "true");
 
-  const symbols = ["✦", "✧", "⋆", "✦", "✧"];
+  /*
+    THE WHITE BORDER IS APPROXIMATELY 11PX WIDE.
+    ALL DECORATIONS ARE DRAWN ALONG THE FRAME EDGES,
+    NOT ACROSS THE PHOTOGRAPH.
+  */
 
-  /* SELECT A SMALL RANDOM NUMBER OF BORDER STARS */
+  function addPath(d, className) {
+    const path = document.createElementNS(svgNS, "path");
+    path.setAttribute("d", d);
+    path.setAttribute("class", className);
+    svg.appendChild(path);
+  }
 
-  const starCount = 2 + Math.floor(Math.random() * 3);
-  const chosenPositions = shuffle(starPositions).slice(0, starCount);
+  function addCircle(cx, cy, radius, className) {
+    const circle = document.createElementNS(svgNS, "circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", radius);
+    circle.setAttribute("class", className);
+    svg.appendChild(circle);
+  }
 
-  chosenPositions.forEach((position, index) => {
-    const star = document.createElement("span");
-
-    star.className =
-      index % 2 === 0 ? "frame-star" : "frame-sparkle";
-
-    star.textContent = symbols[
-      Math.floor(Math.random() * symbols.length)
+  function addStar(cx, cy, size) {
+    const points = [
+      [cx, cy - size],
+      [cx + size * .22, cy - size * .22],
+      [cx + size, cy],
+      [cx + size * .22, cy + size * .22],
+      [cx, cy + size],
+      [cx - size * .22, cy + size * .22],
+      [cx - size, cy],
+      [cx - size * .22, cy - size * .22]
     ];
 
-    Object.assign(star.style, position);
+    const d = points.map((point, index) =>
+      (index === 0 ? "M" : "L") +
+      point[0] + " " + point[1]
+    ).join(" ") + " Z";
 
-    layer.appendChild(star);
+    addPath(d, "celestial-star");
+  }
+
+  function addSparkle(cx, cy, size) {
+    addPath(
+      `M ${cx} ${cy - size}
+       Q ${cx + size * .12} ${cy - size * .12} ${cx + size} ${cy}
+       Q ${cx + size * .12} ${cy + size * .12} ${cx} ${cy + size}
+       Q ${cx - size * .12} ${cy + size * .12} ${cx - size} ${cy}
+       Q ${cx - size * .12} ${cy - size * .12} ${cx} ${cy - size} Z`,
+      "celestial-sparkle"
+    );
+  }
+
+  function addMoon(x, y, scale, rotation) {
+    const group = document.createElementNS(svgNS, "g");
+
+    group.setAttribute(
+      "transform",
+      `translate(${x} ${y}) rotate(${rotation}) scale(${scale})`
+    );
+
+    const moon = document.createElementNS(svgNS, "path");
+
+    moon.setAttribute(
+      "d",
+      "M 5 -7 C -3 -5 -4 6 4 8 C 1 4 1 -2 5 -7 Z"
+    );
+
+    moon.setAttribute("class", "celestial-moon");
+
+    group.appendChild(moon);
+    svg.appendChild(group);
+  }
+
+  const designs = [
+    function() {
+      addMoon(9, 8, 1.05, -18);
+      addStar(116, 8, 5);
+      addStar(13, 151, 4.5);
+      addSparkle(112, 151, 3);
+      addPath("M 18 8 Q 32 3 43 9", "celestial-line");
+      addCircle(43, 9, 1.4, "celestial-dot");
+    },
+
+    function() {
+      addMoon(118, 150, 1.05, 165);
+      addStar(11, 8, 5);
+      addStar(114, 9, 4);
+      addSparkle(13, 151, 3.5);
+      addPath("M 110 151 Q 96 156 84 150", "celestial-line");
+      addCircle(84, 150, 1.4, "celestial-dot");
+    },
+
+    function() {
+      addMoon(9, 150, 1, -70);
+      addStar(116, 8, 5);
+      addStar(64, 8, 4);
+      addSparkle(112, 151, 3);
+      addPath("M 17 151 Q 29 155 39 150", "celestial-line");
+      addCircle(39, 150, 1.4, "celestial-dot");
+    },
+
+    function() {
+      addMoon(118, 8, 1.05, 150);
+      addStar(11, 151, 5);
+      addStar(64, 151, 4);
+      addSparkle(13, 8, 3);
+      addPath("M 109 8 Q 97 3 86 9", "celestial-line");
+      addCircle(86, 9, 1.4, "celestial-dot");
+    },
+
+    function() {
+      addMoon(9, 8, .95, -15);
+      addStar(116, 8, 5);
+      addStar(116, 151, 4.5);
+      addStar(11, 151, 3.5);
+      addPath("M 17 8 L 29 5 L 40 9", "celestial-line");
+      addCircle(29, 5, 1.3, "celestial-dot");
+    },
+
+    function() {
+      addMoon(118, 150, 1, 165);
+      addStar(11, 8, 5);
+      addStar(64, 151, 4.5);
+      addStar(116, 8, 3.5);
+      addPath("M 110 150 L 99 154 L 88 150", "celestial-line");
+      addCircle(99, 154, 1.3, "celestial-dot");
+    }
+  ];
+
+  const selectedDesign =
+    designs[Math.floor(Math.random() * designs.length)];
+
+  selectedDesign();
+
+  /* ADD A FEW RANDOM SMALL SPARKLES */
+
+  const sparklePositions = [
+    [34, 8],
+    [94, 8],
+    [34, 151],
+    [94, 151],
+    [8, 42],
+    [120, 42],
+    [8, 118],
+    [120, 118]
+  ];
+
+  const selectedSparkles = shuffle(sparklePositions).slice(
+    0,
+    1 + Math.floor(Math.random() * 3)
+  );
+
+  selectedSparkles.forEach(position => {
+    addSparkle(
+      position[0],
+      position[1],
+      2.2 + Math.random() * 1.2
+    );
   });
 
-  /* OCCASIONAL CRESCENT MOON IN A FRAME CORNER */
-
-  if (Math.random() < 0.30) {
-    const moon = document.createElement("span");
-
-    moon.className = "frame-moon";
-    moon.textContent = "☾";
-
-    const moonCorner = Math.floor(Math.random() * 4);
-
-    if (moonCorner === 0) {
-      moon.style.top = "1px";
-      moon.style.left = "1px";
-    } else if (moonCorner === 1) {
-      moon.style.top = "1px";
-      moon.style.right = "1px";
-    } else if (moonCorner === 2) {
-      moon.style.bottom = "1px";
-      moon.style.left = "1px";
-    } else {
-      moon.style.bottom = "1px";
-      moon.style.right = "1px";
-    }
-
-    layer.appendChild(moon);
-  }
+  layer.appendChild(svg);
 }
 
 function createFallingPhoto() {
@@ -772,8 +886,6 @@ function createFallingPhoto() {
     photoRetryCounts.delete(filename);
     lastDisplayedPhoto = filename;
 
-    /* PHOTO ONLY ENTERS THE SCREEN AFTER SUCCESSFULLY LOADING */
-
     photos.appendChild(frame);
 
     console.log("Photo displayed:", filename);
@@ -786,9 +898,6 @@ function createFallingPhoto() {
 
     if (retries < MAX_PHOTO_RETRIES) {
       photoRetryCounts.set(filename, retries + 1);
-
-      /* PUT IT BACK AT THE END OF THE CURRENT CYCLE
-         SO OTHER PHOTOS CAN CONTINUE FIRST. */
 
       photoDeck.push(filename);
 
@@ -850,6 +959,7 @@ function onYouTubeIframeAPIReady() {
     height: "200",
 
     videoId: videoId,
+
     playerVars: {
       autoplay: 0,
       controls: 0,
@@ -870,6 +980,7 @@ function onYouTubeIframeAPIReady() {
           startMusicWhenReady = false;
         }
       },
+
       onStateChange: function(event) {
         if (event.data === YT.PlayerState.ENDED) {
           event.target.playVideo();
