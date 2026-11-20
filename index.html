@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,6 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 }
 .hidden { display:none !important; }
 
-/* Visible soft galaxy clouds */
 .nebula-clouds {
   position:absolute; inset:-12%; z-index:0; overflow:hidden;
   pointer-events:none; opacity:1;
@@ -149,25 +149,32 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 }
 .open-button:active { transform:scale(.97); background:rgba(180,145,220,.28); }
 
-/* Main scene */
+/* Main screen */
 #main-screen { z-index:10; }
 #photos {
   position:absolute; inset:0; z-index:3; overflow:hidden; pointer-events:none;
 }
 
-/* Four-picture photobooth strips */
+/* Classic photobooth paper: four distinct frames, one outer border */
 .falling-photo-frame {
-  position:absolute; top:-370px; left:0;
+  position:absolute; top:-430px; left:0;
   width:var(--photo-width); height:var(--photo-height);
-  padding:8px 7px 17px; background:#fff; border-radius:2px;
-  box-shadow:0 5px 18px rgba(0,0,0,.32),0 0 12px rgba(229,211,255,.18);
+  padding:9px 8px 24px; background:#fff; border:1px solid rgba(232,225,240,.95);
+  border-radius:1px;
+  box-shadow:0 6px 20px rgba(0,0,0,.34),0 0 13px rgba(229,211,255,.2);
   transform:rotate(var(--rotation));
   animation:photoFall var(--fall-duration) linear forwards;
   will-change:transform; overflow:hidden;
 }
 .photo-strip-images {
   width:100%; height:100%; display:grid;
-  grid-template-rows:repeat(4,minmax(0,1fr)); gap:3px;
+  grid-template-rows:repeat(4,minmax(0,1fr)); gap:5px;
+}
+.photo-cell {
+  display:flex; align-items:center; justify-content:center;
+  min-width:0; min-height:0; overflow:hidden;
+  padding:2px; background:#f7f5f9;
+  border:1px solid #e5deeb;
 }
 .falling-photo-image {
   display:block; width:100%; height:100%; min-height:0; min-width:0;
@@ -175,7 +182,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   background:#fff; border:0; padding:0; margin:0;
 }
 
-/* Tiny lavender stars stay on the white strip border */
+/* Lavender stars on the white border, not on the pictures */
 .photo-decoration-layer {
   position:absolute; inset:0; width:100%; height:100%;
   pointer-events:none; overflow:hidden;
@@ -229,7 +236,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 .message-heart path { fill:#fff; }
 
 @keyframes photoFall {
-  0% { transform:translate3d(0,-190px,0) rotate(var(--rotation)); }
+  0% { transform:translate3d(0,-430px,0) rotate(var(--rotation)); }
   100% { transform:translate3d(var(--drift),calc(100vh + 240px),0) rotate(calc(var(--rotation) + var(--spin))); }
 }
 @media (max-width:600px) {
@@ -462,7 +469,6 @@ function createStars(containerId, count) {
 createStars("opening-stars",125);
 createStars("main-stars",175);
 
-/* Subtle star patterns on the photobooth borders */
 const frameDecorations = [
   '<span class="frame-star bright top-a">✦</span><span class="frame-star small top-b">✧</span><span class="frame-star medium top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✧</span><span class="frame-star small bottom-b">✦</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>',
   '<span class="frame-star medium top-a">✧</span><span class="frame-star small top-b">✦</span><span class="frame-star bright top-c">✦</span><span class="frame-star small side-a">✦</span><span class="frame-star small side-b">✧</span><span class="frame-star small bottom-a">✦</span><span class="frame-star bright bottom-b">✦</span><span class="frame-star medium bottom-c">✧</span><span class="frame-star small bottom-d">✦</span>',
@@ -489,7 +495,7 @@ function nextPhoto() {
 }
 refillPhotoDeck();
 
-/* Preload the first four images while the opening screen is visible */
+/* Preload the first four images before the opening screen is dismissed */
 let preloadedFirstStrip = null;
 function preloadFirstStrip() {
   if (preloadedFirstStrip) return;
@@ -513,7 +519,7 @@ function preloadFirstStrip() {
 preloadFirstStrip();
 
 const photosContainer = document.getElementById("photos");
-const stripSizes = [[94,286],[100,302],[106,318],[112,334],[118,350]];
+const stripSizes = [[112,356],[118,374],[124,392],[130,410],[136,428]];
 let activePhotoCount = 0;
 let waitingForFirstStrip = false;
 
@@ -568,11 +574,14 @@ function createFallingPhoto(attempt=0) {
   frame.style.setProperty("--fall-duration",duration+"s");
 
   stripImages.className = "photo-strip-images";
-  images.forEach((image) => {
+  images.forEach((image,index) => {
+    const cell = document.createElement("div");
+    cell.className = "photo-cell";
     image.className = "falling-photo-image";
     image.alt = "";
     image.draggable = false;
-    stripImages.appendChild(image);
+    cell.appendChild(image);
+    stripImages.appendChild(cell);
   });
   decoration.className = "photo-decoration-layer";
   decoration.innerHTML = frameDecorations[design];
@@ -621,7 +630,7 @@ function startPhotos() {
   setInterval(createFallingPhoto,5000);
 }
 
-/* Hidden YouTube player; starts from the opening-button tap and loops */
+/* Hidden YouTube player: new song, continuous looping */
 const videoId = "Qv20J91J7mA";
 let youtubePlayer = null;
 let youtubeReady = false;
