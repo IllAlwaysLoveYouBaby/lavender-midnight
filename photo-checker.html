@@ -1,105 +1,205 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lavender Midnight — Photo Checker</title>
+<title>Lavender Midnight Photo Checker</title>
 <style>
-*{box-sizing:border-box}body{margin:0;padding:24px;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#21182f;color:#f8f3ff}main{max-width:900px;margin:auto}h1{font-weight:600}p{color:#d9cce9;line-height:1.5}.stats{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}.stat{background:#332644;border:1px solid #59436b;border-radius:12px;padding:14px 18px;min-width:120px}.stat strong{display:block;font-size:1.5rem;margin-top:4px}button{background:#e7d4ff;color:#251a33;border:0;border-radius:10px;padding:12px 18px;font-weight:700;font-size:1rem;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.status{margin:18px 0;color:#d8c5eb}table{border-collapse:collapse;width:100%;margin-top:16px;background:#2b2039;border-radius:10px;overflow:hidden}th,td{text-align:left;padding:10px;border-bottom:1px solid #493758;overflow-wrap:anywhere}th{background:#382a4b}tr.ok td:last-child{color:#8be0b0}tr.fail td:last-child{color:#ff9d9d}.hidden{display:none}.note{font-size:.9rem;color:#bfaed2}
+body {
+  font-family: Arial, sans-serif;
+  background: #21182f;
+  color: white;
+  padding: 20px;
+}
+main {
+  max-width: 700px;
+  margin: auto;
+}
+button {
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 8px;
+  background: #e7c8f1;
+  color: #21182f;
+  font-size: 16px;
+  font-weight: bold;
+}
+button:disabled {
+  opacity: 0.5;
+}
+.good { color: #9ce6b1; }
+.bad { color: #ffaaaa; }
+li {
+  margin: 8px 0;
+  overflow-wrap: anywhere;
+}
+#status {
+  margin: 20px 0;
+}
 </style>
 </head>
-<body><main>
+<body>
+<main>
 <h1>Lavender Midnight Photo Checker</h1>
-<p>This standalone checker reads the photo filename list from your live <code>index.html</code> and tests each image. It does not modify the website or its photo animations, music, or settings.</p>
-<button id="start">Check all photos</button>
-<div class="status" id="status">Ready. Press the button to begin.</div>
-<div class="stats" id="stats"></div>
-<table id="results" class="hidden"><thead><tr><th>Photo filename</th><th>Result</th></tr></thead><tbody id="tbody"></tbody></table>
-<p class="note">Images are tested in small batches. A slow connection may take a little while. Failed items are listed so their filenames can be checked.</p>
+<p>This checks every photo listed in your live website.</p>
+
+<button id="checkButton">Check All Photos</button>
+
+<div id="status">Ready to check.</div>
+<div id="summary"></div>
+<div id="results"></div>
 </main>
+
 <script>
-(() => {
-  const button = document.getElementById('start');
-  const status = document.getElementById('status');
-  const stats = document.getElementById('stats');
-  const table = document.getElementById('results');
-  const tbody = document.getElementById('tbody');
-  const BATCH_SIZE = 8;
-  const TIMEOUT_MS = 20000;
+(function () {
+  var button = document.getElementById("checkButton");
+  var status = document.getElementById("status");
+  var summary = document.getElementById("summary");
+  var results = document.getElementById("results");
 
-  function extractPhotoList(html) {
-    const match = html.match(/(?:const|let|var)\s+photoFiles\s*=\s*(\[[\s\S]*?\])\s*;/);
-    if (!match) throw new Error('Could not locate the photoFiles array in index.html.');
-    return JSON.parse(match[1]);
-  }
-
-  function testImage(filename) {
-    return new Promise(resolve => {
-      const image = new Image();
-      let finished = false;
-      const timer = setTimeout(() => finish(false, 'Timed out'), TIMEOUT_MS);
-      function finish(ok, detail) {
-        if (finished) return;
-        finished = true;
-        clearTimeout(timer);
-        image.onload = null;
-        image.onerror = null;
-        resolve({ filename, ok, detail: detail || (ok ? 'Loaded' : 'Failed') });
-      }
-      image.onload = () => finish(image.naturalWidth > 0, image.naturalWidth > 0 ? 'Loaded' : 'Empty image');
-      image.onerror = () => finish(false, 'Load error');
-      image.src = './' + encodeURIComponent(filename);
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>"']/g, function (c) {
+      return {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[c];
     });
   }
 
-  function addResult(result) {
-    const tr = document.createElement('tr');
-    tr.className = result.ok ? 'ok' : 'fail';
-    const name = document.createElement('td');
-    name.textContent = result.filename;
-    const outcome = document.createElement('td');
-    outcome.textContent = result.detail;
-    tr.append(name, outcome);
-    tbody.appendChild(tr);
+  function getPhotoNames(source) {
+    var start = source.indexOf("photoFiles");
+    if (start === -1) {
+      throw new Error("Could not find photoFiles in index.html.");
+    }
+
+    var open = source.indexOf("[", start);
+    var close = source.indexOf("];", open);
+
+    if (open === -1 || close === -1) {
+      throw new Error("Could not read the photo list.");
+    }
+
+    var section = source.substring(open + 1, close);
+    var matches = section.match(/(["'])(.*?)\1/g);
+
+    if (!matches || matches.length === 0) {
+      throw new Error("No photo filenames were found.");
+    }
+
+    return matches.map(function (item) {
+      return item.substring(1, item.length - 1);
+    });
   }
 
-  async function run() {
-    button.disabled = true;
-    status.textContent = 'Fetching photo list from the live website…';
-    stats.innerHTML = '';
-    tbody.innerHTML = '';
-    table.classList.add('hidden');
-    try {
-      const response = await fetch('./index.html', { cache: 'no-store' });
-      if (!response.ok) throw new Error('Could not fetch index.html (HTTP ' + response.status + ').');
-      const filenames = extractPhotoList(await response.text());
-      if (!Array.isArray(filenames) || !filenames.length) throw new Error('The photo list was empty or invalid.');
-      const duplicateNames = filenames.filter((name, i) => filenames.indexOf(name) !== i);
-      const results = [];
-      table.classList.remove('hidden');
-      for (let i = 0; i < filenames.length; i += BATCH_SIZE) {
-        const batch = filenames.slice(i, i + BATCH_SIZE);
-        const batchResults = await Promise.all(batch.map(testImage));
-        results.push(...batchResults);
-        batchResults.forEach(addResult);
-        const passed = results.filter(r => r.ok).length;
-        const failed = results.length - passed;
-        status.textContent = 'Checked ' + results.length + ' of ' + filenames.length + ' photos…';
-        stats.innerHTML = '<div class="stat">Total<strong>' + filenames.length + '</strong></div><div class="stat">Loaded<strong>' + passed + '</strong></div><div class="stat">Failed<strong>' + failed + '</strong></div>';
-      }
-      const passed = results.filter(r => r.ok).length;
-      const failedResults = results.filter(r => !r.ok);
-      status.textContent = 'Finished checking. ' + passed + ' loaded; ' + failedResults.length + ' failed.' + (duplicateNames.length ? ' Duplicate filenames were also found.' : '');
-      if (failedResults.length) console.table(failedResults.map(r => ({ filename: r.filename, result: r.detail })));
-      if (duplicateNames.length) console.warn('Duplicate filenames in photoFiles:', duplicateNames);
-      console.table(results.map(r => ({ filename: r.filename, result: r.detail })))
-    } catch (error) {
-      status.textContent = 'Checker error: ' + error.message;
-    } finally {
-      button.disabled = false;
-    }
+  function checkOne(name, callback) {
+    var photo = new Image();
+
+    photo.onload = function () {
+      callback(true);
+    };
+
+    photo.onerror = function () {
+      callback(false);
+    };
+
+    photo.src = "./" + encodeURIComponent(name);
   }
-  button.addEventListener('click', run);
+
+  button.onclick = function () {
+    button.disabled = true;
+    status.textContent = "Reading your website's photo list...";
+    summary.innerHTML = "";
+    results.innerHTML = "";
+
+    var request = new XMLHttpRequest();
+
+    request.open("GET", "./index.html", true);
+    request.onload = function () {
+      if (request.status < 200 || request.status >= 300) {
+        status.textContent = "Unable to read index.html. HTTP " + request.status;
+        button.disabled = false;
+        return;
+      }
+
+      var names;
+
+      try {
+        names = getPhotoNames(request.responseText);
+      } catch (error) {
+        status.textContent = error.message;
+        button.disabled = false;
+        return;
+      }
+
+      var loaded = [];
+      var failed = [];
+      var position = 0;
+
+      status.textContent = "Checking " + names.length + " photos...";
+
+      function nextPhoto() {
+        if (position >= names.length) {
+          showResults();
+          return;
+        }
+
+        var name = names[position];
+        position++;
+
+        status.textContent =
+          "Checking photo " + position + " of " + names.length + "...";
+
+        checkOne(name, function (success) {
+          if (success) {
+            loaded.push(name);
+          } else {
+            failed.push(name);
+          }
+
+          nextPhoto();
+        });
+      }
+
+      function showResults() {
+        summary.innerHTML =
+          "<h2>Results</h2>" +
+          "<p>Total checked: " + names.length + "</p>" +
+          '<p class="good">Loaded: ' + loaded.length + "</p>" +
+          '<p class="bad">Failed: ' + failed.length + "</p>";
+
+        var output = "<h2 class='good'>Successfully loaded</h2><ul>";
+
+        loaded.forEach(function (name) {
+          output += "<li>" + escapeHTML(name) + "</li>";
+        });
+
+        output += "</ul><h2 class='bad'>Failed photos</h2><ul>";
+
+        failed.forEach(function (name) {
+          output += "<li>" + escapeHTML(name) + "</li>";
+        });
+
+        output += "</ul>";
+
+        results.innerHTML = output;
+        status.textContent = "Finished checking all photos!";
+        button.disabled = false;
+      }
+
+      nextPhoto();
+    };
+
+    request.onerror = function () {
+      status.textContent = "Unable to connect to your website.";
+      button.disabled = false;
+    };
+
+    request.send();
+  };
 })();
 </script>
 </body>
