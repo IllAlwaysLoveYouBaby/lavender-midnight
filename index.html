@@ -24,72 +24,108 @@ body {
   color: white;
 }
 
+/* =========================
+   GALAXY BACKGROUND
+========================= */
+
 .screen {
   position: fixed;
   inset: 0;
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(ellipse at 50% 42%, #382849 0%, #21182f 42%, #100b1c 100%);
+    radial-gradient(ellipse at 50% 45%,
+      #292039 0%,
+      #1c142b 48%,
+      #100b1c 100%);
 }
 
-/* DEEP GALAXY AND NEBULA CLOUDS */
+/* Separate nebula layer so it stays visible behind the stars */
 
-.screen::before,
-.screen::after {
+.nebula-clouds {
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 42% 27% at 18% 28%,
+      rgba(157,119,194,.36) 0%,
+      rgba(125,88,167,.22) 35%,
+      transparent 76%),
+    radial-gradient(ellipse 38% 30% at 78% 25%,
+      rgba(133,108,185,.34) 0%,
+      rgba(103,77,153,.20) 40%,
+      transparent 78%),
+    radial-gradient(ellipse 46% 32% at 58% 72%,
+      rgba(164,119,184,.30) 0%,
+      rgba(111,79,151,.17) 43%,
+      transparent 80%),
+    radial-gradient(ellipse 34% 26% at 15% 82%,
+      rgba(104,91,167,.30) 0%,
+      rgba(85,66,139,.16) 45%,
+      transparent 80%);
+  filter: blur(32px);
+  animation: nebulaFloat 34s ease-in-out infinite alternate;
+}
+
+.nebula-clouds::before {
   content: "";
   position: absolute;
-  inset: -25%;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.screen::before {
+  inset: 0;
   background:
-    radial-gradient(ellipse at 18% 28%,
-      rgba(139, 102, 174, .30) 0%,
-      rgba(103, 75, 143, .16) 19%,
-      transparent 42%),
-    radial-gradient(ellipse at 78% 22%,
-      rgba(105, 83, 151, .28) 0%,
-      rgba(87, 62, 126, .14) 23%,
-      transparent 45%),
-    radial-gradient(ellipse at 65% 72%,
-      rgba(135, 91, 158, .25) 0%,
-      rgba(92, 65, 127, .13) 25%,
-      transparent 48%),
-    radial-gradient(ellipse at 24% 82%,
-      rgba(90, 72, 139, .24) 0%,
-      transparent 42%);
-  filter: blur(28px);
-  animation: nebulaDrift 32s ease-in-out infinite alternate;
+    radial-gradient(ellipse 35% 18% at 36% 48%,
+      rgba(190,151,211,.22) 0%,
+      rgba(145,108,184,.12) 38%,
+      transparent 76%),
+    radial-gradient(ellipse 32% 23% at 85% 65%,
+      rgba(153,124,194,.23) 0%,
+      rgba(112,83,163,.12) 45%,
+      transparent 78%),
+    radial-gradient(ellipse 28% 20% at 8% 56%,
+      rgba(133,109,183,.20) 0%,
+      transparent 78%);
+  filter: blur(24px);
+  animation: nebulaFloatTwo 42s ease-in-out infinite alternate;
 }
 
-.screen::after {
+.nebula-clouds::after {
+  content: "";
+  position: absolute;
+  inset: 0;
   background:
-    radial-gradient(ellipse at 45% 18%,
-      rgba(179, 145, 204, .12) 0%,
-      transparent 32%),
-    radial-gradient(ellipse at 88% 56%,
-      rgba(133, 102, 177, .16) 0%,
-      transparent 38%),
-    radial-gradient(ellipse at 12% 58%,
-      rgba(105, 80, 151, .17) 0%,
-      transparent 36%),
-    radial-gradient(ellipse at 48% 92%,
-      rgba(123, 87, 155, .15) 0%,
-      transparent 38%);
-  filter: blur(42px);
-  animation: nebulaDrift 42s ease-in-out infinite alternate-reverse;
+    radial-gradient(ellipse 24% 12% at 50% 20%,
+      rgba(213,184,231,.13),
+      transparent 78%),
+    radial-gradient(ellipse 30% 14% at 24% 68%,
+      rgba(177,143,210,.15),
+      transparent 78%),
+    radial-gradient(ellipse 26% 15% at 75% 42%,
+      rgba(184,151,218,.14),
+      transparent 78%);
+  filter: blur(30px);
+  animation: nebulaFloatThree 48s ease-in-out infinite alternate;
 }
 
-@keyframes nebulaDrift {
-  0% { transform: translate3d(-2%, -1%, 0) scale(1); }
-  50% { transform: translate3d(2%, 2%, 0) scale(1.08); }
-  100% { transform: translate3d(-1%, 3%, 0) scale(1.03); }
+@keyframes nebulaFloat {
+  0% { transform: translate(-2%, -1%) scale(1); }
+  50% { transform: translate(2%, 2%) scale(1.08); }
+  100% { transform: translate(-1%, 3%) scale(1.04); }
 }
 
-/* BACKGROUND STARS */
+@keyframes nebulaFloatTwo {
+  0% { transform: translate(2%, 1%) scale(1.03); }
+  100% { transform: translate(-3%, -2%) scale(1.12); }
+}
+
+@keyframes nebulaFloatThree {
+  0% { transform: translate(-1%, 2%); }
+  100% { transform: translate(2%, -2%); }
+}
+
+/* =========================
+   BACKGROUND STARS
+========================= */
 
 .stars {
   position: absolute;
@@ -119,14 +155,15 @@ body {
   }
 }
 
-/* FOUR-POINT BACKGROUND SPARKLES */
-
 .sky-sparkle {
   position: absolute;
   width: 9px;
   height: 9px;
-  background: rgba(245, 236, 255, .9);
-  clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
+  background: rgba(245,236,255,.9);
+  clip-path: polygon(
+    50% 0%, 62% 38%, 100% 50%, 62% 62%,
+    50% 100%, 38% 62%, 0% 50%, 38% 38%
+  );
   filter: drop-shadow(0 0 5px rgba(231,213,255,.9));
   animation: sparklePulse 3.5s ease-in-out infinite;
 }
@@ -136,7 +173,9 @@ body {
   50% { opacity: 1; transform: scale(1.2) rotate(20deg); }
 }
 
-/* SHOOTING STARS */
+/* =========================
+   SHOOTING STARS
+========================= */
 
 .shooting-star {
   position: absolute;
@@ -175,17 +214,15 @@ body {
     transform: translate(0,0) rotate(-35deg);
   }
   74% { opacity: 1; }
-  82% {
-    opacity: 0;
-    transform: translate(-330px,210px) rotate(-35deg);
-  }
-  100% {
+  82%, 100% {
     opacity: 0;
     transform: translate(-330px,210px) rotate(-35deg);
   }
 }
 
-/* OPENING SCREEN */
+/* =========================
+   OPENING SCREEN
+========================= */
 
 #opening {
   z-index: 10;
@@ -257,7 +294,9 @@ body {
   background: rgba(255,255,255,.18);
 }
 
-/* MAIN SCREEN */
+/* =========================
+   MAIN SCREEN
+========================= */
 
 #main {
   display: none;
@@ -273,31 +312,38 @@ body {
   z-index: 3;
 }
 
-/* FALLING POLAROIDS */
+/* =========================
+   POLAROID FRAMES
+========================= */
 
 .falling-photo-frame {
   position: absolute;
-  top: -160px;
+  top: -170px;
   opacity: 0;
   animation: fall var(--fall-duration) linear forwards;
   will-change: transform;
 }
 
+/*
+  The bottom padding is intentionally larger.
+  It creates a clear white decorative strip.
+  The photo itself no longer sits underneath the artwork.
+*/
+
 .falling-photo-image {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
   border: 6px solid white;
-  outline: none;
-  padding: 5px;
+  padding: 5px 5px 17px;
   background: white;
   border-radius: 3px;
   box-shadow: 0 4px 18px rgba(10,5,20,.4);
 }
 
-/* CELESTIAL POLAROID DECORATIONS */
+/* Decoration is restricted to the white frame margins */
 
 .photo-decoration-layer {
   position: absolute;
@@ -323,12 +369,23 @@ body {
   85% { opacity: 1; }
   100% {
     opacity: 0;
-    transform: translate3d(var(--drift),110vh,0)
+    transform:
+      translate3d(var(--drift),110vh,0)
       rotate(calc(var(--rotation) + 25deg));
   }
 }
 
-/* CENTER MESSAGE AND HEART */
+/* =========================
+   POLAROID CELESTIAL ART
+   No overlapping decorations.
+   No constellation lines.
+========================= */
+
+function-placeholder { display: none; }
+
+/* =========================
+   CENTER MESSAGE
+========================= */
 
 .center-message {
   position: absolute;
@@ -376,7 +433,9 @@ body {
     drop-shadow(0 0 38px rgba(190,160,255,.65));
 }
 
-/* HIDDEN YOUTUBE PLAYER */
+/* =========================
+   HIDDEN YOUTUBE PLAYER
+========================= */
 
 #youtube-player-container {
   position: fixed;
@@ -395,7 +454,9 @@ body {
   border: 0;
 }
 
-/* SMALL SCREENS */
+/* =========================
+   SMALL SCREENS
+========================= */
 
 @media (max-width: 380px) {
   .opening-subtitle { font-size: 17px; }
@@ -430,7 +491,9 @@ body {
 <!-- OPENING SCREEN -->
 
 <div class="screen" id="opening">
+  <div class="nebula-clouds"></div>
   <div class="stars" id="opening-stars"></div>
+
   <div class="shooting-star" style="top:18%;left:85%;animation-delay:1s"></div>
   <div class="shooting-star" style="top:42%;left:100%;animation-delay:4s"></div>
   <div class="shooting-star" style="top:70%;left:75%;animation-delay:6s"></div>
@@ -451,6 +514,7 @@ body {
 <!-- MAIN SCREEN -->
 
 <div class="screen" id="main">
+  <div class="nebula-clouds"></div>
   <div class="stars" id="main-stars"></div>
 
   <div class="shooting-star" style="top:12%;left:95%;animation-delay:2s"></div>
@@ -462,18 +526,24 @@ body {
   <div class="center-message">
     <span class="message-text">I'll Always Choose You</span>
     <svg class="white-heart" viewBox="0 0 24 24" aria-label="White heart" role="img">
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5
-      2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
-      1.09-1.28 2.76-2.09 4.5-2.09
-      3.08 0 5.5 2.42 5.5 5.5
-      0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      <path d="M12 21.35
+        C11.5 20.9 10.9 20.35 10.2 19.7
+        C5.1 15.1 2 12.2 2 8.5
+        C2 5.4 4.4 3 7.5 3
+        C9.3 3 10.9 3.8 12 5.1
+        C13.1 3.8 14.7 3 16.5 3
+        C19.6 3 22 5.4 22 8.5
+        C22 12.2 18.9 15.1 13.8 19.7
+        Z"/>
     </svg>
   </div>
 </div>
 
 <script>
 
-/* PHOTO FILES */
+/* =========================
+   PHOTO FILES
+========================= */
 
 const photoFiles = [
   "Picture_36_Original_Original.jpeg",
@@ -613,7 +683,9 @@ const photoFiles = [
   "Wedding4.jpeg"
 ];
 
-/* BACKGROUND STARS AND SPARKLES */
+/* =========================
+   BACKGROUND STARS
+========================= */
 
 function createStars(containerId, count) {
   const container = document.getElementById(containerId);
@@ -649,7 +721,9 @@ function createStars(containerId, count) {
 createStars("opening-stars", 125);
 createStars("main-stars", 145);
 
-/* PHOTO SHUFFLE / NO REPEATS */
+/* =========================
+   PHOTO SHUFFLE / NO REPEATS
+========================= */
 
 const photos = document.getElementById("photos");
 
@@ -720,7 +794,9 @@ function getNextPhoto() {
   return photoDeck.shift();
 }
 
-/* RANDOM PHOTO DIMENSIONS */
+/* =========================
+   RANDOM PHOTO DIMENSIONS
+========================= */
 
 function getRandomPhotoSize() {
   const sizes = [
@@ -745,124 +821,156 @@ function getRandomPhotoSize() {
   };
 }
 
-/* DRAWN CELESTIAL BORDER ART
-   SVG SHAPES ARE USED INSTEAD OF FONT SYMBOLS.
-   NO CONSTELLATION LINES. */
+/* =========================
+   POLAROID BORDER DECORATIONS
+
+   Artwork is placed only in:
+   - the narrow top white margin
+   - the larger bottom white margin
+
+   No artwork is placed over the photo.
+   No connecting lines are used.
+========================= */
 
 function addPhotoDecorations(layer) {
+
   const star = (x, y, size, opacity = 1) => `
     <path
-      d="M ${x} ${y-size} Q ${x+1.1} ${y-1.1} ${x+size} ${y}
-         Q ${x+1.1} ${y+1.1} ${x} ${y+size}
-         Q ${x-1.1} ${y+1.1} ${x-size} ${y}
-         Q ${x-1.1} ${y-1.1} ${x} ${y-size} Z"
-      fill="#a98bd3"
+      d="
+        M ${x} ${y-size}
+        Q ${x+1} ${y-1} ${x+size} ${y}
+        Q ${x+1} ${y+1} ${x} ${y+size}
+        Q ${x-1} ${y+1} ${x-size} ${y}
+        Q ${x-1} ${y-1} ${x} ${y-size}
+        Z
+      "
+      fill="#a88acb"
       opacity="${opacity}"
-      filter="url(#glow)"
-    />`;
+    />
+  `;
 
   const sparkle = (x, y, size, opacity = .9) => `
     <path
-      d="M ${x} ${y-size} L ${x+1.2} ${y-1.2}
-         L ${x+size} ${y} L ${x+1.2} ${y+1.2}
-         L ${x} ${y+size} L ${x-1.2} ${y+1.2}
-         L ${x-size} ${y} L ${x-1.2} ${y-1.2} Z"
-      fill="#c6b2e5"
+      d="
+        M ${x} ${y-size}
+        L ${x+1} ${y-1}
+        L ${x+size} ${y}
+        L ${x+1} ${y+1}
+        L ${x} ${y+size}
+        L ${x-1} ${y+1}
+        L ${x-size} ${y}
+        L ${x-1} ${y-1}
+        Z
+      "
+      fill="#c5b1e2"
       opacity="${opacity}"
-    />`;
+    />
+  `;
+
+  const tinyDot = (x, y, r = 1.1) => `
+    <circle cx="${x}" cy="${y}" r="${r}" fill="#bca5dc" opacity=".9"/>
+  `;
 
   const moon = (x, y, scale, flip = false) => `
     <g transform="translate(${x} ${y}) scale(${flip ? -scale : scale},${scale})">
       <path
-        d="M 0 -8
-           C -8 -7 -11 2 -5 8
-           C 0 13 8 9 10 3
-           C 5 7 0 5 -2 1
-           C -4 -3 -2 -6 0 -8 Z"
-        fill="#b69bdc"
-        stroke="#e1d2f5"
-        stroke-width=".7"
-        filter="url(#glow)"
+        d="
+          M 0 -6.5
+          C -5 -5.5 -7 1 -3.8 5
+          C -.5 9 5.5 7.5 8 2.5
+          C 4.2 5 1 3.2 -.4 .4
+          C -1.8 -2.5 -1.1 -4.8 0 -6.5
+          Z
+        "
+        fill="#b39bd5"
+        stroke="#e3d5f4"
+        stroke-width=".65"
       />
-    </g>`;
+    </g>
+  `;
+
+  /*
+    Each layout is intentionally sparse.
+    One crescent per design, with stars kept
+    at separate positions in the white margins.
+  */
 
   const patterns = [
+
+    /* Crescent at lower left */
+
     () => `
-      ${moon(12, 12, .78)}
-      ${star(29, 8, 5.5)}
-      ${sparkle(45, 10, 3.5)}
-      ${star(116, 146, 5)}
-      ${sparkle(99, 151, 3)}
-      ${sparkle(8, 145, 3.5)}
+      ${star(31, 7, 2.8, .9)}
+      ${sparkle(49, 7, 2.1, .8)}
+      ${tinyDot(68, 7)}
+      ${moon(15, 151, .82)}
+      ${star(39, 151, 3.1, .95)}
+      ${sparkle(65, 151, 2.5, .85)}
+      ${star(91, 151, 2.8, .9)}
+      ${tinyDot(111, 151)}
     `,
+
+    /* Crescent at lower right */
+
     () => `
-      ${moon(116, 12, .78, true)}
-      ${star(98, 8, 5.5)}
-      ${sparkle(82, 10, 3.5)}
-      ${star(12, 147, 5)}
-      ${sparkle(29, 151, 3)}
-      ${sparkle(119, 80, 3.5)}
+      ${tinyDot(17, 7)}
+      ${sparkle(39, 7, 2.1, .8)}
+      ${star(62, 7, 2.8, .9)}
+      ${star(88, 7, 2.3, .8)}
+      ${tinyDot(108, 7)}
+      ${star(18, 151, 2.8, .9)}
+      ${sparkle(43, 151, 2.5, .85)}
+      ${star(69, 151, 3.1, .95)}
+      ${moon(111, 151, .82, true)}
     `,
+
+    /* Crescent at upper left */
+
     () => `
-      ${moon(12, 148, .78)}
-      ${star(29, 151, 5.5)}
-      ${sparkle(46, 150, 3.5)}
-      ${star(116, 12, 5)}
-      ${sparkle(99, 8, 3)}
-      ${sparkle(8, 78, 3.5)}
+      ${moon(15, 7, .72)}
+      ${star(39, 7, 2.8, .9)}
+      ${sparkle(63, 7, 2.1, .8)}
+      ${tinyDot(89, 7)}
+      ${star(109, 7, 2.3, .85)}
+      ${star(25, 151, 3, .9)}
+      ${sparkle(52, 151, 2.4, .85)}
+      ${star(83, 151, 2.8, .9)}
+      ${tinyDot(108, 151)}
     `,
+
+    /* Crescent at upper right */
+
     () => `
-      ${moon(116, 148, .78, true)}
-      ${star(98, 151, 5.5)}
-      ${sparkle(82, 150, 3.5)}
-      ${star(12, 12, 5)}
-      ${sparkle(29, 8, 3)}
-      ${sparkle(119, 80, 3.5)}
-    `,
-    () => `
-      ${moon(12, 12, .72)}
-      ${star(116, 12, 5.5)}
-      ${star(12, 148, 5)}
-      ${sparkle(29, 8, 3.5)}
-      ${sparkle(98, 151, 3.5)}
-      ${sparkle(116, 80, 3)}
-    `,
-    () => `
-      ${moon(116, 12, .72, true)}
-      ${star(12, 148, 5.5)}
-      ${star(116, 148, 5)}
-      ${sparkle(98, 8, 3.5)}
-      ${sparkle(29, 151, 3.5)}
-      ${sparkle(8, 80, 3)}
+      ${tinyDot(18, 7)}
+      ${star(42, 7, 2.5, .85)}
+      ${sparkle(66, 7, 2.2, .8)}
+      ${star(89, 7, 2.8, .9)}
+      ${moon(111, 7, .72, true)}
+      ${star(17, 151, 2.8, .9)}
+      ${sparkle(43, 151, 2.3, .85)}
+      ${star(72, 151, 3, .9)}
+      ${tinyDot(99, 151)}
     `
   ];
 
   const selectedPattern =
     patterns[Math.floor(Math.random() * patterns.length)];
 
-  const extraSparkles = Math.random() < .55
-    ? `${sparkle(64, 8, 3, .75)}`
-    : "";
-
   layer.innerHTML = `
-    <svg viewBox="0 0 128 160" preserveAspectRatio="none"
-         xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <defs>
-        <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
-          <feGaussianBlur stdDeviation="1.1" result="blur"/>
-          <feMerge>
-            <feMergeNode in="blur"/>
-            <feMergeNode in="SourceGraphic"/>
-          </feMerge>
-        </filter>
-      </defs>
+    <svg
+      viewBox="0 0 128 160"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
       ${selectedPattern()}
-      ${extraSparkles}
     </svg>
   `;
 }
 
-/* CREATE FALLING PHOTO */
+/* =========================
+   CREATE FALLING PHOTO
+========================= */
 
 function createFallingPhoto() {
   const filename = getNextPhoto();
@@ -947,7 +1055,9 @@ function createFallingPhoto() {
   img.src = "./" + encodeURIComponent(filename);
 }
 
-/* PHOTO START SEQUENCE */
+/* =========================
+   PHOTO START SEQUENCE
+========================= */
 
 function startPhotos() {
   if (photoStarted) return;
@@ -965,7 +1075,9 @@ function startPhotos() {
   }, 8000);
 }
 
-/* HIDDEN YOUTUBE PLAYER WITH AUTOPLAY AND LOOP */
+/* =========================
+   HIDDEN YOUTUBE PLAYER
+========================= */
 
 const videoId = "yLZoVTayvxY";
 
@@ -1019,13 +1131,16 @@ function onYouTubeIframeAPIReady() {
   firstScript.parentNode.insertBefore(tag, firstScript);
 })();
 
-/* OPEN SURPRISE */
+/* =========================
+   OPEN SURPRISE
+========================= */
 
 const opening = document.getElementById("opening");
 const main = document.getElementById("main");
 const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
+
   if (youtubePlayer && youtubePlayerReady) {
     youtubePlayer.playVideo();
   } else {
