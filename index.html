@@ -395,8 +395,6 @@ body {
 
 .falling-photo-frame {
   position: absolute;
-
-  /* CHANGED: Start much closer to the screen */
   top: -180px;
   left: 0;
 
@@ -640,10 +638,6 @@ body {
 ========================= */
 
 @keyframes photoFall {
-
-  /* CHANGED: No extra -430px translation.
-     The strip starts at its top position above the screen
-     and begins falling immediately. */
   0% {
     transform: translate3d(0,0,0) rotate(var(--rotation));
   }
@@ -1065,10 +1059,10 @@ const stripSizes = [
   [136,428]
 ];
 
-const MAX_ACTIVE_PHOTOS = 1;
+/* Multiple strips can fall at the same time. */
 
-let activePhotoCount = 0;
 let photoTimersStarted = false;
+let cascadeStarted = false;
 
 
 /* =========================
@@ -1076,10 +1070,6 @@ let photoTimersStarted = false;
 ========================= */
 
 function createFallingPhoto() {
-
-  if (activePhotoCount >= MAX_ACTIVE_PHOTOS) {
-    return;
-  }
 
   const filenames = [
     nextPhoto(),
@@ -1150,22 +1140,69 @@ function createFallingPhoto() {
   frame.appendChild(stripImages);
   frame.appendChild(decoration);
 
-  activePhotoCount++;
-
   photosContainer.appendChild(frame);
 
-  frame.addEventListener("animationend",function() {
+}
 
-    frame.remove();
 
-    activePhotoCount = Math.max(0,activePhotoCount-1);
+/* =========================
+   OPENING: FIRST TWO STRIPS
+========================= */
 
-    /* Wait 10 seconds after the strip finishes before the next one. */
-    if (photoTimersStarted) {
-      setTimeout(createFallingPhoto,10000);
+function startOpeningPhotoSequence() {
+
+  if (photoTimersStarted) {
+    return;
+  }
+
+  photoTimersStarted = true;
+
+  /* Strip #1 begins immediately. */
+  createFallingPhoto();
+
+  /* Strip #2 begins separately after 3 seconds. */
+  setTimeout(function() {
+
+    createFallingPhoto();
+
+    /* After the second strip, begin the cascade. */
+    setTimeout(startPhotoCascade,3000);
+
+  },3000);
+
+}
+
+
+/* =========================
+   CASCADING PHOTO SEQUENCE
+========================= */
+
+function startPhotoCascade() {
+
+  if (cascadeStarted) {
+    return;
+  }
+
+  cascadeStarted = true;
+
+  /* Begin the cascading sequence. */
+  createFallingPhoto();
+
+  /* Continue adding strips every 3 seconds.
+     Previous strips remain falling, creating the cascade. */
+  function continueCascade() {
+
+    if (!cascadeStarted) {
+      return;
     }
 
-  },{once:true});
+    createFallingPhoto();
+
+    setTimeout(continueCascade,3000);
+  }
+
+  setTimeout(continueCascade,3000);
+
 }
 
 
@@ -1174,15 +1211,7 @@ function createFallingPhoto() {
 ========================= */
 
 function startPhotos() {
-
-  if (photoTimersStarted) {
-    return;
-  }
-
-  photoTimersStarted = true;
-
-  /* First strip starts immediately. */
-  createFallingPhoto();
+  startOpeningPhotoSequence();
 }
 
 
@@ -1190,7 +1219,9 @@ function startPhotos() {
    YOUTUBE BACKGROUND MUSIC
 ========================= */
 
-const videoId = "Qv20J91J7mA";
+/* UPDATED VIDEO */
+
+const videoId = "QIhhWlfvPy0";
 
 let youtubePlayer = null;
 let youtubeReady = false;
