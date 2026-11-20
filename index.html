@@ -3,20 +3,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#10091c">
 <title>Lavender Midnight</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 html, body {
-  margin: 0;
   width: 100%;
   height: 100%;
+  margin: 0;
   overflow: hidden;
-  background: #0c0817;
+  background: #10091c;
 }
 
 body {
@@ -30,295 +33,372 @@ body {
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(ellipse at 50% 45%, #30213f 0%, #1b142a 48%, #0c0817 100%);
+    radial-gradient(ellipse at 50% 48%, #241333 0%, #180e25 42%, #10091c 100%);
 }
 
-/* =====================================
-   VISIBLE LAVENDER NEBULA CLOUDS
-===================================== */
+.hidden {
+  display: none !important;
+}
+
+/* =====================================================
+   NEBULA CLOUDS
+   Separate positive-z layer so they remain visible.
+===================================================== */
 
 .nebula-clouds {
   position: absolute;
-  inset: -25%;
+  inset: -18%;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
-  opacity: 1;
 }
 
-.nebula-clouds span {
+.nebula-cloud {
   position: absolute;
   display: block;
   border-radius: 50%;
   filter: blur(48px);
   mix-blend-mode: screen;
+  opacity: .8;
   will-change: transform;
 }
 
 .cloud-one {
-  width: 75%;
-  height: 35%;
-  left: -5%;
-  top: 15%;
-  background: radial-gradient(ellipse, rgba(154,111,194,.43), rgba(117,77,163,.22) 43%, transparent 74%);
-  transform: rotate(-24deg);
-  animation: cloudDriftOne 32s ease-in-out infinite alternate;
+  width: 85vw;
+  height: 58vw;
+  min-width: 440px;
+  min-height: 330px;
+  left: -20%;
+  top: 13%;
+  background:
+    radial-gradient(ellipse at 45% 50%,
+      rgba(156, 105, 204, .72) 0%,
+      rgba(119, 76, 169, .48) 30%,
+      rgba(83, 52, 132, .25) 53%,
+      transparent 74%);
+  animation: cloudDriftOne 24s ease-in-out infinite alternate;
 }
 
 .cloud-two {
-  width: 72%;
-  height: 42%;
-  right: -8%;
-  top: 30%;
-  background: radial-gradient(ellipse, rgba(119,103,190,.40), rgba(105,76,157,.22) 45%, transparent 75%);
-  transform: rotate(28deg);
-  animation: cloudDriftTwo 39s ease-in-out infinite alternate;
+  width: 95vw;
+  height: 62vw;
+  min-width: 480px;
+  min-height: 350px;
+  right: -30%;
+  top: 28%;
+  background:
+    radial-gradient(ellipse at 50% 50%,
+      rgba(120, 91, 190, .66) 0%,
+      rgba(105, 69, 163, .42) 32%,
+      rgba(79, 48, 127, .2) 55%,
+      transparent 75%);
+  animation: cloudDriftTwo 29s ease-in-out infinite alternate;
 }
 
 .cloud-three {
-  width: 78%;
-  height: 35%;
-  left: 15%;
-  bottom: 3%;
-  background: radial-gradient(ellipse, rgba(173,119,192,.34), rgba(121,81,166,.20) 45%, transparent 76%);
-  transform: rotate(-15deg);
-  animation: cloudDriftThree 36s ease-in-out infinite alternate;
+  width: 82vw;
+  height: 55vw;
+  min-width: 420px;
+  min-height: 310px;
+  left: 12%;
+  bottom: -15%;
+  background:
+    radial-gradient(ellipse at 50% 45%,
+      rgba(180, 117, 179, .48) 0%,
+      rgba(132, 80, 164, .36) 36%,
+      rgba(91, 53, 135, .18) 58%,
+      transparent 76%);
+  animation: cloudDriftThree 32s ease-in-out infinite alternate;
 }
 
 .cloud-four {
-  width: 58%;
-  height: 32%;
-  left: 32%;
-  top: 3%;
-  background: radial-gradient(ellipse, rgba(177,143,211,.27), rgba(125,91,173,.14) 48%, transparent 76%);
-  transform: rotate(18deg);
-  animation: cloudDriftOne 44s ease-in-out infinite alternate-reverse;
+  width: 70vw;
+  height: 46vw;
+  min-width: 370px;
+  min-height: 270px;
+  left: 25%;
+  top: 4%;
+  background:
+    radial-gradient(ellipse at 50% 50%,
+      rgba(207, 145, 190, .32) 0%,
+      rgba(148, 93, 177, .29) 38%,
+      transparent 73%);
+  animation: cloudDriftOne 35s ease-in-out infinite alternate-reverse;
 }
 
 .cloud-five {
-  width: 65%;
-  height: 30%;
-  left: -12%;
-  bottom: 12%;
-  background: radial-gradient(ellipse, rgba(111,104,181,.32), rgba(92,76,153,.16) 48%, transparent 76%);
-  transform: rotate(32deg);
-  animation: cloudDriftTwo 42s ease-in-out infinite alternate-reverse;
+  width: 60vw;
+  height: 45vw;
+  min-width: 320px;
+  min-height: 260px;
+  left: -5%;
+  top: 52%;
+  background:
+    radial-gradient(ellipse at 50% 50%,
+      rgba(106, 91, 194, .45) 0%,
+      rgba(102, 66, 163, .3) 40%,
+      transparent 75%);
+  animation: cloudDriftTwo 27s ease-in-out infinite alternate-reverse;
 }
 
 @keyframes cloudDriftOne {
-  from { translate: -3% -2%; scale: .95; }
-  to { translate: 5% 4%; scale: 1.13; }
+  from { transform: translate(-2%, -2%) rotate(-8deg) scale(.96); }
+  to { transform: translate(9%, 8%) rotate(12deg) scale(1.12); }
 }
 
 @keyframes cloudDriftTwo {
-  from { translate: 3% 2%; scale: 1.05; }
-  to { translate: -5% -3%; scale: .92; }
+  from { transform: translate(3%, 2%) rotate(10deg) scale(1.05); }
+  to { transform: translate(-9%, -6%) rotate(-12deg) scale(.94); }
 }
 
 @keyframes cloudDriftThree {
-  from { translate: -2% 3%; scale: .94; }
-  to { translate: 4% -3%; scale: 1.12; }
+  from { transform: translate(4%, -3%) rotate(-5deg) scale(.95); }
+  to { transform: translate(-6%, 5%) rotate(9deg) scale(1.1); }
 }
 
-/* Soft, wispy cloud detail */
-
-.nebula-haze {
-  position: absolute;
-  inset: -15%;
-  z-index: 0;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at 22% 38%, rgba(202,167,226,.13), transparent 24%),
-    radial-gradient(ellipse at 73% 30%, rgba(171,148,224,.15), transparent 27%),
-    radial-gradient(ellipse at 57% 78%, rgba(190,143,211,.13), transparent 25%),
-    radial-gradient(ellipse at 8% 78%, rgba(130,116,194,.12), transparent 25%);
-  filter: blur(30px);
-  animation: hazeMove 38s ease-in-out infinite alternate;
-}
-
-@keyframes hazeMove {
-  from { transform: translate(-2%, 1%) scale(1); }
-  to { transform: translate(3%, -2%) scale(1.1); }
-}
-
-/* =====================================
-   BACKGROUND STARS
-===================================== */
+/* =====================================================
+   STAR FIELD
+===================================================== */
 
 .stars {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .star {
   position: absolute;
-  width: 2px;
-  height: 2px;
   border-radius: 50%;
-  background: white;
-  box-shadow: 0 0 7px 1px rgba(255,255,255,.8);
-  animation: twinkle 3s ease-in-out infinite;
+  background: #fff;
+  box-shadow:
+    0 0 4px rgba(255,255,255,.9),
+    0 0 10px rgba(213,190,255,.8);
+  animation: twinkle var(--twinkle-duration, 3s) ease-in-out infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+.star.large {
+  box-shadow:
+    0 0 5px white,
+    0 0 13px rgba(221,198,255,.95),
+    0 0 23px rgba(177,137,255,.6);
 }
 
 @keyframes twinkle {
-  0%, 100% { opacity: .2; transform: scale(.75); }
-  50% { opacity: 1; transform: scale(1.6); }
+  0%, 100% { opacity: .28; transform: scale(.75); }
+  50% { opacity: 1; transform: scale(1.3); }
 }
 
-.sky-sparkle {
+/* Four-point glowing stars */
+
+.sparkle {
   position: absolute;
-  width: 9px;
-  height: 9px;
-  background: rgba(245,236,255,.95);
-  clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
-  filter: drop-shadow(0 0 5px rgba(231,213,255,.9));
-  animation: sparklePulse 3.5s ease-in-out infinite;
+  width: 13px;
+  height: 13px;
+  z-index: 1;
+  opacity: .7;
+  animation: sparklePulse 4s ease-in-out infinite;
+}
+
+.sparkle::before,
+.sparkle::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255,255,255,.95);
+  border-radius: 100%;
+  box-shadow: 0 0 9px rgba(221,201,255,.9);
+}
+
+.sparkle::before {
+  width: 2px;
+  height: 100%;
+}
+
+.sparkle::after {
+  width: 100%;
+  height: 2px;
 }
 
 @keyframes sparklePulse {
   0%, 100% { opacity: .25; transform: scale(.7) rotate(0deg); }
-  50% { opacity: 1; transform: scale(1.2) rotate(20deg); }
+  50% { opacity: .95; transform: scale(1.25) rotate(45deg); }
 }
 
-/* =====================================
-   SHOOTING STARS IN THE SKY
-===================================== */
+/* =====================================================
+   SHOOTING STARS
+===================================================== */
 
 .shooting-star {
   position: absolute;
   z-index: 2;
-  width: 155px;
+  width: 105px;
   height: 1.5px;
+  border-radius: 50%;
   opacity: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(218,195,255,.18) 25%,
+    rgba(255,255,255,.95) 100%
+  );
+  filter: drop-shadow(0 0 5px rgba(224,203,255,.9));
+  transform: rotate(-32deg);
+  animation: shootingStar 7s linear infinite;
   pointer-events: none;
-  background: linear-gradient(90deg, transparent, rgba(226,211,255,.25), white, transparent);
-  transform: rotate(-35deg);
-  filter: drop-shadow(0 0 5px rgba(226,211,255,.9));
-  animation: shooting 8s ease-in-out infinite;
 }
 
 .shooting-star::after {
   content: "";
   position: absolute;
-  right: 20px;
+  right: 0;
   top: -2px;
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: white;
-  box-shadow: 0 0 9px 3px rgba(255,255,255,.8);
+  box-shadow: 0 0 8px 2px rgba(227,210,255,.9);
 }
 
-@keyframes shooting {
-  0%, 72% { opacity: 0; transform: translate(0,0) rotate(-35deg); }
-  74% { opacity: 1; }
-  82%, 100% { opacity: 0; transform: translate(-330px,210px) rotate(-35deg); }
+@keyframes shootingStar {
+  0% {
+    opacity: 0;
+    transform: translate(0,0) rotate(-32deg);
+  }
+  5% { opacity: .95; }
+  14% { opacity: 0; }
+  100% {
+    opacity: 0;
+    transform: translate(-260px,170px) rotate(-32deg);
+  }
 }
 
-/* =====================================
+/* =====================================================
    OPENING SCREEN
-===================================== */
+===================================================== */
 
 #opening {
-  z-index: 10;
+  z-index: 20;
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  transition: opacity 1.5s ease;
 }
 
 .opening-content {
   position: relative;
-  z-index: 3;
-  padding: 25px;
-  width: 100%;
-  max-width: 500px;
+  z-index: 5;
+  width: min(90%, 460px);
+  text-align: center;
+  padding: 28px 18px;
+  animation: openingAppear 2s ease both;
+}
+
+@keyframes openingAppear {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .opening-eyebrow {
-  font-size: 13px;
-  letter-spacing: 5px;
+  font-size: 11px;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  color: rgba(255,255,255,.78);
-  margin-bottom: 30px;
+  color: rgba(237,222,255,.78);
+  margin-bottom: 27px;
 }
 
-.moon {
-  font-size: 50px;
-  margin-bottom: 15px;
-  color: #eee3ff;
-  filter: drop-shadow(0 0 15px rgba(218,195,255,.65));
+.opening-moon {
+  width: 45px;
+  height: 45px;
+  margin: 0 auto 22px;
+  filter: drop-shadow(0 0 12px rgba(221,198,255,.8));
+}
+
+.opening-moon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .opening-title {
   font-family: 'Allura', cursive;
-  font-size: clamp(48px, 13vw, 76px);
-  line-height: 1.1;
+  font-size: clamp(43px, 11vw, 66px);
   font-weight: 400;
-  color: white;
-  text-shadow: 0 0 18px rgba(221,201,255,.3);
+  line-height: 1.05;
+  color: #fff;
+  text-shadow:
+    0 0 8px rgba(255,255,255,.7),
+    0 0 22px rgba(208,177,255,.8),
+    0 0 42px rgba(164,116,220,.6);
+  margin: 0 0 16px;
 }
 
 .opening-subtitle {
-  margin-top: 18px;
-  font-size: 19px;
+  font-size: 16px;
   letter-spacing: 1px;
-  color: rgba(255,255,255,.88);
+  line-height: 1.6;
+  color: rgba(244,234,255,.78);
+  margin: 0 auto 35px;
 }
 
 .open-button {
-  margin-top: 40px;
-  padding: 15px 28px;
-  border: 1px solid rgba(255,255,255,.65);
+  appearance: none;
+  border: 1px solid rgba(230,210,255,.65);
   border-radius: 40px;
-  background: rgba(255,255,255,.08);
+  padding: 13px 28px;
+  background: rgba(160,122,193,.15);
   color: white;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
-  letter-spacing: 1px;
+  font-size: 16px;
+  letter-spacing: 1.5px;
   cursor: pointer;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  transition: background .3s ease, transform .3s ease;
+  box-shadow:
+    0 0 16px rgba(178,142,224,.2),
+    inset 0 0 14px rgba(220,199,255,.08);
+  transition: .3s ease;
 }
 
 .open-button:active {
-  transform: scale(.96);
-  background: rgba(255,255,255,.18);
+  transform: scale(.97);
+  background: rgba(180,145,220,.28);
 }
 
-/* =====================================
-   MAIN SCREEN AND PHOTOS
-===================================== */
+/* =====================================================
+   MAIN SCREEN
+===================================================== */
 
-#main {
-  display: none;
-  opacity: 0;
-  transition: opacity 1.5s ease;
+#main-screen {
+  z-index: 10;
 }
 
 #photos {
   position: absolute;
   inset: 0;
+  z-index: 3;
   overflow: hidden;
   pointer-events: none;
-  z-index: 3;
 }
 
-/* Polaroid has a real white frame and bottom margin */
+/* =====================================================
+   POLAROID PHOTO CARDS
+===================================================== */
 
 .falling-photo-frame {
   position: absolute;
-  top: -170px;
-  opacity: 0;
-  padding: 6px 6px 23px;
+  top: -190px;
+  left: 0;
+  width: var(--photo-width);
+  height: var(--photo-height);
+  padding: 7px 7px 25px;
   background: #fff;
   border-radius: 2px;
-  box-shadow: 0 4px 18px rgba(10,5,20,.45);
-  animation: fall var(--fall-duration) linear forwards;
+  box-shadow:
+    0 5px 18px rgba(0,0,0,.32),
+    0 0 12px rgba(229,211,255,.18);
+  transform: rotate(var(--rotation));
+  animation: photoFall var(--fall-duration) linear forwards;
   will-change: transform;
 }
 
@@ -327,46 +407,89 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center;
+  background: #eee;
   border: 0;
   padding: 0;
-  background: white;
-  border-radius: 0;
 }
 
-/* The SVG overlay only decorates the white frame margins */
+/*
+  Decoration layer is deliberately larger and more expressive.
+  The art stays on the white Polaroid border.
+*/
 
 .photo-decoration-layer {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .photo-decoration-layer svg {
   display: block;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
-@keyframes fall {
-  0% {
-    opacity: 0;
-    transform: translate3d(0,-10px,0) rotate(var(--rotation));
-  }
-  3% { opacity: 1; }
-  85% { opacity: 1; }
-  100% {
-    opacity: 0;
-    transform: translate3d(var(--drift),110vh,0) rotate(calc(var(--rotation) + 25deg));
-  }
+.photo-decoration-layer .ornament {
+  fill: none;
+  stroke: #a98acb;
+  stroke-width: 1.15;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .9;
 }
 
-/* =====================================
+.photo-decoration-layer .ornament-soft {
+  fill: none;
+  stroke: #c2a8df;
+  stroke-width: .8;
+  stroke-linecap: round;
+  opacity: .75;
+}
+
+.photo-decoration-layer .moon {
+  fill: #b99bd8;
+  opacity: .94;
+  filter: drop-shadow(0 0 2px rgba(171,133,211,.4));
+}
+
+.photo-decoration-layer .star-shape {
+  fill: #a98acb;
+  opacity: .95;
+}
+
+.photo-decoration-layer .tiny-star {
+  fill: #c4a9df;
+  opacity: .95;
+}
+
+.photo-decoration-layer .streak {
+  stroke: #a98acb;
+  stroke-width: 1.1;
+  stroke-linecap: round;
+  opacity: .85;
+}
+
+.photo-decoration-layer .streak-glow {
+  stroke: #d3bce9;
+  stroke-width: 2.8;
+  stroke-linecap: round;
+  opacity: .32;
+}
+
+/* Gentle variety in the ornament composition */
+
+.falling-photo-frame.design-1 .moon { transform: translate(0,0); }
+.falling-photo-frame.design-2 .moon { transform: translate(0,0) scale(.85); }
+.falling-photo-frame.design-3 .moon { transform: translate(0,0) scale(1.1); }
+.falling-photo-frame.design-4 .moon { transform: translate(0,0) scale(.92); }
+
+/* =====================================================
    CENTER MESSAGE
-===================================== */
+===================================================== */
 
 .center-message {
   position: absolute;
@@ -376,150 +499,180 @@ body {
   transform: translate(-50%, -50%);
   width: calc(100% - 20px);
   max-width: 520px;
-  text-align: center;
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 5px;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
   pointer-events: none;
 }
 
 .message-text {
   font-family: 'Allura', cursive;
   font-size: clamp(25px, 7.1vw, 48px);
-  line-height: 1.12;
   font-weight: 400;
-  color: white;
+  line-height: 1.12;
   white-space: nowrap;
+  color: #fff;
   text-shadow:
-    0 0 2px #fff,
-    0 0 5px #fff,
-    0 0 11px rgba(255,255,255,.95),
-    0 0 22px rgba(255,255,255,.85),
-    0 0 38px rgba(220,205,255,.8),
-    0 0 60px rgba(190,160,255,.55);
+    0 0 5px rgba(255,255,255,.95),
+    0 0 14px rgba(224,207,255,.95),
+    0 0 28px rgba(184,145,237,.85),
+    0 0 48px rgba(155,112,216,.55);
 }
 
-.white-heart {
-  width: clamp(19px, 5.2vw, 31px);
-  height: auto;
-  flex: 0 0 auto;
-  fill: white;
+.message-heart {
+  width: 23px;
+  height: 23px;
+  margin-top: 12px;
   filter:
-    drop-shadow(0 0 2px #fff)
-    drop-shadow(0 0 5px #fff)
-    drop-shadow(0 0 11px rgba(255,255,255,.95))
-    drop-shadow(0 0 22px rgba(255,255,255,.85))
-    drop-shadow(0 0 38px rgba(190,160,255,.65));
+    drop-shadow(0 0 5px rgba(255,255,255,.95))
+    drop-shadow(0 0 13px rgba(211,187,255,.9));
 }
 
-/* =====================================
-   HIDDEN YOUTUBE PLAYER
-===================================== */
-
-#youtube-player-container {
-  position: fixed;
-  width: 200px;
-  height: 200px;
-  left: -10000px;
-  top: -10000px;
-  opacity: 0;
-  pointer-events: none;
-  overflow: hidden;
+.message-heart path {
+  fill: #fff;
 }
 
-#youtube-player-container iframe {
-  width: 200px;
-  height: 200px;
-  border: 0;
-}
+/* =====================================================
+   PHOTO FALL ANIMATION
+===================================================== */
 
-/* SMALL SCREENS */
-
-@media (max-width: 380px) {
-  .opening-subtitle { font-size: 17px; }
-
-  .opening-eyebrow {
-    font-size: 11px;
-    letter-spacing: 4px;
+@keyframes photoFall {
+  0% {
+    transform:
+      translate3d(0, -190px, 0)
+      rotate(var(--rotation));
   }
-
-  .center-message {
-    width: calc(100% - 12px);
-    gap: 3px;
+  100% {
+    transform:
+      translate3d(var(--drift), calc(100vh + 240px), 0)
+      rotate(calc(var(--rotation) + var(--spin)));
   }
+}
 
+@media (max-width: 600px) {
   .message-text {
     font-size: clamp(23px, 6.9vw, 27px);
   }
 
-  .white-heart { width: 19px; }
+  .message-heart {
+    width: 19px;
+    height: 19px;
+    margin-top: 10px;
+  }
+
+  .cloud-one,
+  .cloud-two,
+  .cloud-three,
+  .cloud-four,
+  .cloud-five {
+    filter: blur(38px);
+  }
+
+  .opening-subtitle {
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nebula-cloud,
+  .star,
+  .sparkle,
+  .shooting-star {
+    animation-duration: 1ms !important;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div id="youtube-player-container">
-  <div id="youtube-player"></div>
-</div>
+<!-- ===================================================
+     OPENING SCREEN
+=================================================== -->
 
-<!-- OPENING SCREEN -->
+<section id="opening" class="screen">
 
-<div class="screen" id="opening">
-  <div class="nebula-clouds">
-    <span class="cloud-one"></span>
-    <span class="cloud-two"></span>
-    <span class="cloud-three"></span>
-    <span class="cloud-four"></span>
-    <span class="cloud-five"></span>
+  <div class="nebula-clouds" aria-hidden="true">
+    <span class="nebula-cloud cloud-one"></span>
+    <span class="nebula-cloud cloud-two"></span>
+    <span class="nebula-cloud cloud-three"></span>
+    <span class="nebula-cloud cloud-four"></span>
+    <span class="nebula-cloud cloud-five"></span>
   </div>
-  <div class="nebula-haze"></div>
+
   <div class="stars" id="opening-stars"></div>
 
-  <div class="shooting-star" style="top:18%;left:85%;animation-delay:1s"></div>
-  <div class="shooting-star" style="top:42%;left:100%;animation-delay:4s"></div>
-  <div class="shooting-star" style="top:70%;left:75%;animation-delay:6s"></div>
+  <div class="shooting-star" style="top:24%;left:82%;animation-delay:1s"></div>
+  <div class="shooting-star" style="top:55%;left:70%;animation-delay:4s"></div>
+  <div class="shooting-star" style="top:76%;left:92%;animation-delay:6s"></div>
 
   <div class="opening-content">
     <div class="opening-eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
-    <div class="moon">☾</div>
-    <div class="opening-title">Under the Shooting Stars</div>
-    <div class="opening-subtitle">Some things are worth taking a moment for...</div>
-    <button class="open-button" id="open-button">Open Your Surprise ♡</button>
-  </div>
-</div>
 
-<!-- MAIN SCREEN -->
+    <div class="opening-moon">
+      <svg viewBox="0 0 50 50" aria-hidden="true">
+        <path d="M31 5 C17 7 10 19 14 31 C18 43 31 47 42 39 C31 40 22 33 21 23 C20 15 24 9 31 5Z"
+          fill="#e9d9ff"/>
+      </svg>
+    </div>
 
-<div class="screen" id="main">
-  <div class="nebula-clouds">
-    <span class="cloud-one"></span>
-    <span class="cloud-two"></span>
-    <span class="cloud-three"></span>
-    <span class="cloud-four"></span>
-    <span class="cloud-five"></span>
+    <h1 class="opening-title">Under the Shooting Stars</h1>
+
+    <p class="opening-subtitle">
+      Some things are worth taking a moment for...
+    </p>
+
+    <button class="open-button" id="open-button">
+      Open Your Surprise ♡
+    </button>
   </div>
-  <div class="nebula-haze"></div>
+</section>
+
+<!-- ===================================================
+     MAIN SCREEN
+=================================================== -->
+
+<section id="main-screen" class="screen hidden">
+
+  <div class="nebula-clouds" aria-hidden="true">
+    <span class="nebula-cloud cloud-one"></span>
+    <span class="nebula-cloud cloud-two"></span>
+    <span class="nebula-cloud cloud-three"></span>
+    <span class="nebula-cloud cloud-four"></span>
+    <span class="nebula-cloud cloud-five"></span>
+  </div>
+
   <div class="stars" id="main-stars"></div>
 
-  <div class="shooting-star" style="top:12%;left:95%;animation-delay:2s"></div>
-  <div class="shooting-star" style="top:35%;left:100%;animation-delay:5s"></div>
-  <div class="shooting-star" style="top:60%;left:85%;animation-delay:8s"></div>
+  <div class="shooting-star" style="top:18%;left:90%;animation-delay:1.5s"></div>
+  <div class="shooting-star" style="top:39%;left:75%;animation-delay:4s"></div>
+  <div class="shooting-star" style="top:63%;left:95%;animation-delay:2.5s"></div>
+  <div class="shooting-star" style="top:82%;left:65%;animation-delay:6s"></div>
 
   <div id="photos"></div>
 
   <div class="center-message">
-    <span class="message-text">I'll Always Choose You</span>
-    <svg class="white-heart" viewBox="0 0 24 24" aria-label="White heart" role="img">
-      <path d="M12 21.35 C11.5 20.9 10.9 20.35 10.2 19.7 C5.1 15.1 2 12.2 2 8.5 C2 5.4 4.4 3 7.5 3 C9.3 3 10.9 3.8 12 5.1 C13.1 3.8 14.7 3 16.5 3 C19.6 3 22 5.4 22 8.5 C22 12.2 18.9 15.1 13.8 19.7 Z"/>
+    <div class="message-text">I'll Always Choose You</div>
+
+    <svg class="message-heart" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 21s-9-5.7-9-12.1C3 4.5 5.4 2 8.3 2c1.7 0 3 1 3.7 2.3C12.7 3 14 2 15.7 2 18.6 2 21 4.5 21 8.9 21 15.3 12 21 12 21Z"/>
     </svg>
   </div>
+</section>
+
+<!-- Hidden YouTube player -->
+<div id="youtube-player-container"
+  style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;">
+  <div id="youtube-player"></div>
 </div>
 
 <script>
-
-/* PHOTO FILES */
+/* =====================================================
+   PHOTO FILES
+   Preserve the full photo collection.
+===================================================== */
 
 const photoFiles = [
 "Picture_36_Original_Original.jpeg",
@@ -655,62 +808,159 @@ const photoFiles = [
 "Wedding4.jpeg"
 ];
 
-/* BACKGROUND STARS */
-
-function createStars(containerId, count) {
-  const container = document.getElementById(containerId);
-
-  for (let i = 0; i < count; i++) {
-    const star = document.createElement("div");
-    star.className = "star";
-    star.style.left = Math.random() * 100 + "%";
-    star.style.top = Math.random() * 100 + "%";
-    star.style.animationDelay = Math.random() * 5 + "s";
-    star.style.animationDuration = (2 + Math.random() * 4) + "s";
-
-    if (Math.random() < .16) {
-      star.style.width = "3px";
-      star.style.height = "3px";
-      star.style.boxShadow = "0 0 10px 2px rgba(255,255,255,.85)";
-    }
-
-    container.appendChild(star);
-  }
-
-  for (let i = 0; i < 15; i++) {
-    const sparkle = document.createElement("div");
-    sparkle.className = "sky-sparkle";
-    sparkle.style.left = Math.random() * 100 + "%";
-    sparkle.style.top = Math.random() * 100 + "%";
-    sparkle.style.animationDelay = Math.random() * 5 + "s";
-    sparkle.style.animationDuration = (2.5 + Math.random() * 3) + "s";
-    container.appendChild(sparkle);
-  }
-}
-
-createStars("opening-stars", 125);
-createStars("main-stars", 145);
-
-/* PHOTO SHUFFLE / NO REPEATS */
-
-const photos = document.getElementById("photos");
-
-let photoDeck = [];
-let lastDisplayedPhoto = null;
-let failedPhotos = new Set();
-let photoStarted = false;
-let photoTimer = null;
-let pendingPhotos = 0;
-
 const unavailablePhotos = new Set([
   "IMG_4101_Original.jpeg",
   "wedding-photo-12.png"
 ]);
 
-const photoRetryCounts = new Map();
-const MAX_PHOTO_RETRIES = 2;
+/* =====================================================
+   STAR GENERATION
+===================================================== */
 
-function shuffle(array) {
+function createStars(containerId, count) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  for (let i = 0; i < count; i++) {
+    const star = document.createElement("span");
+    star.className = "star";
+
+    const size = Math.random() < .12
+      ? 3 + Math.random() * 1.5
+      : 1 + Math.random() * 1.5;
+
+    star.style.width = size + "px";
+    star.style.height = size + "px";
+    star.style.left = Math.random() * 100 + "%";
+    star.style.top = Math.random() * 100 + "%";
+    star.style.setProperty("--twinkle-duration", (2 + Math.random() * 4) + "s");
+    star.style.setProperty("--delay", (Math.random() * 5) + "s");
+
+    if (size > 3) star.classList.add("large");
+    container.appendChild(star);
+  }
+
+  const sparkleCount = Math.floor(count / 24);
+
+  for (let i = 0; i < sparkleCount; i++) {
+    const sparkle = document.createElement("span");
+    sparkle.className = "sparkle";
+    sparkle.style.left = Math.random() * 100 + "%";
+    sparkle.style.top = Math.random() * 100 + "%";
+    sparkle.style.animationDelay = Math.random() * 5 + "s";
+    sparkle.style.transform = "scale(" + (.55 + Math.random() * .7) + ")";
+    container.appendChild(sparkle);
+  }
+}
+
+createStars("opening-stars", 125);
+createStars("main-stars", 175);
+
+/* =====================================================
+   POLAROID BORDER ART
+===================================================== */
+
+const borderDesigns = [
+`
+<svg viewBox="0 0 128 160" preserveAspectRatio="none" aria-hidden="true">
+  <g class="ornament">
+    <path d="M13 8 C23 2 31 4 39 8 C47 12 54 11 61 7"/>
+    <path d="M88 7 C96 3 104 4 114 10"/>
+    <path d="M12 150 C23 145 31 147 39 152"/>
+    <path d="M80 151 C91 146 102 147 116 151"/>
+  </g>
+  <g class="ornament-soft">
+    <path d="M40 8 Q47 3 52 7"/>
+    <path d="M78 8 Q84 3 89 7"/>
+    <path d="M40 151 Q47 146 54 151"/>
+  </g>
+  <path class="moon" d="M20 2 C10 3 7 13 12 19 C17 25 27 22 30 14 C24 18 17 16 15 11 C13 7 16 4 20 2Z"/>
+  <path class="star-shape" d="M105 3 L107 8 L112 10 L107 12 L105 17 L103 12 L98 10 L103 8Z"/>
+  <path class="star-shape" d="M62 144 L64 149 L69 151 L64 153 L62 158 L60 153 L55 151 L60 149Z"/>
+  <path class="tiny-star" d="M35 145 L36 148 L39 149 L36 150 L35 153 L34 150 L31 149 L34 148Z"/>
+  <path class="tiny-star" d="M92 6 L93 9 L96 10 L93 11 L92 14 L91 11 L88 10 L91 9Z"/>
+  <path class="streak-glow" d="M77 3 L69 9"/>
+  <path class="streak" d="M77 3 L69 9"/>
+  <circle class="tiny-star" cx="68" cy="10" r="1.4"/>
+  <circle class="tiny-star" cx="12" cy="145" r="1.3"/>
+  <circle class="tiny-star" cx="116" cy="146" r="1.4"/>
+</g>
+</svg>
+`,
+`
+<svg viewBox="0 0 128 160" preserveAspectRatio="none" aria-hidden="true">
+  <g class="ornament">
+    <path d="M13 9 Q25 3 35 8 Q44 13 52 8"/>
+    <path d="M78 8 Q90 3 101 8 Q109 12 116 8"/>
+    <path d="M10 151 Q23 145 35 151"/>
+    <path d="M80 151 Q95 145 116 151"/>
+  </g>
+  <path class="moon" d="M105 2 C95 4 92 14 98 20 C104 26 114 22 117 14 C111 18 104 16 102 11 C100 7 102 4 105 2Z"/>
+  <path class="star-shape" d="M25 3 L27 8 L32 10 L27 12 L25 17 L23 12 L18 10 L23 8Z"/>
+  <path class="star-shape" d="M91 144 L93 149 L98 151 L93 153 L91 158 L89 153 L84 151 L89 149Z"/>
+  <path class="tiny-star" d="M49 145 L50 148 L53 149 L50 150 L49 153 L48 150 L45 149 L48 148Z"/>
+  <path class="tiny-star" d="M65 5 L66 8 L69 9 L66 10 L65 13 L64 10 L61 9 L64 8Z"/>
+  <path class="ornament-soft" d="M39 7 Q47 2 55 7 Q62 11 70 7"/>
+  <path class="ornament-soft" d="M34 151 Q42 146 49 151"/>
+  <path class="streak-glow" d="M72 3 L64 9"/>
+  <path class="streak" d="M72 3 L64 9"/>
+  <circle class="tiny-star" cx="62" cy="10" r="1.4"/>
+  <circle class="tiny-star" cx="13" cy="145" r="1.3"/>
+  <circle class="tiny-star" cx="115" cy="145" r="1.3"/>
+</svg>
+`,
+`
+<svg viewBox="0 0 128 160" preserveAspectRatio="none" aria-hidden="true">
+  <g class="ornament">
+    <path d="M12 8 Q21 2 30 7 Q39 13 47 8"/>
+    <path d="M82 8 Q92 3 102 8 Q109 11 116 8"/>
+    <path d="M13 151 Q22 145 32 150"/>
+    <path d="M76 151 Q92 145 115 151"/>
+  </g>
+  <path class="moon" d="M24 2 C14 4 11 14 17 20 C23 26 33 22 36 14 C30 18 23 16 21 11 C19 7 21 4 24 2Z"/>
+  <path class="star-shape" d="M91 2 L93 7 L98 9 L93 11 L91 16 L89 11 L84 9 L89 7Z"/>
+  <path class="star-shape" d="M48 144 L50 149 L55 151 L50 153 L48 158 L46 153 L41 151 L46 149Z"/>
+  <path class="tiny-star" d="M110 144 L111 147 L114 148 L111 149 L110 152 L109 149 L106 148 L109 147Z"/>
+  <path class="tiny-star" d="M59 4 L60 7 L63 8 L60 9 L59 12 L58 9 L55 8 L58 7Z"/>
+  <path class="ornament-soft" d="M42 8 Q52 2 61 8 Q69 13 78 7"/>
+  <path class="ornament-soft" d="M58 151 Q65 146 73 151"/>
+  <path class="streak-glow" d="M76 3 L68 9"/>
+  <path class="streak" d="M76 3 L68 9"/>
+  <circle class="tiny-star" cx="66" cy="10" r="1.3"/>
+  <circle class="tiny-star" cx="12" cy="145" r="1.3"/>
+</svg>
+`,
+`
+<svg viewBox="0 0 128 160" preserveAspectRatio="none" aria-hidden="true">
+  <g class="ornament">
+    <path d="M12 8 Q22 3 31 8 Q40 13 49 8"/>
+    <path d="M78 8 Q90 3 100 8 Q108 12 116 8"/>
+    <path d="M12 151 Q22 146 32 151"/>
+    <path d="M82 151 Q98 145 116 151"/>
+  </g>
+  <path class="moon" d="M104 2 C94 4 91 14 97 20 C103 26 113 22 116 14 C110 18 103 16 101 11 C99 7 101 4 104 2Z"/>
+  <path class="star-shape" d="M28 2 L30 7 L35 9 L30 11 L28 16 L26 11 L21 9 L26 7Z"/>
+  <path class="star-shape" d="M67 144 L69 149 L74 151 L69 153 L67 158 L65 153 L60 151 L65 149Z"/>
+  <path class="tiny-star" d="M43 145 L44 148 L47 149 L44 150 L43 153 L42 150 L39 149 L42 148Z"/>
+  <path class="tiny-star" d="M86 5 L87 8 L90 9 L87 10 L86 13 L85 10 L82 9 L85 8Z"/>
+  <path class="ornament-soft" d="M41 8 Q49 3 57 7 Q66 12 75 7"/>
+  <path class="streak-glow" d="M77 3 L69 9"/>
+  <path class="streak" d="M77 3 L69 9"/>
+  <circle class="tiny-star" cx="67" cy="10" r="1.3"/>
+  <circle class="tiny-star" cx="12" cy="145" r="1.3"/>
+  <circle class="tiny-star" cx="116" cy="145" r="1.3"/>
+</svg>
+`
+];
+
+/* =====================================================
+   NO-REPEAT SHUFFLED PHOTO DECK
+===================================================== */
+
+let photoDeck = [];
+let photoDeckIndex = 0;
+
+function shuffleArray(array) {
   const result = [...array];
 
   for (let i = result.length - 1; i > 0; i--) {
@@ -721,284 +971,133 @@ function shuffle(array) {
   return result;
 }
 
-function startNewPhotoCycle() {
-  const availablePhotos = photoFiles.filter(
-    filename =>
-      !unavailablePhotos.has(filename) &&
-      !failedPhotos.has(filename)
-  );
+function refillPhotoDeck() {
+  const usable = photoFiles.filter(file => !unavailablePhotos.has(file));
+  photoDeck = shuffleArray(usable);
+  photoDeckIndex = 0;
+}
 
-  photoDeck = shuffle(availablePhotos);
-
-  if (photoDeck.length > 1 && photoDeck[0] === lastDisplayedPhoto) {
-    [photoDeck[0], photoDeck[1]] = [photoDeck[1], photoDeck[0]];
+function nextPhoto() {
+  if (photoDeckIndex >= photoDeck.length) {
+    refillPhotoDeck();
   }
 
-  photoRetryCounts.clear();
-
-  console.log("Starting photo cycle with", photoDeck.length, "available photos.");
+  return photoDeck[photoDeckIndex++];
 }
 
-function getNextPhoto() {
-  if (photoDeck.length === 0) {
-    if (pendingPhotos > 0) return null;
-    startNewPhotoCycle();
-  }
+/* =====================================================
+   PHOTO CREATION
+===================================================== */
 
-  if (photoDeck.length === 0) return null;
+const photosContainer = document.getElementById("photos");
+const photoSizes = [
+  [78, 98],
+  [88, 110],
+  [98, 122],
+  [108, 135],
+  [118, 148],
+  [128, 160]
+];
 
-  return photoDeck.shift();
-}
+let activePhotoCount = 0;
 
-/* RANDOM PHOTO SIZES */
+function createFallingPhoto(attempt = 0) {
+  if (activePhotoCount >= 13) return;
 
-function getRandomPhotoSize() {
-  const sizes = [
-    { width: 78, height: 98 },
-    { width: 88, height: 110 },
-    { width: 98, height: 122 },
-    { width: 108, height: 135 },
-    { width: 118, height: 148 },
-    { width: 128, height: 160 }
-  ];
-
-  const selected = sizes[Math.floor(Math.random() * sizes.length)];
-  const maxWidth = Math.max(70, window.innerWidth - 20);
-  const scale = Math.min(1, maxWidth / selected.width);
-
-  return {
-    width: Math.round(selected.width * scale),
-    height: Math.round(selected.height * scale)
-  };
-}
-
-/* =====================================
-   POLAROID CELESTIAL DECORATIONS
-   Curved connecting details, starbursts,
-   crescent moons and tiny shooting stars.
-===================================== */
-
-function addPhotoDecorations(layer) {
-
-  const star = (x, y, s, opacity = 1) => `
-    <path d="
-      M ${x} ${y-s}
-      C ${x+1} ${y-1} ${x+s} ${y}
-        ${x+1} ${y+1}
-      C ${x} ${y+s} ${x-1} ${y+1}
-        ${x-s} ${y}
-      C ${x-1} ${y-1} ${x} ${y-s}
-      Z"
-      fill="#b69bdc"
-      opacity="${opacity}"/>
-  `;
-
-  const sparkle = (x, y, s, opacity = .9) => `
-    <path d="
-      M ${x} ${y-s}
-      L ${x+1} ${y-1}
-      L ${x+s} ${y}
-      L ${x+1} ${y+1}
-      L ${x} ${y+s}
-      L ${x-1} ${y+1}
-      L ${x-s} ${y}
-      L ${x-1} ${y-1}
-      Z"
-      fill="#d5c2ef"
-      opacity="${opacity}"/>
-  `;
-
-  const moon = (x, y, scale, flip = false) => `
-    <g transform="translate(${x} ${y}) scale(${flip ? -scale : scale},${scale})">
-      <path
-        d="M 1 -8
-           C -7 -7 -10 1 -5 7
-           C 0 12 8 8 10 1
-           C 5 6 0 4 -2 0
-           C -4 -4 -2 -7 1 -8 Z"
-        fill="#b59bdc"
-        stroke="#e6d9f7"
-        stroke-width=".65"
-      />
-    </g>
-  `;
-
-  const shooting = (x, y, angle = -18) => `
-    <g transform="translate(${x} ${y}) rotate(${angle})">
-      <path d="M -13 0 Q -5 -1 0 0"
-        stroke="#bba4df"
-        stroke-width=".8"
-        stroke-linecap="round"
-        opacity=".8"
-        fill="none"/>
-      <circle cx="1" cy="0" r="1.5" fill="#f2eaff"/>
-      <circle cx="1" cy="0" r="2.7" fill="#d5c2ef" opacity=".35"/>
-    </g>
-  `;
-
-  /*
-    Fine curved paths connect a few small details.
-    All paths stay within the white border areas.
-  */
-
-  const patterns = [
-
-    () => `
-      <path d="M 24 8 Q 39 2 53 8" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
-      <path d="M 72 151 Q 88 145 104 151" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
-      ${moon(14,151,.78)}
-      ${star(39,8,3.2)}
-      ${sparkle(58,8,2.2)}
-      ${star(85,151,3.2)}
-      ${sparkle(108,151,2.4)}
-      ${shooting(104,8,-12)}
-    `,
-
-    () => `
-      <path d="M 22 151 Q 39 145 55 151" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
-      <path d="M 73 8 Q 89 2 105 8" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
-      ${moon(113,8,.78,true)}
-      ${star(87,8,3.2)}
-      ${sparkle(65,8,2.2)}
-      ${star(41,151,3.2)}
-      ${sparkle(18,151,2.4)}
-      ${shooting(22,8,12)}
-    `,
-
-    () => `
-      <path d="M 23 8 Q 40 2 55 8" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
-      <path d="M 70 151 Q 86 145 103 151" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
-      ${moon(14,8,.72)}
-      ${star(40,8,3.2)}
-      ${sparkle(61,8,2.2)}
-      ${star(86,151,3.1)}
-      ${sparkle(108,151,2.4)}
-      ${shooting(101,151,-15)}
-    `,
-
-    () => `
-      <path d="M 23 151 Q 40 145 55 151" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
-      <path d="M 72 8 Q 89 2 104 8" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
-      ${moon(113,151,.72,true)}
-      ${star(88,151,3.2)}
-      ${sparkle(64,151,2.2)}
-      ${star(41,8,3.1)}
-      ${sparkle(18,8,2.4)}
-      ${shooting(25,151,15)}
-    `
-  ];
-
-  const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
-
-  layer.innerHTML = `
-    <svg viewBox="0 0 128 160"
-         preserveAspectRatio="none"
-         xmlns="http://www.w3.org/2000/svg"
-         aria-hidden="true">
-      ${selectedPattern()}
-    </svg>
-  `;
-}
-
-/* CREATE FALLING PHOTO */
-
-function createFallingPhoto() {
-  const filename = getNextPhoto();
+  const filename = nextPhoto();
   if (!filename) return;
 
   const frame = document.createElement("div");
-  const img = document.createElement("img");
-  const decorationLayer = document.createElement("div");
+  const image = document.createElement("img");
+  const decoration = document.createElement("div");
 
+  const size = photoSizes[Math.floor(Math.random() * photoSizes.length)];
+  const width = size[0];
+  const height = size[1];
+
+  const left = Math.random() * Math.max(0, window.innerWidth - width);
   const rotation = -16 + Math.random() * 32;
-  const duration = 35 + Math.random() * 10;
   const drift = -65 + Math.random() * 130;
-  const size = getRandomPhotoSize();
+  const spin = -12 + Math.random() * 24;
+  const duration = 35 + Math.random() * 10;
+  const design = 1 + Math.floor(Math.random() * borderDesigns.length);
 
-  frame.className = "falling-photo-frame";
-  frame.style.width = size.width + "px";
-  frame.style.height = size.height + "px";
-
-  const availableWidth = Math.max(0, window.innerWidth - size.width);
-  frame.style.left = Math.random() * availableWidth + "px";
-
+  frame.className = "falling-photo-frame design-" + design;
+  frame.style.left = left + "px";
+  frame.style.setProperty("--photo-width", width + "px");
+  frame.style.setProperty("--photo-height", height + "px");
   frame.style.setProperty("--rotation", rotation + "deg");
-  frame.style.setProperty("--fall-duration", duration + "s");
   frame.style.setProperty("--drift", drift + "px");
+  frame.style.setProperty("--spin", spin + "deg");
+  frame.style.setProperty("--fall-duration", duration + "s");
 
-  img.className = "falling-photo-image";
-  img.alt = "";
-  img.draggable = false;
-  img.loading = "eager";
+  image.className = "falling-photo-image";
+  image.alt = "";
+  image.draggable = false;
 
-  decorationLayer.className = "photo-decoration-layer";
-  addPhotoDecorations(decorationLayer);
+  decoration.className = "photo-decoration-layer";
+  decoration.innerHTML = borderDesigns[design - 1];
 
-  frame.appendChild(img);
-  frame.appendChild(decorationLayer);
+  frame.appendChild(image);
+  frame.appendChild(decoration);
 
-  pendingPhotos++;
+  image.onload = () => {
+    activePhotoCount++;
+    photosContainer.appendChild(frame);
 
-  img.onload = () => {
-    pendingPhotos--;
-    photoRetryCounts.delete(filename);
-    lastDisplayedPhoto = filename;
-    photos.appendChild(frame);
-    console.log("Photo displayed:", filename);
+    frame.addEventListener("animationend", () => {
+      frame.remove();
+      activePhotoCount = Math.max(0, activePhotoCount - 1);
+    }, { once: true });
   };
 
-  img.onerror = () => {
-    pendingPhotos--;
-
-    const retries = photoRetryCounts.get(filename) || 0;
-
-    if (retries < MAX_PHOTO_RETRIES) {
-      photoRetryCounts.set(filename, retries + 1);
-      photoDeck.push(filename);
-      console.warn("Retrying photo:", filename, "Attempt:", retries + 1);
-    } else {
-      failedPhotos.add(filename);
-      photoRetryCounts.delete(filename);
-      console.warn("Skipping photo after retries:", filename);
-    }
-
+  image.onerror = () => {
     frame.remove();
+
+    if (attempt < 2) {
+      createFallingPhoto(attempt + 1);
+    }
   };
 
-  frame.addEventListener("animationend", () => frame.remove());
-
-  img.src = "./" + encodeURIComponent(filename);
+  image.src = "./" + encodeURIComponent(filename);
 }
 
-/* PHOTO START SEQUENCE */
+/* =====================================================
+   START PHOTO FLOW
+===================================================== */
+
+let photoTimersStarted = false;
 
 function startPhotos() {
-  if (photoStarted) return;
-
-  photoStarted = true;
+  if (photoTimersStarted) return;
+  photoTimersStarted = true;
 
   createFallingPhoto();
+
   setTimeout(createFallingPhoto, 1500);
   setTimeout(createFallingPhoto, 3000);
+  setTimeout(createFallingPhoto, 8000);
 
-  setTimeout(() => {
+  setInterval(() => {
     createFallingPhoto();
-    photoTimer = setInterval(createFallingPhoto, 5000);
-  }, 8000);
+  }, 5000);
 }
 
-/* HIDDEN YOUTUBE PLAYER */
+/* =====================================================
+   YOUTUBE PLAYER
+   Hidden player, looping video, same video ID.
+===================================================== */
 
 const videoId = "yLZoVTayvxY";
 
 let youtubePlayer = null;
-let youtubePlayerReady = false;
-let startMusicWhenReady = false;
+let youtubeReady = false;
+let musicRequested = false;
 
 function onYouTubeIframeAPIReady() {
   youtubePlayer = new YT.Player("youtube-player", {
-    width: "200",
-    height: "200",
+    height: "1",
+    width: "1",
     videoId: videoId,
     playerVars: {
       autoplay: 0,
@@ -1006,21 +1105,22 @@ function onYouTubeIframeAPIReady() {
       disablekb: 1,
       fs: 0,
       playsinline: 1,
-      rel: 0,
       loop: 1,
-      playlist: videoId
+      playlist: videoId,
+      modestbranding: 1,
+      rel: 0
     },
     events: {
       onReady: function(event) {
-        youtubePlayerReady = true;
+        youtubeReady = true;
 
-        if (startMusicWhenReady) {
+        if (musicRequested) {
           event.target.playVideo();
-          startMusicWhenReady = false;
         }
       },
       onStateChange: function(event) {
         if (event.data === YT.PlayerState.ENDED) {
+          event.target.seekTo(0);
           event.target.playVideo();
         }
       }
@@ -1028,43 +1128,31 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-/* LOAD YOUTUBE API */
-
 (function loadYouTubeAPI() {
   const tag = document.createElement("script");
   tag.src = "https://www.youtube.com/iframe_api";
-
   const firstScript = document.getElementsByTagName("script")[0];
   firstScript.parentNode.insertBefore(tag, firstScript);
 })();
 
-/* OPEN SURPRISE */
+/* =====================================================
+   OPENING BUTTON
+===================================================== */
 
-const opening = document.getElementById("opening");
-const main = document.getElementById("main");
 const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
-  if (youtubePlayer && youtubePlayerReady) {
+  musicRequested = true;
+
+  if (youtubeReady && youtubePlayer) {
     youtubePlayer.playVideo();
-  } else {
-    startMusicWhenReady = true;
   }
 
-  opening.style.opacity = "0";
+  document.getElementById("opening").classList.add("hidden");
+  document.getElementById("main-screen").classList.remove("hidden");
 
-  setTimeout(() => {
-    opening.style.display = "none";
-    main.style.display = "block";
-
-    requestAnimationFrame(() => {
-      main.style.opacity = "1";
-    });
-
-    startPhotos();
-  }, 1000);
+  startPhotos();
 });
-
 </script>
 
 </body>
