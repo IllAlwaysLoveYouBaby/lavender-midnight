@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +15,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #10091b;
+  background: #100819;
 }
 
 body {
@@ -25,7 +24,7 @@ body {
 }
 
 /* =========================================
-   DARK LAVENDER MIDNIGHT GALAXY BACKGROUND
+   DARK LAVENDER MIDNIGHT NEBULA BACKGROUND
    ========================================= */
 
 .screen {
@@ -34,11 +33,11 @@ body {
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(ellipse at 50% 35%, rgba(105,72,139,.45), transparent 42%),
-    radial-gradient(ellipse at 15% 15%, rgba(93,53,126,.38), transparent 40%),
-    radial-gradient(ellipse at 85% 75%, rgba(81,48,116,.35), transparent 43%),
-    radial-gradient(ellipse at 50% 100%, rgba(55,30,81,.55), transparent 48%),
-    linear-gradient(145deg, #100719 0%, #21112f 38%, #160d24 72%, #0c0715 100%);
+    radial-gradient(ellipse at 50% 42%,
+      #49345f 0%,
+      #30203f 38%,
+      #1b1028 72%,
+      #0c0613 100%);
 }
 
 /* Soft nebula clouds */
@@ -46,48 +45,80 @@ body {
 .screen::before {
   content: "";
   position: absolute;
-  z-index: -1;
-  inset: -20%;
+  inset: -25%;
+  z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(ellipse at 22% 28%, rgba(151,105,185,.30) 0%, transparent 24%),
-    radial-gradient(ellipse at 72% 22%, rgba(113,77,157,.25) 0%, transparent 28%),
-    radial-gradient(ellipse at 45% 58%, rgba(132,86,168,.23) 0%, transparent 30%),
-    radial-gradient(ellipse at 80% 76%, rgba(111,72,151,.25) 0%, transparent 25%),
-    radial-gradient(ellipse at 15% 82%, rgba(90,55,129,.24) 0%, transparent 28%),
-    radial-gradient(ellipse at 55% 10%, rgba(172,124,202,.12) 0%, transparent 35%);
-  filter: blur(28px);
-  animation: nebulaDrift 35s ease-in-out infinite alternate;
+    radial-gradient(ellipse at 18% 20%,
+      rgba(157,112,190,.38) 0%,
+      rgba(104,65,139,.20) 18%,
+      transparent 43%),
+    radial-gradient(ellipse at 78% 17%,
+      rgba(116,78,157,.32) 0%,
+      rgba(82,49,117,.18) 24%,
+      transparent 48%),
+    radial-gradient(ellipse at 72% 58%,
+      rgba(137,91,168,.30) 0%,
+      rgba(84,49,116,.16) 25%,
+      transparent 48%),
+    radial-gradient(ellipse at 20% 76%,
+      rgba(112,73,151,.32) 0%,
+      rgba(74,43,105,.17) 25%,
+      transparent 48%),
+    radial-gradient(ellipse at 48% 48%,
+      rgba(190,143,213,.12) 0%,
+      transparent 38%);
+  filter: blur(38px);
+  opacity: .95;
+  animation: nebulaDrift 28s ease-in-out infinite alternate;
 }
+
+/* Subtle misty cloud detail */
 
 .screen::after {
   content: "";
   position: absolute;
-  z-index: -1;
-  inset: 0;
+  inset: -20%;
+  z-index: 0;
   pointer-events: none;
-  opacity: .42;
   background:
-    radial-gradient(ellipse at 10% 45%, rgba(190,148,220,.12), transparent 22%),
-    radial-gradient(ellipse at 90% 35%, rgba(165,119,206,.13), transparent 25%),
-    radial-gradient(ellipse at 50% 90%, rgba(116,78,164,.15), transparent 30%);
-  filter: blur(35px);
+    radial-gradient(ellipse at 30% 35%,
+      rgba(205,170,226,.13) 0%,
+      transparent 24%),
+    radial-gradient(ellipse at 80% 75%,
+      rgba(169,125,206,.13) 0%,
+      transparent 28%),
+    radial-gradient(ellipse at 55% 12%,
+      rgba(191,153,218,.10) 0%,
+      transparent 25%),
+    radial-gradient(ellipse at 12% 85%,
+      rgba(140,99,184,.12) 0%,
+      transparent 30%);
+  filter: blur(25px);
+  opacity: .9;
+  animation: cloudDrift 36s ease-in-out infinite alternate;
 }
 
 @keyframes nebulaDrift {
-  0% { transform: translate3d(-2%, -1%, 0) scale(1); }
-  100% { transform: translate3d(2%, 2%, 0) scale(1.08); }
+  from { transform: translate3d(-2%, -1%, 0) scale(1); }
+  to   { transform: translate3d(2%, 2%, 0) scale(1.08); }
+}
+
+@keyframes cloudDrift {
+  from { transform: translate3d(1%, 1%, 0) scale(1); }
+  to   { transform: translate3d(-2%, -2%, 0) scale(1.1); }
 }
 
 /* =========================================
-   BACKGROUND STARS
+   BACKGROUND STARFIELD
    ========================================= */
 
 .stars {
   position: absolute;
   inset: 0;
+  z-index: 1;
   pointer-events: none;
-  z-index: 0;
+  overflow: hidden;
 }
 
 .star {
@@ -97,8 +128,8 @@ body {
   border-radius: 50%;
   background: white;
   box-shadow:
-    0 0 4px rgba(255,255,255,.9),
-    0 0 9px rgba(220,195,255,.7);
+    0 0 5px 1px rgba(255,255,255,.75),
+    0 0 12px rgba(213,190,255,.45);
   animation: twinkle 3s ease-in-out infinite;
 }
 
@@ -106,20 +137,66 @@ body {
   width: 3px;
   height: 3px;
   box-shadow:
-    0 0 5px white,
-    0 0 12px rgba(235,215,255,.95),
-    0 0 20px rgba(190,150,255,.6);
+    0 0 6px 2px rgba(255,255,255,.9),
+    0 0 15px 3px rgba(221,197,255,.65);
+}
+
+.star.sparkle {
+  width: 4px;
+  height: 4px;
+  box-shadow:
+    0 0 8px 3px rgba(255,255,255,.95),
+    0 0 20px 5px rgba(218,185,255,.75);
 }
 
 @keyframes twinkle {
   0%, 100% {
-    opacity: .22;
+    opacity: .2;
     transform: scale(.7);
   }
   50% {
     opacity: 1;
-    transform: scale(1.6);
+    transform: scale(1.5);
   }
+}
+
+/* Four-point background glimmers */
+
+.sky-glimmer {
+  position: absolute;
+  z-index: 1;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+  opacity: .85;
+  animation: glimmer 4s ease-in-out infinite;
+}
+
+.sky-glimmer::before,
+.sky-glimmer::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  background: rgba(255,255,255,.95);
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  box-shadow: 0 0 9px 2px rgba(226,204,255,.7);
+}
+
+.sky-glimmer::before {
+  width: 1px;
+  height: 16px;
+}
+
+.sky-glimmer::after {
+  width: 16px;
+  height: 1px;
+}
+
+@keyframes glimmer {
+  0%, 100% { opacity: .3; transform: scale(.65); }
+  50% { opacity: 1; transform: scale(1.2); }
 }
 
 /* =========================================
@@ -128,21 +205,21 @@ body {
 
 .shooting-star {
   position: absolute;
-  z-index: 1;
-  width: 155px;
-  height: 1.5px;
+  z-index: 2;
+  width: 150px;
+  height: 2px;
   pointer-events: none;
+  opacity: 0;
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255,255,255,.25),
-    rgba(255,255,255,1)
+    rgba(255,255,255,.12) 25%,
+    rgba(255,255,255,.95) 85%,
+    white
   );
   transform: rotate(-35deg);
-  transform-origin: right center;
-  opacity: 0;
-  filter: drop-shadow(0 0 4px white);
-  animation: shooting 8s ease-in infinite;
+  filter: drop-shadow(0 0 5px rgba(255,255,255,.8));
+  animation: shooting 8s linear infinite;
 }
 
 .shooting-star::after {
@@ -150,13 +227,13 @@ body {
   position: absolute;
   right: 0;
   top: -2px;
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: white;
   box-shadow:
-    0 0 7px 2px white,
-    0 0 15px 4px rgba(215,185,255,.8);
+    0 0 8px 3px rgba(255,255,255,.9),
+    0 0 18px 5px rgba(201,165,255,.65);
 }
 
 @keyframes shooting {
@@ -165,7 +242,7 @@ body {
     opacity: 0;
   }
   4% { opacity: 1; }
-  13% { opacity: 0; }
+  12% { opacity: 0; }
   100% {
     transform: translate3d(-650px,420px,0) rotate(-35deg);
     opacity: 0;
@@ -187,7 +264,7 @@ body {
 
 .opening-content {
   position: relative;
-  z-index: 2;
+  z-index: 3;
   padding: 25px;
   width: 100%;
   max-width: 500px;
@@ -204,7 +281,8 @@ body {
 .moon {
   font-size: 50px;
   margin-bottom: 15px;
-  filter: drop-shadow(0 0 15px rgba(255,255,255,.45));
+  color: #e8d8ff;
+  filter: drop-shadow(0 0 15px rgba(218,190,255,.55));
 }
 
 .opening-title {
@@ -214,8 +292,8 @@ body {
   font-weight: 400;
   color: #fff;
   text-shadow:
-    0 0 12px rgba(255,255,255,.4),
-    0 0 28px rgba(190,150,255,.4);
+    0 0 15px rgba(255,255,255,.3),
+    0 0 35px rgba(203,166,255,.3);
 }
 
 .opening-subtitle {
@@ -248,7 +326,7 @@ body {
 }
 
 /* =========================================
-   MAIN SCREEN AND FALLING PHOTOS
+   MAIN SCREEN AND PHOTOS
    ========================================= */
 
 #main {
@@ -260,10 +338,12 @@ body {
 #photos {
   position: absolute;
   inset: 0;
+  z-index: 3;
   overflow: hidden;
   pointer-events: none;
-  z-index: 2;
 }
+
+/* Floating photo wrappers */
 
 .falling-photo-frame {
   position: absolute;
@@ -287,72 +367,37 @@ body {
   background: white;
   border-radius: 3px;
   box-shadow:
-    0 4px 18px rgba(10,4,20,.35),
-    0 0 12px rgba(210,185,255,.12);
+    0 5px 18px rgba(0,0,0,.35),
+    0 0 12px rgba(226,207,255,.08);
 }
 
 /* =========================================
-   MOCKUP-STYLE CELESTIAL POLAROID DECORATIONS
-   CRESCENT MOONS, FOUR-POINT STARS, SPARKLES
-   NO CONSTELLATIONS OR CONNECTING LINES
+   CELESTIAL POLAROID DECORATIONS
+
+   Crescent moons, large four-point stars,
+   and delicate little sparkles only.
+
+   No constellation lines.
+   No connecting dots.
+   No emoji decorations.
    ========================================= */
 
 .photo-decoration-layer {
   position: absolute;
   inset: 0;
-  z-index: 3;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.frame-decoration {
-  position: absolute;
-  display: block;
+  z-index: 4;
   pointer-events: none;
   overflow: visible;
-  filter: drop-shadow(0 0 2px rgba(167,128,210,.35));
 }
 
-/* Main four-point stars */
-
-.frame-star {
-  width: 15px;
-  height: 15px;
-  fill: #9b79c5;
-  opacity: .96;
+.photo-decoration-layer svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
 }
 
-/* Smaller delicate sparkles */
-
-.frame-sparkle {
-  width: 9px;
-  height: 9px;
-  fill: #b69bd5;
-  opacity: .9;
-}
-
-/* Tiny accent stars */
-
-.frame-tiny-star {
-  width: 6px;
-  height: 6px;
-  fill: #a98acb;
-  opacity: .82;
-}
-
-/* Larger crescent moons */
-
-.frame-moon {
-  width: 24px;
-  height: 24px;
-  fill: #a783ce;
-  opacity: .98;
-  filter:
-    drop-shadow(0 0 2px rgba(167,128,210,.55))
-    drop-shadow(0 0 5px rgba(167,128,210,.25));
-}
-
-/* Falling animation */
+/* Falling photos */
 
 @keyframes fall {
   0% {
@@ -374,18 +419,18 @@ body {
 
 .center-message {
   position: absolute;
-  z-index: 5;
+  z-index: 6;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
-  padding: 0 9px;
+  padding: 0 10px;
   text-align: center;
   white-space: nowrap;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 7px;
+  gap: 10px;
   pointer-events: none;
 }
 
@@ -397,16 +442,16 @@ body {
   color: white;
   text-shadow:
     0 0 2px #ffffff,
-    0 0 5px #ffffff,
+    0 0 6px #ffffff,
     0 0 12px rgba(255,255,255,1),
     0 0 24px rgba(255,255,255,.95),
-    0 0 40px rgba(224,195,255,.9),
-    0 0 65px rgba(190,145,255,.8),
-    0 0 95px rgba(160,110,255,.55);
+    0 0 40px rgba(220,190,255,.9),
+    0 0 65px rgba(190,145,255,.75),
+    0 0 90px rgba(170,120,255,.55);
 }
 
 .white-heart {
-  width: clamp(34px, 8.5vw, 58px);
+  width: clamp(34px, 8vw, 58px);
   height: auto;
   flex-shrink: 0;
   fill: white;
@@ -415,8 +460,8 @@ body {
     drop-shadow(0 0 6px #ffffff)
     drop-shadow(0 0 13px rgba(255,255,255,1))
     drop-shadow(0 0 25px rgba(255,255,255,.95))
-    drop-shadow(0 0 42px rgba(220,185,255,.9))
-    drop-shadow(0 0 65px rgba(185,135,255,.75));
+    drop-shadow(0 0 42px rgba(218,185,255,.9))
+    drop-shadow(0 0 65px rgba(190,145,255,.7));
 }
 
 /* =========================================
@@ -440,7 +485,9 @@ body {
   border: 0;
 }
 
-/* SMALL SCREENS */
+/* =========================================
+   SMALL SCREENS
+   ========================================= */
 
 @media (max-width: 380px) {
   .opening-subtitle { font-size: 17px; }
@@ -450,14 +497,17 @@ body {
     letter-spacing: 4px;
   }
 
-  .center-message { gap: 4px; }
+  .center-message {
+    gap: 6px;
+    padding: 0 7px;
+  }
 
   .message-text {
     font-size: clamp(39px, 10.5vw, 48px);
   }
 
   .white-heart {
-    width: clamp(29px, 7.5vw, 36px);
+    width: clamp(29px, 7vw, 36px);
   }
 }
 </style>
@@ -480,11 +530,13 @@ body {
   <div class="shooting-star" style="top:42%;left:100%;animation-delay:4s"></div>
   <div class="shooting-star" style="top:70%;left:75%;animation-delay:6s"></div>
 
+  <div class="sky-glimmer" style="top:22%;left:18%;animation-delay:1s"></div>
+  <div class="sky-glimmer" style="top:68%;left:82%;animation-delay:2.5s"></div>
+
   <div class="opening-content">
     <div class="opening-eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
     <div class="moon">☾</div>
     <div class="opening-title">Under the Shooting Stars</div>
-
     <div class="opening-subtitle">
       Some things are worth taking a moment for...
     </div>
@@ -503,7 +555,12 @@ body {
   <div class="shooting-star" style="top:12%;left:95%;animation-delay:2s"></div>
   <div class="shooting-star" style="top:35%;left:100%;animation-delay:5s"></div>
   <div class="shooting-star" style="top:60%;left:85%;animation-delay:8s"></div>
-  <div class="shooting-star" style="top:82%;left:100%;animation-delay:11s"></div>
+  <div class="shooting-star" style="top:82%;left:90%;animation-delay:3.5s"></div>
+
+  <div class="sky-glimmer" style="top:13%;left:20%;animation-delay:.5s"></div>
+  <div class="sky-glimmer" style="top:30%;left:76%;animation-delay:2s"></div>
+  <div class="sky-glimmer" style="top:76%;left:16%;animation-delay:1.5s"></div>
+  <div class="sky-glimmer" style="top:88%;left:82%;animation-delay:3s"></div>
 
   <div id="photos"></div>
 
@@ -663,7 +720,7 @@ const photoFiles = [
 ];
 
 /* =========================================
-   CREATE BACKGROUND STARS
+   BACKGROUND STARS
    ========================================= */
 
 function createStars(containerId, count) {
@@ -672,21 +729,27 @@ function createStars(containerId, count) {
   for (let i = 0; i < count; i++) {
     const star = document.createElement("div");
 
-    star.className = Math.random() < 0.13
-      ? "star bright"
-      : "star";
+    const sizeRoll = Math.random();
+
+    if (sizeRoll > .96) {
+      star.className = "star sparkle";
+    } else if (sizeRoll > .82) {
+      star.className = "star bright";
+    } else {
+      star.className = "star";
+    }
 
     star.style.left = Math.random() * 100 + "%";
     star.style.top = Math.random() * 100 + "%";
     star.style.animationDelay = Math.random() * 6 + "s";
-    star.style.animationDuration = (2 + Math.random() * 4) + "s";
+    star.style.animationDuration = (2 + Math.random() * 5) + "s";
 
     container.appendChild(star);
   }
 }
 
 createStars("opening-stars", 145);
-createStars("main-stars", 175);
+createStars("main-stars", 190);
 
 /* =========================================
    PHOTO SHUFFLE / NO REPEATS
@@ -789,133 +852,108 @@ function getRandomPhotoSize() {
 }
 
 /* =========================================
-   CELESTIAL POLAROID BORDER DECORATIONS
-   SVG SHAPES: NO LINES OR CONSTELLATIONS
+   POLAROID CELESTIAL DECORATIONS
+
+   SVG shapes create the same visual language
+   as the mockup: lavender crescent moons,
+   elegant four-point stars, and tiny sparkles.
+
+   There are deliberately NO constellation
+   lines, connecting dots, or emoji symbols.
    ========================================= */
 
-const starShape = `
-  <path d="M12 0
-    C13.5 7.8 16.2 10.5 24 12
-    C16.2 13.5 13.5 16.2 12 24
-    C10.5 16.2 7.8 13.5 0 12
-    C7.8 10.5 10.5 7.8 12 0Z"/>
-`;
+function addPhotoDecorations(layer) {
+  const patterns = [
 
-const sparkleShape = `
-  <path d="M12 0
-    C13 7 17 11 24 12
-    C17 13 13 17 12 24
-    C11 17 7 13 0 12
-    C7 11 11 7 12 0Z"/>
-`;
+    /* MOON TOP LEFT, STARS ON OPPOSITE EDGES */
+    `
+      <path class="moon-shape" d="M17 5 C7 7 5 20 14 25 C8 15 12 9 17 5 Z"/>
+      <path class="star-large" d="M111 5 L114 13 L122 16 L114 19 L111 27 L108 19 L100 16 L108 13 Z"/>
+      <path class="star-medium" d="M12 135 L14 141 L20 143 L14 145 L12 151 L10 145 L4 143 L10 141 Z"/>
+      <path class="star-large" d="M111 137 L114 145 L122 148 L114 151 L111 159 L108 151 L100 148 L108 145 Z"/>
+      <path class="sparkle-shape" d="M62 5 L64 10 L69 12 L64 14 L62 19 L60 14 L55 12 L60 10 Z"/>
+      <path class="sparkle-shape" d="M88 146 L90 150 L94 152 L90 154 L88 158 L86 154 L82 152 L86 150 Z"/>
+    `,
 
-const moonShape = `
-  <path d="M19.2 2.8
-    A9.5 9.5 0 1 0 21.2 19
-    A8 8 0 0 1 19.2 2.8Z"/>
-`;
+    /* MOON BOTTOM RIGHT, STARS ON TOP AND SIDES */
+    `
+      <path class="moon-shape" d="M111 133 C101 135 99 148 108 153 C102 143 106 137 111 133 Z"/>
+      <path class="star-large" d="M14 5 L17 13 L25 16 L17 19 L14 27 L11 19 L3 16 L11 13 Z"/>
+      <path class="star-medium" d="M111 5 L113 11 L119 13 L113 15 L111 21 L109 15 L103 13 L109 11 Z"/>
+      <path class="star-large" d="M15 137 L18 145 L26 148 L18 151 L15 159 L12 151 L4 148 L12 145 Z"/>
+      <path class="sparkle-shape" d="M64 5 L66 10 L71 12 L66 14 L64 19 L62 14 L57 12 L62 10 Z"/>
+      <path class="sparkle-shape" d="M87 145 L89 149 L93 151 L89 153 L87 157 L85 153 L81 151 L85 149 Z"/>
+    `,
 
-function addDecoration(layer, type, position) {
+    /* MOON TOP RIGHT, STARS AT LOWER CORNERS */
+    `
+      <path class="moon-shape" d="M111 5 C101 7 99 20 108 25 C102 15 106 9 111 5 Z"/>
+      <path class="star-large" d="M15 5 L18 13 L26 16 L18 19 L15 27 L12 19 L4 16 L12 13 Z"/>
+      <path class="star-large" d="M15 137 L18 145 L26 148 L18 151 L15 159 L12 151 L4 148 L12 145 Z"/>
+      <path class="star-medium" d="M111 137 L113 143 L119 145 L113 147 L111 153 L109 147 L103 145 L109 143 Z"/>
+      <path class="sparkle-shape" d="M62 5 L64 10 L69 12 L64 14 L62 19 L60 14 L55 12 L60 10 Z"/>
+      <path class="sparkle-shape" d="M88 144 L90 148 L94 150 L90 152 L88 156 L86 152 L82 150 L86 148 Z"/>
+    `,
+
+    /* MOON BOTTOM LEFT, MORE SCATTERED SPARKLES */
+    `
+      <path class="moon-shape" d="M17 133 C7 135 5 148 14 153 C8 143 12 137 17 133 Z"/>
+      <path class="star-large" d="M111 5 L114 13 L122 16 L114 19 L111 27 L108 19 L100 16 L108 13 Z"/>
+      <path class="star-medium" d="M111 137 L113 143 L119 145 L113 147 L111 153 L109 147 L103 145 L109 143 Z"/>
+      <path class="star-large" d="M62 137 L65 145 L73 148 L65 151 L62 159 L59 151 L51 148 L59 145 Z"/>
+      <path class="sparkle-shape" d="M38 5 L40 10 L45 12 L40 14 L38 19 L36 14 L31 12 L36 10 Z"/>
+      <path class="sparkle-shape" d="M87 144 L89 148 L93 150 L89 152 L87 156 L85 152 L81 150 L85 148 Z"/>
+    `
+  ];
+
+  const selectedPattern =
+    patterns[Math.floor(Math.random() * patterns.length)];
+
   const svg = document.createElementNS(
     "http://www.w3.org/2000/svg",
     "svg"
   );
 
-  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("viewBox", "0 0 128 160");
+  svg.setAttribute("preserveAspectRatio", "none");
   svg.setAttribute("aria-hidden", "true");
 
-  svg.classList.add("frame-decoration", type);
+  svg.innerHTML = `
+    <defs>
+      <style>
+        .moon-shape {
+          fill: #b995df;
+          stroke: #8d68b9;
+          stroke-width: 1.1;
+          opacity: .98;
+          filter: drop-shadow(0 0 2px rgba(153,112,196,.45));
+        }
 
-  if (type === "frame-moon") {
-    svg.innerHTML = moonShape;
-  } else if (type === "frame-sparkle") {
-    svg.innerHTML = sparkleShape;
-  } else {
-    svg.innerHTML = starShape;
-  }
+        .star-large {
+          fill: #a987d1;
+          stroke: #8964b5;
+          stroke-width: .65;
+          opacity: .96;
+          filter: drop-shadow(0 0 2px rgba(153,112,196,.35));
+        }
 
-  Object.assign(svg.style, position);
+        .star-medium {
+          fill: #c2a6e2;
+          stroke: #9b78c5;
+          stroke-width: .55;
+          opacity: .94;
+        }
+
+        .sparkle-shape {
+          fill: #c8b0e6;
+          opacity: .9;
+        }
+      </style>
+    </defs>
+    ${selectedPattern}
+  `;
+
   layer.appendChild(svg);
-}
-
-function addPhotoDecorations(layer) {
-
-  /*
-    Each frame receives its own randomized arrangement.
-    All decorations stay near the white border.
-    No connecting lines, constellation patterns, or
-    decorations across the photo itself.
-  */
-
-  const corners = [
-    { top: "4px", left: "4px" },
-    { top: "4px", right: "4px" },
-    { bottom: "4px", left: "4px" },
-    { bottom: "4px", right: "4px" }
-  ];
-
-  const edgePositions = [
-    { top: "5px", left: "38%" },
-    { top: "5px", right: "38%" },
-    { bottom: "5px", left: "38%" },
-    { bottom: "5px", right: "38%" },
-    { top: "40%", left: "5px" },
-    { top: "40%", right: "5px" },
-    { bottom: "30%", left: "5px" },
-    { bottom: "30%", right: "5px" }
-  ];
-
-  const selectedMoonCorner =
-    Math.floor(Math.random() * corners.length);
-
-  /* Most frames receive one large crescent moon */
-
-  if (Math.random() < 0.72) {
-    addDecoration(
-      layer,
-      "frame-moon",
-      corners[selectedMoonCorner]
-    );
-  }
-
-  /* Main prominent stars */
-
-  const starPositions = shuffle([
-    ...corners.filter((_, index) => index !== selectedMoonCorner),
-    ...edgePositions
-  ]);
-
-  const starCount = 3 + Math.floor(Math.random() * 3);
-
-  starPositions.slice(0, starCount).forEach(position => {
-    addDecoration(layer, "frame-star", position);
-  });
-
-  /* Small delicate sparkles */
-
-  const sparklePositions = shuffle(edgePositions);
-  const sparkleCount = 2 + Math.floor(Math.random() * 3);
-
-  sparklePositions.slice(0, sparkleCount).forEach(position => {
-    addDecoration(layer, "frame-sparkle", position);
-  });
-
-  /* Occasional tiny accents */
-
-  if (Math.random() < 0.65) {
-    const tinyPositions = shuffle([
-      { top: "17px", left: "20%" },
-      { top: "17px", right: "20%" },
-      { bottom: "17px", left: "20%" },
-      { bottom: "17px", right: "20%" }
-    ]);
-
-    addDecoration(
-      layer,
-      "frame-tiny-star",
-      tinyPositions[0]
-    );
-  }
 }
 
 /* =========================================
@@ -941,11 +979,7 @@ function createFallingPhoto() {
   frame.style.width = size.width + "px";
   frame.style.height = size.height + "px";
 
-  const availableWidth = Math.max(
-    0,
-    window.innerWidth - size.width
-  );
-
+  const availableWidth = Math.max(0, window.innerWidth - size.width);
   frame.style.left = (Math.random() * availableWidth) + "px";
 
   frame.style.setProperty("--rotation", rotation + "deg");
@@ -984,7 +1018,6 @@ function createFallingPhoto() {
 
     if (retries < MAX_PHOTO_RETRIES) {
       photoRetryCounts.set(filename, retries + 1);
-
       photoDeck.push(filename);
 
       console.warn(
@@ -1034,7 +1067,8 @@ function startPhotos() {
 }
 
 /* =========================================
-   HIDDEN YOUTUBE PLAYER WITH LOOPING
+   HIDDEN YOUTUBE PLAYER WITH AUTOPLAY
+   AND LOOPING ENABLED
    ========================================= */
 
 const videoId = "yLZoVTayvxY";
@@ -1084,11 +1118,9 @@ function onYouTubeIframeAPIReady() {
 
 (function loadYouTubeAPI() {
   const tag = document.createElement("script");
-
   tag.src = "https://www.youtube.com/iframe_api";
 
   const firstScript = document.getElementsByTagName("script")[0];
-
   firstScript.parentNode.insertBefore(tag, firstScript);
 })();
 
@@ -1102,7 +1134,7 @@ const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
 
-  /* Start the hidden song from the opening button tap */
+  /* START THE HIDDEN SONG FROM THE OPENING BUTTON TAP */
 
   if (youtubePlayer && youtubePlayerReady) {
     youtubePlayer.playVideo();
