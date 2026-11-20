@@ -670,30 +670,28 @@ function startPhotos() {
   setInterval(() => createFallingPhoto(),5000);
 }
 
-/* YouTube music player — updated video */
-const videoId = "D9KbfXysjd0";
+/* ORIGINAL WORKING YOUTUBE PLAYER SETUP */
+const videoId = "yLZoVTayvxY";
 
 let youtubePlayer = null;
 let youtubeReady = false;
 let musicRequested = false;
 let youtubePlayerCreating = false;
 
-/* Called directly from the opening-button tap */
+/* Playback is requested directly from the opening-button tap */
 function startMusicFromTap() {
   musicRequested = true;
 
-  if (youtubePlayer && youtubeReady) {
-    try {
-      youtubePlayer.unMute();
-      youtubePlayer.setVolume(100);
-      youtubePlayer.playVideo();
-    } catch (error) {
-      console.warn("Music playback request failed:",error);
-    }
+  if (!youtubeReady || !youtubePlayer) return;
+
+  try {
+    youtubePlayer.playVideo();
+  } catch (error) {
+    console.warn("Music playback could not start:",error);
   }
 }
 
-/* YouTube calls this global function after the IFrame API loads */
+/* YouTube calls this after the IFrame API loads */
 function onYouTubeIframeAPIReady() {
   if (youtubePlayerCreating || youtubePlayer) return;
   youtubePlayerCreating = true;
@@ -725,8 +723,6 @@ function onYouTubeIframeAPIReady() {
         });
 
         if (musicRequested) {
-          event.target.unMute();
-          event.target.setVolume(100);
           event.target.playVideo();
         }
       },
