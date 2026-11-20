@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -492,17 +491,39 @@ function nextPhoto() {
 }
 refillPhotoDeck();
 
+/* Preload the very first photo while the opening screen is still visible.
+   This avoids waiting for the first full-size image request after the button tap. */
+let preloadedFirstPhoto = null;
+function preloadFirstPhoto() {
+  if (preloadedFirstPhoto) return;
+  const filename = nextPhoto();
+  const image = new Image();
+  preloadedFirstPhoto = { filename, image, ready: false };
+  image.onload = () => { preloadedFirstPhoto.ready = true; };
+  image.onerror = () => { preloadedFirstPhoto = null; };
+  image.src = "./" + encodeURIComponent(filename);
+}
+preloadFirstPhoto();
+
 const photosContainer = document.getElementById("photos");
 const photoSizes = [[78,98],[88,110],[98,122],[108,135],[118,148],[128,160]];
 let activePhotoCount = 0;
 
 function createFallingPhoto(attempt=0) {
   if (activePhotoCount >= 13) return;
-  const filename = nextPhoto();
+  let filename;
+  let preloadedImage = null;
+  if (preloadedFirstPhoto) {
+    filename = preloadedFirstPhoto.filename;
+    preloadedImage = preloadedFirstPhoto.image;
+    preloadedFirstPhoto = null;
+  } else {
+    filename = nextPhoto();
+  }
   if (!filename) return;
 
   const frame = document.createElement("div");
-  const image = document.createElement("img");
+  const image = preloadedImage || document.createElement("img");
   const decoration = document.createElement("div");
   const size = photoSizes[Math.floor(Math.random()*photoSizes.length)];
   const width = size[0], height = size[1];
@@ -532,7 +553,8 @@ function createFallingPhoto(attempt=0) {
   frame.appendChild(image);
   frame.appendChild(decoration);
 
-  image.onload = () => {
+  const showLoadedPhoto = () => {
+    if (frame.isConnected) return;
     activePhotoCount++;
     photosContainer.appendChild(frame);
     frame.addEventListener("animationend",() => {
@@ -540,11 +562,16 @@ function createFallingPhoto(attempt=0) {
       activePhotoCount = Math.max(0,activePhotoCount-1);
     },{once:true});
   };
+  image.onload = showLoadedPhoto;
   image.onerror = () => {
     frame.remove();
     if (attempt < 2) createFallingPhoto(attempt+1);
   };
-  image.src = "./"+encodeURIComponent(filename);
+  if (preloadedImage && image.complete && image.naturalWidth > 0) {
+    showLoadedPhoto();
+  } else if (!preloadedImage) {
+    image.src = "./"+encodeURIComponent(filename);
+  }
 }
 
 let photoTimersStarted = false;
@@ -574,7 +601,13 @@ function onYouTubeIframeAPIReady() {
     events:{
       onReady:function(event) {
         youtubeReady = true;
-        if (musicRequested) event.target.playVideo();
+        /* Explicitly cue the selected ID so an older cached player cannot
+           continue with the previous track. Playback still waits for the tap. */
+        if (musicRequested) {
+          event.target.loadVideoById({videoId:videoId,startSeconds:0});
+        } else {
+          event.target.cueVideoById(videoId);
+        }
       },
       onStateChange:function(event) {
         if (event.data === YT.PlayerState.ENDED) {
@@ -594,7 +627,9 @@ function onYouTubeIframeAPIReady() {
 
 document.getElementById("open-button").addEventListener("click",function() {
   musicRequested = true;
-  if (youtubeReady && youtubePlayer) youtubePlayer.playVideo();
+  if (youtubeReady && youtubePlayer) {
+    youtubePlayer.loadVideoById({videoId:videoId,startSeconds:0});
+  }
   document.getElementById("opening").classList.add("hidden");
   document.getElementById("main-screen").classList.remove("hidden");
   startPhotos();
