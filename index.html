@@ -156,11 +156,13 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   position:absolute; inset:0; z-index:3; overflow:hidden; pointer-events:none;
 }
 
-/* Four-picture photobooth strips */
+/* Individual falling Polaroid photographs */
 .falling-photo-frame {
-  position:absolute; top:-370px; left:0;
+  position:absolute; top:-260px; left:0;
   width:var(--photo-width); height:var(--photo-height);
-  padding:8px 7px 17px; background:#fff; border-radius:2px;
+  padding:8px 8px 27px;
+  background:#fff;
+  border-radius:2px;
   box-shadow:0 5px 18px rgba(0,0,0,.32),0 0 12px rgba(229,211,255,.18);
   transform:rotate(var(--rotation));
   will-change:transform;
@@ -168,17 +170,17 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   animation:none;
   visibility:hidden;
 }
-.photo-strip-images {
-  width:100%; height:100%; display:grid;
-  grid-template-rows:repeat(4,minmax(0,1fr)); gap:3px;
-}
 .falling-photo-image {
-  display:block; width:100%; height:100%; min-height:0; min-width:0;
-  object-fit:contain; object-position:center center;
-  background:#fff; border:0; padding:0; margin:0;
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  background:#eee;
+  border:0;
+  padding:0;
+  margin:0;
 }
-
-/* Tiny lavender stars stay on the white strip border */
 .photo-decoration-layer {
   position:absolute; inset:0; width:100%; height:100%;
   pointer-events:none; overflow:hidden;
@@ -196,10 +198,10 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 .frame-star.top-c { right:12%; top:1px; }
 .frame-star.side-a { left:1px; top:36%; font-size:6px; }
 .frame-star.side-b { right:1px; top:54%; font-size:6px; }
-.frame-star.bottom-a { left:14%; bottom:5px; }
-.frame-star.bottom-b { left:38%; bottom:4px; }
-.frame-star.bottom-c { right:14%; bottom:5px; }
-.frame-star.bottom-d { right:42%; bottom:3px; }
+.frame-star.bottom-a { left:14%; bottom:8px; }
+.frame-star.bottom-b { left:38%; bottom:7px; }
+.frame-star.bottom-c { right:14%; bottom:8px; }
+.frame-star.bottom-d { right:42%; bottom:6px; }
 
 .center-message {
   position:absolute; z-index:5; left:50%; top:50%;
@@ -496,7 +498,15 @@ function nextPhoto() {
 refillPhotoDeck();
 
 const photosContainer = document.getElementById("photos");
-const stripSizes = [[94,286],[100,302],[106,318],[112,334],[118,350]];
+
+/* Randomized Polaroid dimensions */
+const polaroidSizes = [
+  [116,150],
+  [124,162],
+  [132,174],
+  [140,186],
+  [148,198]
+];
 
 let activePhotoCount = 0;
 const MAX_ACTIVE_PHOTOS = 13;
@@ -549,24 +559,17 @@ function loadPhotoImage(filename) {
   });
 }
 
+/* Create one individual falling Polaroid */
 async function createFallingPhoto(attempt=0) {
   if (activePhotoCount >= MAX_ACTIVE_PHOTOS) return;
 
-  const filenames = [
-    nextPhoto(),
-    nextPhoto(),
-    nextPhoto(),
-    nextPhoto()
-  ];
-
-  let images;
+  const filename = nextPhoto();
+  let image;
 
   try {
-    images = await Promise.all(
-      filenames.map(filename => loadPhotoImage(filename))
-    );
+    image = await loadPhotoImage(filename);
   } catch (error) {
-    console.warn("Skipping an incomplete photo strip:",error);
+    console.warn("Skipping an incomplete Polaroid photo:",error);
 
     if (attempt < 2) {
       createFallingPhoto(attempt + 1);
@@ -578,10 +581,9 @@ async function createFallingPhoto(attempt=0) {
   if (activePhotoCount >= MAX_ACTIVE_PHOTOS) return;
 
   const frame = document.createElement("div");
-  const stripImages = document.createElement("div");
   const decoration = document.createElement("div");
 
-  const size = stripSizes[Math.floor(Math.random()*stripSizes.length)];
+  const size = polaroidSizes[Math.floor(Math.random()*polaroidSizes.length)];
   const width = size[0];
   const height = size[1];
 
@@ -601,19 +603,14 @@ async function createFallingPhoto(attempt=0) {
   frame.style.setProperty("--spin",spin+"deg");
   frame.style.setProperty("--fall-duration",duration+"s");
 
-  stripImages.className = "photo-strip-images";
-
-  images.forEach(image => {
-    image.className = "falling-photo-image";
-    image.alt = "";
-    image.draggable = false;
-    stripImages.appendChild(image);
-  });
+  image.className = "falling-photo-image";
+  image.alt = "";
+  image.draggable = false;
 
   decoration.className = "photo-decoration-layer";
   decoration.innerHTML = frameDecorations[design];
 
-  frame.appendChild(stripImages);
+  frame.appendChild(image);
   frame.appendChild(decoration);
 
   frame.style.visibility = "hidden";
@@ -646,7 +643,7 @@ async function createFallingPhoto(attempt=0) {
   });
 }
 
-/* Original photo-strip drop sequence */
+/* Preserve the existing photo drop sequence */
 let photoTimersStarted = false;
 
 function startPhotos() {
@@ -663,8 +660,8 @@ function startPhotos() {
   setInterval(() => createFallingPhoto(),5000);
 }
 
-/* Original hidden YouTube player setup with your requested song */
-const videoId = "D9KbfXysjd0";
+/* Hidden YouTube player — original Us, Now song */
+const videoId = "yLZoVTayvxY";
 
 let youtubePlayer = null;
 let youtubeReady = false;
@@ -677,7 +674,10 @@ function startMusicFromTap() {
   if (!youtubeReady || !youtubePlayer) return;
 
   try {
-    youtubePlayer.playVideo();
+    youtubePlayer.loadVideoById({
+      videoId:videoId,
+      startSeconds:0
+    });
   } catch (error) {
     console.warn("Music playback could not start:",error);
   }
@@ -708,13 +708,16 @@ function onYouTubeIframeAPIReady() {
       onReady:function(event) {
         youtubeReady = true;
 
-        event.target.cueVideoById({
-          videoId:videoId,
-          startSeconds:0
-        });
-
         if (musicRequested) {
-          event.target.playVideo();
+          event.target.loadVideoById({
+            videoId:videoId,
+            startSeconds:0
+          });
+        } else {
+          event.target.cueVideoById({
+            videoId:videoId,
+            startSeconds:0
+          });
         }
       },
 
