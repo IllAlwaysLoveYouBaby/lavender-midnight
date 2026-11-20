@@ -4,407 +4,79 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lavender Midnight</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
-
 <style>
-* { box-sizing: border-box; }
-
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #21182f;
-}
-
-body {
-  font-family: 'Cormorant Garamond', serif;
-  color: white;
-}
-
-.screen {
-  position: fixed;
-  inset: 0;
-  overflow: hidden;
-  background:
-    radial-gradient(ellipse at 50% 25%, #81709e 0%, #55466e 35%, #322541 68%, #21182f 100%);
-}
-
-/* STARS */
-
-.stars {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 0 6px rgba(255,255,255,.7);
-  animation: twinkle 3s ease-in-out infinite;
-}
-
-@keyframes twinkle {
-  0%, 100% { opacity: .25; transform: scale(.8); }
-  50% { opacity: 1; transform: scale(1.4); }
-}
-
-/* SHOOTING STARS */
-
-.shooting-star {
-  position: absolute;
-  width: 130px;
-  height: 1.5px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);
-  transform: rotate(-35deg);
-  opacity: 0;
-  animation: shooting 7s linear infinite;
-}
-
-.shooting-star::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: -2px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 0 10px 3px rgba(255,255,255,.6);
-}
-
-@keyframes shooting {
-  0% {
-    transform: translate(0,0) rotate(-35deg);
-    opacity: 0;
-  }
-  5% { opacity: 1; }
-  15% { opacity: 0; }
-  100% {
-    transform: translate(-550px,350px) rotate(-35deg);
-    opacity: 0;
-  }
-}
-
-/* OPENING */
-
-#opening {
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  transition: opacity 1.5s ease;
-}
-
-.opening-content {
-  position: relative;
-  z-index: 2;
-  padding: 25px;
-  width: 100%;
-  max-width: 500px;
-}
-
-.opening-eyebrow {
-  font-size: 13px;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,.75);
-  margin-bottom: 30px;
-}
-
-.moon {
-  font-size: 50px;
-  margin-bottom: 15px;
-  filter: drop-shadow(0 0 15px rgba(255,255,255,.35));
-}
-
-.opening-title {
-  font-family: 'Allura', cursive;
-  font-size: clamp(48px, 13vw, 76px);
-  line-height: 1.1;
-  font-weight: 400;
-  color: #fff;
-  text-shadow: 0 0 15px rgba(255,255,255,.15);
-}
-
-.opening-subtitle {
-  margin-top: 18px;
-  font-size: 19px;
-  font-weight: 400;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,.85);
-}
-
-.open-button {
-  margin-top: 40px;
-  padding: 15px 28px;
-  border: 1px solid rgba(255,255,255,.65);
-  border-radius: 40px;
-  background: rgba(255,255,255,.08);
-  color: white;
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 18px;
-  letter-spacing: 1px;
-  cursor: pointer;
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  transition: background .3s ease, transform .3s ease;
-}
-
-.open-button:active {
-  transform: scale(.96);
-  background: rgba(255,255,255,.18);
-}
-
-/* MAIN SCREEN */
-
-#main {
-  display: none;
-  opacity: 0;
-  transition: opacity 1.5s ease;
-}
-
-#photos {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-/* RANDOM-SIZED FLOATING PHOTOS */
-
-.falling-photo-frame {
-  position: absolute;
-  top: -160px;
-  opacity: 0;
-  animation: fall var(--fall-duration) linear forwards;
-  will-change: transform;
-}
-
-/* ORIGINAL WHITE POLAROID */
-
-.falling-photo-image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  border: 6px solid white;
-  outline: none;
-  padding: 5px;
-  background: white;
-  border-radius: 3px;
-  box-shadow: 0 4px 18px rgba(20,10,30,.25);
-}
-
-/* CELESTIAL POLAROID DECORATIONS */
-
-.photo-decoration-layer {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.polaroid-celestial-svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-.celestial-line {
-  fill: none;
-  stroke: #a991cf;
-  stroke-width: 1.7;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  opacity: .9;
-}
-
-.celestial-star {
-  fill: #b9a4dc;
-  stroke: #8e75b8;
-  stroke-width: .65;
-  opacity: .98;
-}
-
-.celestial-sparkle {
-  fill: #c8b9e5;
-  opacity: .95;
-}
-
-.celestial-moon {
-  fill: #bba7dd;
-  stroke: #927ab9;
-  stroke-width: .8;
-  opacity: .98;
-}
-
-.celestial-dot {
-  fill: #a58bcf;
-  opacity: .95;
-}
-
-/* SLOW FALLING PHOTOS */
-
-@keyframes fall {
-  0% {
-    opacity: 0;
-    transform: translate3d(0,-10px,0) rotate(var(--rotation));
-  }
-  3% { opacity: 1; }
-  85% { opacity: 1; }
-  100% {
-    opacity: 0;
-    transform: translate3d(var(--drift),110vh,0) rotate(calc(var(--rotation) + 25deg));
-  }
-}
-
-/* CENTER MESSAGE */
-
-.center-message {
-  position: absolute;
-  z-index: 5;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%;
-  padding: 0 8px;
-  text-align: center;
-  white-space: nowrap;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-  pointer-events: none;
-}
-
-.message-text {
-  font-family: 'Allura', cursive;
-  font-size: clamp(34px, 8.8vw, 55px);
-  font-weight: 400;
-  color: white;
-  text-shadow:
-    0 0 2px #ffffff,
-    0 0 5px #ffffff,
-    0 0 10px rgba(255,255,255,1),
-    0 0 20px rgba(255,255,255,.95),
-    0 0 35px rgba(255,255,255,.8),
-    0 0 55px rgba(220,205,255,.7),
-    0 0 80px rgba(190,160,255,.45);
-}
-
-.white-heart {
-  width: clamp(22px, 5.5vw, 33px);
-  height: auto;
-  flex-shrink: 0;
-  fill: white;
-  filter:
-    drop-shadow(0 0 2px #ffffff)
-    drop-shadow(0 0 5px #ffffff)
-    drop-shadow(0 0 10px rgba(255,255,255,1))
-    drop-shadow(0 0 20px rgba(255,255,255,.9))
-    drop-shadow(0 0 35px rgba(255,255,255,.75))
-    drop-shadow(0 0 55px rgba(190,160,255,.6));
-}
-
-/* HIDDEN YOUTUBE PLAYER */
-
-#youtube-player-container {
-  position: fixed;
-  width: 200px;
-  height: 200px;
-  left: -10000px;
-  top: -10000px;
-  opacity: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-#youtube-player-container iframe {
-  width: 200px;
-  height: 200px;
-  border: 0;
-}
-
-/* SMALL SCREENS */
-
-@media (max-width: 380px) {
-  .opening-subtitle { font-size: 17px; }
-
-  .opening-eyebrow {
-    font-size: 11px;
-    letter-spacing: 4px;
-  }
-}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#21182f}
+body{font-family:'Cormorant Garamond',serif;color:white}
+.screen{position:fixed;inset:0;overflow:hidden;background:radial-gradient(ellipse at 50% 25%,#81709e 0%,#55466e 35%,#322541 68%,#21182f 100%)}
+.stars{position:absolute;inset:0;pointer-events:none}
+.star{position:absolute;width:2px;height:2px;border-radius:50%;background:white;box-shadow:0 0 6px rgba(255,255,255,.7);animation:twinkle 3s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1.4)}}
+.shooting-star{position:absolute;width:130px;height:1.5px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.95),transparent);transform:rotate(-35deg);opacity:0;animation:shooting 7s linear infinite}
+.shooting-star::after{content:"";position:absolute;right:0;top:-2px;width:4px;height:4px;border-radius:50%;background:white;box-shadow:0 0 10px 3px rgba(255,255,255,.6)}
+@keyframes shooting{0%{transform:translate(0,0) rotate(-35deg);opacity:0}5%{opacity:1}15%{opacity:0}100%{transform:translate(-550px,350px) rotate(-35deg);opacity:0}}
+#opening{z-index:10;display:flex;align-items:center;justify-content:center;text-align:center;transition:opacity 1.5s ease}
+.opening-content{position:relative;z-index:2;padding:25px;width:100%;max-width:500px}
+.opening-eyebrow{font-size:13px;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,.75);margin-bottom:30px}
+.moon{font-size:50px;margin-bottom:15px;filter:drop-shadow(0 0 15px rgba(255,255,255,.35))}
+.opening-title{font-family:'Allura',cursive;font-size:clamp(48px,13vw,76px);line-height:1.1;font-weight:400;color:#fff;text-shadow:0 0 15px rgba(255,255,255,.15)}
+.opening-subtitle{margin-top:18px;font-size:19px;font-weight:400;letter-spacing:1px;color:rgba(255,255,255,.85)}
+.open-button{margin-top:40px;padding:15px 28px;border:1px solid rgba(255,255,255,.65);border-radius:40px;background:rgba(255,255,255,.08);color:white;font-family:'Cormorant Garamond',serif;font-size:18px;letter-spacing:1px;cursor:pointer;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);transition:background .3s ease,transform .3s ease}
+.open-button:active{transform:scale(.96);background:rgba(255,255,255,.18)}
+#main{display:none;opacity:0;transition:opacity 1.5s ease}
+#photos{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.falling-photo-frame{position:absolute;top:-160px;opacity:0;animation:fall var(--fall-duration) linear forwards;will-change:transform}
+.falling-photo-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center;border:6px solid white;outline:none;padding:5px;background:white;border-radius:3px;box-shadow:0 4px 18px rgba(20,10,30,.25)}
+.photo-decoration-layer{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.polaroid-celestial-svg{display:block;width:100%;height:100%;overflow:hidden}
+.celestial-line{fill:none;stroke:#a58bc9;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round;opacity:.95}
+.celestial-star{fill:#b39bd8;stroke:#8066a8;stroke-width:.45;opacity:1}
+.celestial-sparkle{fill:#c7b5e4;opacity:1}
+.celestial-moon{fill:#bba6dc;stroke:#8e75b7;stroke-width:.55;opacity:1}
+.celestial-dot{fill:#9276ba;opacity:1}
+@keyframes fall{0%{opacity:0;transform:translate3d(0,-10px,0) rotate(var(--rotation))}3%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translate3d(var(--drift),110vh,0) rotate(calc(var(--rotation) + 25deg))}}
+.center-message{position:absolute;z-index:5;left:50%;top:50%;transform:translate(-50%,-50%);width:100%;padding:0 8px;text-align:center;white-space:nowrap;display:flex;justify-content:center;align-items:center;gap:5px;pointer-events:none}
+.message-text{font-family:'Allura',cursive;font-size:clamp(34px,8.8vw,55px);font-weight:400;color:white;text-shadow:0 0 2px #fff,0 0 5px #fff,0 0 10px rgba(255,255,255,1),0 0 20px rgba(255,255,255,.95),0 0 35px rgba(255,255,255,.8),0 0 55px rgba(220,205,255,.7),0 0 80px rgba(190,160,255,.45)}
+.white-heart{width:clamp(22px,5.5vw,33px);height:auto;flex-shrink:0;fill:white;filter:drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px #fff) drop-shadow(0 0 10px rgba(255,255,255,1)) drop-shadow(0 0 20px rgba(255,255,255,.9)) drop-shadow(0 0 35px rgba(255,255,255,.75)) drop-shadow(0 0 55px rgba(190,160,255,.6))}
+#youtube-player-container{position:fixed;width:200px;height:200px;left:-10000px;top:-10000px;opacity:0;pointer-events:none;overflow:hidden}
+#youtube-player-container iframe{width:200px;height:200px;border:0}
+@media(max-width:380px){.opening-subtitle{font-size:17px}.opening-eyebrow{font-size:11px;letter-spacing:4px}}
 </style>
 </head>
-
 <body>
-
-<!-- HIDDEN YOUTUBE PLAYER -->
-
-<div id="youtube-player-container">
-  <div id="youtube-player"></div>
-</div>
-
-<!-- OPENING SCREEN -->
+<div id="youtube-player-container"><div id="youtube-player"></div></div>
 
 <div class="screen" id="opening">
   <div class="stars" id="opening-stars"></div>
   <div class="shooting-star" style="top:18%;left:85%;animation-delay:1s"></div>
   <div class="shooting-star" style="top:42%;left:100%;animation-delay:4s"></div>
   <div class="shooting-star" style="top:70%;left:75%;animation-delay:6s"></div>
-
   <div class="opening-content">
     <div class="opening-eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
     <div class="moon">☾</div>
     <div class="opening-title">Under the Shooting Stars</div>
-    <div class="opening-subtitle">
-      Some things are worth taking a moment for...
-    </div>
-
-    <button class="open-button" id="open-button">
-      Open Your Surprise ♡
-    </button>
+    <div class="opening-subtitle">Some things are worth taking a moment for...</div>
+    <button class="open-button" id="open-button">Open Your Surprise ♡</button>
   </div>
 </div>
-
-<!-- MAIN SCREEN -->
 
 <div class="screen" id="main">
   <div class="stars" id="main-stars"></div>
   <div class="shooting-star" style="top:12%;left:95%;animation-delay:2s"></div>
   <div class="shooting-star" style="top:35%;left:100%;animation-delay:5s"></div>
   <div class="shooting-star" style="top:60%;left:85%;animation-delay:8s"></div>
-
   <div id="photos"></div>
-
-  <!-- CENTER MESSAGE -->
-
   <div class="center-message">
     <span class="message-text">I'll Always Choose You</span>
     <svg class="white-heart" viewBox="0 0 24 24" aria-label="White heart" role="img">
-      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09
-    13.09 3.81 14.76 3 16.5 3
-    19.58 3 22 5.42 22 8.5
-    c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09 1.09-1.28 2.76-2.09 4.5-2.09 3.08 0 5.5 2.42 5.5 5.5 0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
     </svg>
   </div>
 </div>
 
 <script>
-
 /* PHOTO FILES */
-
 const photoFiles = [
   "Picture_36_Original_Original.jpeg",
   "PXL_20201225_045227157.NIGHT_Original_Original.jpeg",
@@ -510,9 +182,7 @@ const photoFiles = [
   "IMG_4250_Original.jpeg",
   "IMG_4254_Original.jpeg",
   "IMG_0842_Original.jpeg",
-
   /* 26 NEW PHOTOS */
-
   "IMG_5530_Original.jpeg",
   "IMG_5489_Original.jpeg",
   "IMG_5431_Original.jpeg",
@@ -539,498 +209,301 @@ const photoFiles = [
   "19DD59E4-43C2-463B-A70B-96588933B44F_Original.jpeg",
   "8F4746F3-B883-4DE1-8AD9-E14C94805202_Original.jpeg",
   "5A9A7BF3-806C-4CC1-96AE-F2E8FABA7D18_Original.jpeg",
-
-  /* NEW PHOTO */
-
   "Wedding4.jpeg"
 ];
 
 /* STARS */
-
-function createStars(containerId, count) {
-  const container = document.getElementById(containerId);
-
-  for (let i = 0; i < count; i++) {
-    const star = document.createElement("div");
-
-    star.className = "star";
-    star.style.left = Math.random() * 100 + "%";
-    star.style.top = Math.random() * 100 + "%";
-    star.style.animationDelay = Math.random() * 5 + "s";
-    star.style.animationDuration = (2 + Math.random() * 4) + "s";
-
+function createStars(containerId,count){
+  const container=document.getElementById(containerId);
+  for(let i=0;i<count;i++){
+    const star=document.createElement("div");
+    star.className="star";
+    star.style.left=Math.random()*100+"%";
+    star.style.top=Math.random()*100+"%";
+    star.style.animationDelay=Math.random()*5+"s";
+    star.style.animationDuration=(2+Math.random()*4)+"s";
     container.appendChild(star);
   }
 }
-
-createStars("opening-stars", 100);
-createStars("main-stars", 110);
+createStars("opening-stars",100);
+createStars("main-stars",110);
 
 /* PHOTO SHUFFLE / NO REPEATS */
+const photos=document.getElementById("photos");
+let photoDeck=[];
+let lastDisplayedPhoto=null;
+let failedPhotos=new Set();
+let photoStarted=false;
+let photoTimer=null;
+let pendingPhotos=0;
 
-const photos = document.getElementById("photos");
-
-let photoDeck = [];
-let lastDisplayedPhoto = null;
-let failedPhotos = new Set();
-let photoStarted = false;
-let photoTimer = null;
-let pendingPhotos = 0;
-
-/* THESE TWO FILES FAILED THE PHOTO CHECKER */
-
-const unavailablePhotos = new Set([
+const unavailablePhotos=new Set([
   "IMG_4101_Original.jpeg",
   "wedding-photo-12.png"
 ]);
 
-/* RETRY TEMPORARY LOADING FAILURES */
+const photoRetryCounts=new Map();
+const MAX_PHOTO_RETRIES=2;
 
-const photoRetryCounts = new Map();
-const MAX_PHOTO_RETRIES = 2;
-
-function shuffle(array) {
-  const result = [...array];
-
-  for (let i = result.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [result[i], result[j]] = [result[j], result[i]];
+function shuffle(array){
+  const result=[...array];
+  for(let i=result.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [result[i],result[j]]=[result[j],result[i]];
   }
-
   return result;
 }
 
-function startNewPhotoCycle() {
-  const availablePhotos = photoFiles.filter(
-    filename =>
-      !unavailablePhotos.has(filename) &&
-      !failedPhotos.has(filename)
+function startNewPhotoCycle(){
+  const availablePhotos=photoFiles.filter(filename=>
+    !unavailablePhotos.has(filename)&&!failedPhotos.has(filename)
   );
-
-  photoDeck = shuffle(availablePhotos);
-
-  if (
-    photoDeck.length > 1 &&
-    photoDeck[0] === lastDisplayedPhoto
-  ) {
-    [photoDeck[0], photoDeck[1]] =
-      [photoDeck[1], photoDeck[0]];
+  photoDeck=shuffle(availablePhotos);
+  if(photoDeck.length>1&&photoDeck[0]===lastDisplayedPhoto){
+    [photoDeck[0],photoDeck[1]]=[photoDeck[1],photoDeck[0]];
   }
-
   photoRetryCounts.clear();
-
-  console.log(
-    "Starting photo cycle with",
-    photoDeck.length,
-    "available photos."
-  );
+  console.log("Starting photo cycle with",photoDeck.length,"available photos.");
 }
 
-function getNextPhoto() {
-  if (photoDeck.length === 0) {
-
-    if (pendingPhotos > 0) return null;
-
+function getNextPhoto(){
+  if(photoDeck.length===0){
+    if(pendingPhotos>0)return null;
     startNewPhotoCycle();
   }
-
-  if (photoDeck.length === 0) return null;
-
+  if(photoDeck.length===0)return null;
   return photoDeck.shift();
 }
 
 /* RANDOM PHOTO DIMENSIONS */
-
-function getRandomPhotoSize() {
-  const sizes = [
-    { width: 78, height: 98 },
-    { width: 88, height: 110 },
-    { width: 98, height: 122 },
-    { width: 108, height: 135 },
-    { width: 118, height: 148 },
-    { width: 128, height: 160 }
+function getRandomPhotoSize(){
+  const sizes=[
+    {width:78,height:98},
+    {width:88,height:110},
+    {width:98,height:122},
+    {width:108,height:135},
+    {width:118,height:148},
+    {width:128,height:160}
   ];
-
-  const selected = sizes[
-    Math.floor(Math.random() * sizes.length)
-  ];
-
-  const maxWidth = Math.max(70, window.innerWidth - 20);
-  const scale = Math.min(1, maxWidth / selected.width);
-
-  return {
-    width: Math.round(selected.width * scale),
-    height: Math.round(selected.height * scale)
+  const selected=sizes[Math.floor(Math.random()*sizes.length)];
+  const maxWidth=Math.max(70,window.innerWidth-20);
+  const scale=Math.min(1,maxWidth/selected.width);
+  return{
+    width:Math.round(selected.width*scale),
+    height:Math.round(selected.height*scale)
   };
 }
 
-/* CELESTIAL BORDER DECORATIONS */
+/* CELESTIAL BORDER DECORATIONS
+   SVG VIEWBOX USES EACH FRAME'S REAL PIXEL SIZE.
+   This keeps the ornaments legible on small and large photos.
+*/
+function addPhotoDecorations(layer,width,height){
+  const ns="http://www.w3.org/2000/svg";
+  const svg=document.createElementNS(ns,"svg");
+  svg.setAttribute("class","polaroid-celestial-svg");
+  svg.setAttribute("viewBox",`0 0 ${width} ${height}`);
+  svg.setAttribute("preserveAspectRatio","none");
+  svg.setAttribute("aria-hidden","true");
 
-function addPhotoDecorations(layer) {
-  const svgNS = "http://www.w3.org/2000/svg";
-
-  const svg = document.createElementNS(svgNS, "svg");
-
-  svg.setAttribute("class", "polaroid-celestial-svg");
-  svg.setAttribute("viewBox", "0 0 128 160");
-  svg.setAttribute("preserveAspectRatio", "none");
-  svg.setAttribute("aria-hidden", "true");
-
-  /*
-    THE WHITE BORDER IS APPROXIMATELY 11PX WIDE.
-    ALL DECORATIONS ARE DRAWN ALONG THE FRAME EDGES,
-    NOT ACROSS THE PHOTOGRAPH.
-  */
-
-  function addPath(d, className) {
-    const path = document.createElementNS(svgNS, "path");
-    path.setAttribute("d", d);
-    path.setAttribute("class", className);
-    svg.appendChild(path);
+  function path(d,cls){
+    const el=document.createElementNS(ns,"path");
+    el.setAttribute("d",d);
+    el.setAttribute("class",cls);
+    svg.appendChild(el);
+  }
+  function circle(x,y,r,cls){
+    const el=document.createElementNS(ns,"circle");
+    el.setAttribute("cx",x);el.setAttribute("cy",y);el.setAttribute("r",r);
+    el.setAttribute("class",cls);svg.appendChild(el);
+  }
+  function star(x,y,r){
+    path(`M ${x} ${y-r} Q ${x+1.1} ${y-1.1} ${x+r} ${y} Q ${x+1.1} ${y+1.1} ${x} ${y+r} Q ${x-1.1} ${y+1.1} ${x-r} ${y} Q ${x-1.1} ${y-1.1} ${x} ${y-r} Z`,"celestial-star");
+  }
+  function sparkle(x,y,r){
+    path(`M ${x} ${y-r} Q ${x+.8} ${y-.8} ${x+r} ${y} Q ${x+.8} ${y+.8} ${x} ${y+r} Q ${x-.8} ${y+.8} ${x-r} ${y} Q ${x-.8} ${y-.8} ${x} ${y-r} Z`,"celestial-sparkle");
+  }
+  function moon(x,y,scale,angle){
+    const g=document.createElementNS(ns,"g");
+    g.setAttribute("transform",`translate(${x} ${y}) rotate(${angle}) scale(${scale})`);
+    const p=document.createElementNS(ns,"path");
+    p.setAttribute("d","M 5 -5.8 C -1.5 -5.5 -3.8 3.2 2.2 6 C .2 2.5 1 -2.7 5 -5.8 Z");
+    p.setAttribute("class","celestial-moon");
+    g.appendChild(p);svg.appendChild(g);
   }
 
-  function addCircle(cx, cy, radius, className) {
-    const circle = document.createElementNS(svgNS, "circle");
-    circle.setAttribute("cx", cx);
-    circle.setAttribute("cy", cy);
-    circle.setAttribute("r", radius);
-    circle.setAttribute("class", className);
-    svg.appendChild(circle);
-  }
-
-  function addStar(cx, cy, size) {
-    const points = [
-      [cx, cy - size],
-      [cx + size * .22, cy - size * .22],
-      [cx + size, cy],
-      [cx + size * .22, cy + size * .22],
-      [cx, cy + size],
-      [cx - size * .22, cy + size * .22],
-      [cx - size, cy],
-      [cx - size * .22, cy - size * .22]
-    ];
-
-    const d = points.map((point, index) =>
-      (index === 0 ? "M" : "L") +
-      point[0] + " " + point[1]
-    ).join(" ") + " Z";
-
-    addPath(d, "celestial-star");
-  }
-
-  function addSparkle(cx, cy, size) {
-    addPath(
-      `M ${cx} ${cy - size}
-       Q ${cx + size * .12} ${cy - size * .12} ${cx + size} ${cy}
-       Q ${cx + size * .12} ${cy + size * .12} ${cx} ${cy + size}
-       Q ${cx - size * .12} ${cy + size * .12} ${cx - size} ${cy}
-       Q ${cx - size * .12} ${cy - size * .12} ${cx} ${cy - size} Z`,
-      "celestial-sparkle"
-    );
-  }
-
-  function addMoon(x, y, scale, rotation) {
-    const group = document.createElementNS(svgNS, "g");
-
-    group.setAttribute(
-      "transform",
-      `translate(${x} ${y}) rotate(${rotation}) scale(${scale})`
-    );
-
-    const moon = document.createElementNS(svgNS, "path");
-
-    moon.setAttribute(
-      "d",
-      "M 5 -7 C -3 -5 -4 6 4 8 C 1 4 1 -2 5 -7 Z"
-    );
-
-    moon.setAttribute("class", "celestial-moon");
-
-    group.appendChild(moon);
-    svg.appendChild(group);
-  }
-
-  const designs = [
-    function() {
-      addMoon(9, 8, 1.05, -18);
-      addStar(116, 8, 5);
-      addStar(13, 151, 4.5);
-      addSparkle(112, 151, 3);
-      addPath("M 18 8 Q 32 3 43 9", "celestial-line");
-      addCircle(43, 9, 1.4, "celestial-dot");
+  const right=width-7;
+  const bottom=height-7;
+  const patterns=[
+    ()=>{
+      moon(7,7,1.15,-20);star(right,7,4.8);star(8,bottom,3.8);
+      path(`M 15 7 Q 23 3 31 7 L 37 5`,"celestial-line");
+      circle(31,7,1.15,"celestial-dot");sparkle(right,bottom,2.8);
     },
-
-    function() {
-      addMoon(118, 150, 1.05, 165);
-      addStar(11, 8, 5);
-      addStar(114, 9, 4);
-      addSparkle(13, 151, 3.5);
-      addPath("M 110 151 Q 96 156 84 150", "celestial-line");
-      addCircle(84, 150, 1.4, "celestial-dot");
+    ()=>{
+      moon(right,bottom,1.15,160);star(7,7,4.8);star(right,7,3.8);
+      path(`M ${right-15} ${bottom} Q ${right-23} ${bottom-4} ${right-31} ${bottom}`,"celestial-line");
+      circle(right-31,bottom,1.15,"celestial-dot");sparkle(7,bottom,2.8);
     },
-
-    function() {
-      addMoon(9, 150, 1, -70);
-      addStar(116, 8, 5);
-      addStar(64, 8, 4);
-      addSparkle(112, 151, 3);
-      addPath("M 17 151 Q 29 155 39 150", "celestial-line");
-      addCircle(39, 150, 1.4, "celestial-dot");
+    ()=>{
+      moon(7,bottom,1.1,-75);star(right,7,4.8);star(width/2,7,3.8);
+      path(`M 15 ${bottom} Q 24 ${bottom-4} 33 ${bottom}`,"celestial-line");
+      circle(33,bottom,1.15,"celestial-dot");sparkle(right,bottom,2.8);
     },
-
-    function() {
-      addMoon(118, 8, 1.05, 150);
-      addStar(11, 151, 5);
-      addStar(64, 151, 4);
-      addSparkle(13, 8, 3);
-      addPath("M 109 8 Q 97 3 86 9", "celestial-line");
-      addCircle(86, 9, 1.4, "celestial-dot");
+    ()=>{
+      moon(right,7,1.15,145);star(7,bottom,4.8);star(width/2,bottom,3.8);
+      path(`M ${right-15} 7 Q ${right-24} 3 ${right-33} 7`,"celestial-line");
+      circle(right-33,7,1.15,"celestial-dot");sparkle(7,7,2.8);
     },
-
-    function() {
-      addMoon(9, 8, .95, -15);
-      addStar(116, 8, 5);
-      addStar(116, 151, 4.5);
-      addStar(11, 151, 3.5);
-      addPath("M 17 8 L 29 5 L 40 9", "celestial-line");
-      addCircle(29, 5, 1.3, "celestial-dot");
+    ()=>{
+      moon(7,7,1.05,-20);star(right,7,5.2);star(right,bottom,4.3);star(7,bottom,3.5);
+      path(`M 15 7 L 23 4 L 31 7 L 38 5`,"celestial-line");
+      circle(23,4,1.1,"celestial-dot");sparkle(width/2,bottom,2.6);
     },
-
-    function() {
-      addMoon(118, 150, 1, 165);
-      addStar(11, 8, 5);
-      addStar(64, 151, 4.5);
-      addStar(116, 8, 3.5);
-      addPath("M 110 150 L 99 154 L 88 150", "celestial-line");
-      addCircle(99, 154, 1.3, "celestial-dot");
+    ()=>{
+      moon(right,bottom,1.1,160);star(7,7,5.2);star(width/2,bottom,4.2);star(right,7,3.5);
+      path(`M ${right-15} ${bottom} L ${right-23} ${bottom-3} L ${right-31} ${bottom} L ${right-38} ${bottom-2}`,"celestial-line");
+      circle(right-23,bottom-3,1.1,"celestial-dot");sparkle(7,bottom,2.6);
     }
   ];
+  patterns[Math.floor(Math.random()*patterns.length)]();
 
-  const selectedDesign =
-    designs[Math.floor(Math.random() * designs.length)];
-
-  selectedDesign();
-
-  /* ADD A FEW RANDOM SMALL SPARKLES */
-
-  const sparklePositions = [
-    [34, 8],
-    [94, 8],
-    [34, 151],
-    [94, 151],
-    [8, 42],
-    [120, 42],
-    [8, 118],
-    [120, 118]
+  /* A small number of extra glints, placed only on the border. */
+  const extra=[
+    [width*.28,7],[width*.72,7],[width*.28,bottom],[width*.72,bottom],
+    [7,height*.35],[right,height*.65]
   ];
-
-  const selectedSparkles = shuffle(sparklePositions).slice(
-    0,
-    1 + Math.floor(Math.random() * 3)
-  );
-
-  selectedSparkles.forEach(position => {
-    addSparkle(
-      position[0],
-      position[1],
-      2.2 + Math.random() * 1.2
-    );
+  shuffle(extra).slice(0,1+Math.floor(Math.random()*2)).forEach(([x,y])=>{
+    sparkle(x,y,2.1);
   });
-
   layer.appendChild(svg);
 }
 
-function createFallingPhoto() {
-  const filename = getNextPhoto();
+function createFallingPhoto(){
+  const filename=getNextPhoto();
+  if(!filename)return;
 
-  if (!filename) return;
+  const frame=document.createElement("div");
+  const img=document.createElement("img");
+  const decorationLayer=document.createElement("div");
+  const rotation=-16+Math.random()*32;
+  const duration=35+Math.random()*10;
+  const drift=-65+Math.random()*130;
+  const size=getRandomPhotoSize();
 
-  const frame = document.createElement("div");
-  const img = document.createElement("img");
-  const decorationLayer = document.createElement("div");
+  frame.className="falling-photo-frame";
+  frame.style.width=size.width+"px";
+  frame.style.height=size.height+"px";
+  const availableWidth=Math.max(0,window.innerWidth-size.width);
+  frame.style.left=(Math.random()*availableWidth)+"px";
+  frame.style.setProperty("--rotation",rotation+"deg");
+  frame.style.setProperty("--fall-duration",duration+"s");
+  frame.style.setProperty("--drift",drift+"px");
 
-  const rotation = -16 + Math.random() * 32;
-  const duration = 35 + Math.random() * 10;
-  const drift = -65 + Math.random() * 130;
-  const size = getRandomPhotoSize();
+  img.className="falling-photo-image";
+  img.alt="";
+  img.draggable=false;
+  img.loading="eager";
 
-  frame.className = "falling-photo-frame";
-
-  frame.style.width = size.width + "px";
-  frame.style.height = size.height + "px";
-
-  const availableWidth = Math.max(0, window.innerWidth - size.width);
-  frame.style.left = (Math.random() * availableWidth) + "px";
-
-  frame.style.setProperty("--rotation", rotation + "deg");
-  frame.style.setProperty("--fall-duration", duration + "s");
-  frame.style.setProperty("--drift", drift + "px");
-
-  img.className = "falling-photo-image";
-  img.alt = "";
-  img.draggable = false;
-  img.loading = "eager";
-
-  decorationLayer.className = "photo-decoration-layer";
-
-  addPhotoDecorations(decorationLayer);
+  decorationLayer.className="photo-decoration-layer";
+  addPhotoDecorations(decorationLayer,size.width,size.height);
 
   frame.appendChild(img);
   frame.appendChild(decorationLayer);
-
   pendingPhotos++;
 
-  img.onload = () => {
+  img.onload=()=>{
     pendingPhotos--;
-
     photoRetryCounts.delete(filename);
-    lastDisplayedPhoto = filename;
-
+    lastDisplayedPhoto=filename;
     photos.appendChild(frame);
-
-    console.log("Photo displayed:", filename);
+    console.log("Photo displayed:",filename);
   };
 
-  img.onerror = () => {
+  img.onerror=()=>{
     pendingPhotos--;
-
-    const retries = photoRetryCounts.get(filename) || 0;
-
-    if (retries < MAX_PHOTO_RETRIES) {
-      photoRetryCounts.set(filename, retries + 1);
-
+    const retries=photoRetryCounts.get(filename)||0;
+    if(retries<MAX_PHOTO_RETRIES){
+      photoRetryCounts.set(filename,retries+1);
       photoDeck.push(filename);
-
-      console.warn(
-        "Retrying photo:",
-        filename,
-        "Attempt:",
-        retries + 1
-      );
-    } else {
+      console.warn("Retrying photo:",filename,"Attempt:",retries+1);
+    }else{
       failedPhotos.add(filename);
       photoRetryCounts.delete(filename);
-
-      console.warn(
-        "Skipping photo after retries:",
-        filename
-      );
+      console.warn("Skipping photo after retries:",filename);
     }
-
     frame.remove();
   };
 
-  frame.addEventListener("animationend", () => {
-    frame.remove();
-  });
-
-  img.src = "./" + encodeURIComponent(filename);
+  frame.addEventListener("animationend",()=>frame.remove());
+  img.src="./"+encodeURIComponent(filename);
 }
 
 /* PHOTO START SEQUENCE */
-
-function startPhotos() {
-  if (photoStarted) return;
-
-  photoStarted = true;
-
+function startPhotos(){
+  if(photoStarted)return;
+  photoStarted=true;
   createFallingPhoto();
-
-  setTimeout(createFallingPhoto, 1500);
-  setTimeout(createFallingPhoto, 3000);
-
-  setTimeout(() => {
+  setTimeout(createFallingPhoto,1500);
+  setTimeout(createFallingPhoto,3000);
+  setTimeout(()=>{
     createFallingPhoto();
-    photoTimer = setInterval(createFallingPhoto, 5000);
-  }, 8000);
+    photoTimer=setInterval(createFallingPhoto,5000);
+  },8000);
 }
 
 /* HIDDEN YOUTUBE PLAYER WITH AUTOPLAY AND LOOP */
+const videoId="yLZoVTayvxY";
+let youtubePlayer=null;
+let youtubePlayerReady=false;
+let startMusicWhenReady=false;
 
-const videoId = "yLZoVTayvxY";
-
-let youtubePlayer = null;
-let youtubePlayerReady = false;
-let startMusicWhenReady = false;
-
-function onYouTubeIframeAPIReady() {
-  youtubePlayer = new YT.Player("youtube-player", {
-    width: "200",
-    height: "200",
-
-    videoId: videoId,
-
-    playerVars: {
-      autoplay: 0,
-      controls: 0,
-      disablekb: 1,
-      fs: 0,
-      playsinline: 1,
-      rel: 0,
-      loop: 1,
-      playlist: videoId
-    },
-
-    events: {
-      onReady: function(event) {
-        youtubePlayerReady = true;
-
-        if (startMusicWhenReady) {
+function onYouTubeIframeAPIReady(){
+  youtubePlayer=new YT.Player("youtube-player",{
+    width:"200",height:"200",videoId:videoId,
+    playerVars:{autoplay:0,controls:0,disablekb:1,fs:0,playsinline:1,rel:0,loop:1,playlist:videoId},
+    events:{
+      onReady:function(event){
+        youtubePlayerReady=true;
+        if(startMusicWhenReady){
           event.target.playVideo();
-          startMusicWhenReady = false;
+          startMusicWhenReady=false;
         }
       },
-
-      onStateChange: function(event) {
-        if (event.data === YT.PlayerState.ENDED) {
-          event.target.playVideo();
-        }
+      onStateChange:function(event){
+        if(event.data===YT.PlayerState.ENDED)event.target.playVideo();
       }
     }
   });
 }
 
 /* LOAD YOUTUBE API */
-
-(function loadYouTubeAPI() {
-  const tag = document.createElement("script");
-  tag.src = "https://www.youtube.com/iframe_api";
-
-  const firstScript = document.getElementsByTagName("script")[0];
-  firstScript.parentNode.insertBefore(tag, firstScript);
+(function loadYouTubeAPI(){
+  const tag=document.createElement("script");
+  tag.src="https://www.youtube.com/iframe_api";
+  const firstScript=document.getElementsByTagName("script")[0];
+  firstScript.parentNode.insertBefore(tag,firstScript);
 })();
 
 /* OPEN SURPRISE */
+const opening=document.getElementById("opening");
+const main=document.getElementById("main");
+const openButton=document.getElementById("open-button");
 
-const opening = document.getElementById("opening");
-const main = document.getElementById("main");
-const openButton = document.getElementById("open-button");
-
-openButton.addEventListener("click", function() {
-
-  /* START THE HIDDEN SONG FROM THE OPENING BUTTON TAP. */
-
-  if (youtubePlayer && youtubePlayerReady) {
+openButton.addEventListener("click",function(){
+  if(youtubePlayer&&youtubePlayerReady){
     youtubePlayer.playVideo();
-  } else {
-    startMusicWhenReady = true;
+  }else{
+    startMusicWhenReady=true;
   }
-
-  opening.style.opacity = "0";
-
-  setTimeout(() => {
-    opening.style.display = "none";
-    main.style.display = "block";
-
-    requestAnimationFrame(() => {
-      main.style.opacity = "1";
-    });
-
+  opening.style.opacity="0";
+  setTimeout(()=>{
+    opening.style.display="none";
+    main.style.display="block";
+    requestAnimationFrame(()=>{main.style.opacity="1";});
     startPhotos();
-  }, 1000);
+  },1000);
 });
-
 </script>
-
 </body>
 </html>
