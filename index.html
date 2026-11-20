@@ -176,8 +176,12 @@ body {
 .falling-photo {
   position: absolute;
   top: -160px;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
+  border: none;
+  padding: 0;
+  background: transparent;
+  border-radius: 0;
   box-shadow: 0 4px 18px rgba(20,10,30,.25);
   opacity: 0;
   animation: fall var(--fall-duration) linear forwards;
