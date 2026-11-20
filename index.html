@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,104 +9,184 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+
 <style>
-* { box-sizing: border-box; }
-html, body {
-  width:100%; height:100%; margin:0; overflow:hidden;
+* { box-sizing:border-box; }
+
+html,body {
+  width:100%;
+  height:100%;
+  margin:0;
+  overflow:hidden;
   background:#10091c;
 }
-body { font-family:'Cormorant Garamond',serif; color:white; }
+
+body {
+  font-family:'Cormorant Garamond',serif;
+  color:white;
+}
+
 .screen {
-  position:fixed; inset:0; overflow:hidden; isolation:isolate;
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  isolation:isolate;
   background:#10091c;
 }
+
 .hidden { display:none !important; }
 
 .nebula-clouds {
-  position:absolute; inset:-12%; z-index:0; overflow:hidden;
-  pointer-events:none; opacity:1;
+  position:absolute;
+  inset:-12%;
+  z-index:0;
+  overflow:hidden;
+  pointer-events:none;
+  opacity:1;
 }
+
 .nebula-clouds::before,
 .nebula-clouds::after {
-  content:""; position:absolute; inset:-8%; pointer-events:none;
+  content:"";
+  position:absolute;
+  inset:-8%;
+  pointer-events:none;
 }
+
 .nebula-clouds::before {
   background:
-    radial-gradient(ellipse 43% 28% at 18% 28%, rgba(151,105,205,.62) 0%, rgba(115,73,166,.38) 42%, transparent 76%),
-    radial-gradient(ellipse 42% 31% at 76% 38%, rgba(133,101,197,.58) 0%, rgba(103,69,157,.34) 46%, transparent 76%),
-    radial-gradient(ellipse 46% 30% at 48% 82%, rgba(179,119,177,.46) 0%, rgba(129,79,159,.3) 44%, transparent 78%);
+    radial-gradient(ellipse 43% 28% at 18% 28%,rgba(151,105,205,.62) 0%,rgba(115,73,166,.38) 42%,transparent 76%),
+    radial-gradient(ellipse 42% 31% at 76% 38%,rgba(133,101,197,.58) 0%,rgba(103,69,157,.34) 46%,transparent 76%),
+    radial-gradient(ellipse 46% 30% at 48% 82%,rgba(179,119,177,.46) 0%,rgba(129,79,159,.3) 44%,transparent 78%);
   filter:blur(24px);
   animation:nebulaFloatA 34s ease-in-out infinite alternate;
 }
+
 .nebula-clouds::after {
   background:
-    radial-gradient(ellipse 27% 20% at 34% 52%, rgba(202,151,203,.34) 0%, rgba(147,101,182,.22) 48%, transparent 78%),
-    radial-gradient(ellipse 32% 22% at 88% 75%, rgba(119,105,195,.38) 0%, rgba(91,73,157,.2) 48%, transparent 78%),
-    radial-gradient(ellipse 28% 18% at 12% 88%, rgba(166,119,191,.32) 0%, transparent 76%);
+    radial-gradient(ellipse 27% 20% at 34% 52%,rgba(202,151,203,.34) 0%,rgba(147,101,182,.22) 48%,transparent 78%),
+    radial-gradient(ellipse 32% 22% at 88% 75%,rgba(119,105,195,.38) 0%,rgba(91,73,157,.2) 48%,transparent 78%),
+    radial-gradient(ellipse 28% 18% at 12% 88%,rgba(166,119,191,.32) 0%,transparent 76%);
   filter:blur(30px);
   animation:nebulaFloatB 42s ease-in-out infinite alternate;
 }
+
 @keyframes nebulaFloatA {
   from { transform:translate3d(-2%,1%,0) scale(.98); }
   to { transform:translate3d(3%,-2%,0) scale(1.08); }
 }
+
 @keyframes nebulaFloatB {
   from { transform:translate3d(2%,-1%,0) rotate(-3deg); }
   to { transform:translate3d(-3%,2%,0) rotate(4deg); }
 }
+
 .nebula-ribbon {
-  position:absolute; width:70vw; height:30vw; min-height:190px;
-  border-radius:50%; filter:blur(32px); opacity:.45;
+  position:absolute;
+  width:70vw;
+  height:30vw;
+  min-height:190px;
+  border-radius:50%;
+  filter:blur(32px);
+  opacity:.45;
   background:radial-gradient(ellipse,rgba(157,113,197,.48),rgba(108,75,156,.2) 48%,transparent 75%);
   pointer-events:none;
 }
-.nebula-ribbon.one { left:-18%; top:42%; transform:rotate(-22deg); }
-.nebula-ribbon.two { right:-20%; top:5%; transform:rotate(24deg); opacity:.38; }
+
+.nebula-ribbon.one {
+  left:-18%;
+  top:42%;
+  transform:rotate(-22deg);
+}
+
+.nebula-ribbon.two {
+  right:-20%;
+  top:5%;
+  transform:rotate(24deg);
+  opacity:.38;
+}
 
 .stars {
-  position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden;
+  position:absolute;
+  inset:0;
+  z-index:1;
+  pointer-events:none;
+  overflow:hidden;
 }
+
 .star {
-  position:absolute; border-radius:50%; background:#fff;
+  position:absolute;
+  border-radius:50%;
+  background:#fff;
   box-shadow:0 0 4px rgba(255,255,255,.9),0 0 10px rgba(213,190,255,.8);
   animation:twinkle var(--twinkle-duration,3s) ease-in-out infinite;
   animation-delay:var(--delay,0s);
 }
+
 .star.large {
   box-shadow:0 0 5px white,0 0 13px rgba(221,198,255,.95),0 0 23px rgba(177,137,255,.6);
 }
+
 @keyframes twinkle {
   0%,100% { opacity:.28; transform:scale(.75); }
   50% { opacity:1; transform:scale(1.3); }
 }
+
 .sparkle {
-  position:absolute; width:13px; height:13px; z-index:1; opacity:.7;
+  position:absolute;
+  width:13px;
+  height:13px;
+  z-index:1;
+  opacity:.7;
   animation:sparklePulse 4s ease-in-out infinite;
 }
-.sparkle::before,.sparkle::after {
-  content:""; position:absolute; left:50%; top:50%;
-  transform:translate(-50%,-50%); background:rgba(255,255,255,.95);
-  border-radius:100%; box-shadow:0 0 9px rgba(221,201,255,.9);
+
+.sparkle::before,
+.sparkle::after {
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  background:rgba(255,255,255,.95);
+  border-radius:100%;
+  box-shadow:0 0 9px rgba(221,201,255,.9);
 }
+
 .sparkle::before { width:2px; height:100%; }
 .sparkle::after { width:100%; height:2px; }
+
 @keyframes sparklePulse {
   0%,100% { opacity:.25; transform:scale(.7) rotate(0deg); }
   50% { opacity:.95; transform:scale(1.25) rotate(45deg); }
 }
 
 .shooting-star {
-  position:absolute; z-index:2; width:105px; height:1.5px; border-radius:50%;
+  position:absolute;
+  z-index:2;
+  width:105px;
+  height:1.5px;
+  border-radius:50%;
   opacity:0;
   background:linear-gradient(90deg,transparent,rgba(218,195,255,.18) 25%,rgba(255,255,255,.95) 100%);
   filter:drop-shadow(0 0 5px rgba(224,203,255,.9));
-  transform:rotate(-32deg); animation:shootingStar 7s linear infinite;
+  transform:rotate(-32deg);
+  animation:shootingStar 7s linear infinite;
   pointer-events:none;
 }
+
 .shooting-star::after {
-  content:""; position:absolute; right:0; top:-2px; width:5px; height:5px;
-  border-radius:50%; background:white; box-shadow:0 0 8px 2px rgba(227,210,255,.9);
+  content:"";
+  position:absolute;
+  right:0;
+  top:-2px;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:white;
+  box-shadow:0 0 8px 2px rgba(227,210,255,.9);
 }
+
 @keyframes shootingStar {
   0% { opacity:0; transform:translate(0,0) rotate(-32deg); }
   5% { opacity:.95; }
@@ -113,53 +194,100 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 }
 
 /* Opening screen */
-#opening { z-index:20; display:flex; align-items:center; justify-content:center; }
-.opening-content {
-  position:relative; z-index:5; width:min(90%,460px); text-align:center;
-  padding:28px 18px; animation:openingAppear 2s ease both;
+#opening {
+  z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
+
+.opening-content {
+  position:relative;
+  z-index:5;
+  width:min(90%,460px);
+  text-align:center;
+  padding:28px 18px;
+  animation:openingAppear 2s ease both;
+}
+
 @keyframes openingAppear {
   from { opacity:0; transform:translateY(14px); }
   to { opacity:1; transform:translateY(0); }
 }
+
 .opening-eyebrow {
-  font-size:11px; letter-spacing:4px; text-transform:uppercase;
-  color:rgba(237,222,255,.78); margin-bottom:27px;
+  font-size:11px;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:rgba(237,222,255,.78);
+  margin-bottom:27px;
 }
+
 .opening-moon {
-  width:45px; height:45px; margin:0 auto 22px;
+  width:45px;
+  height:45px;
+  margin:0 auto 22px;
   filter:drop-shadow(0 0 12px rgba(221,198,255,.8));
 }
+
 .opening-moon svg { width:100%; height:100%; }
+
 .opening-title {
-  font-family:'Allura',cursive; font-size:clamp(43px,11vw,66px);
-  font-weight:400; line-height:1.05; color:#fff;
+  font-family:'Allura',cursive;
+  font-size:clamp(43px,11vw,66px);
+  font-weight:400;
+  line-height:1.05;
+  color:#fff;
   text-shadow:0 0 8px rgba(255,255,255,.7),0 0 22px rgba(208,177,255,.8),0 0 42px rgba(164,116,220,.6);
   margin:0 0 16px;
 }
+
 .opening-subtitle {
-  font-size:16px; letter-spacing:1px; line-height:1.6;
-  color:rgba(244,234,255,.78); margin:0 auto 35px;
+  font-size:16px;
+  letter-spacing:1px;
+  line-height:1.6;
+  color:rgba(244,234,255,.78);
+  margin:0 auto 35px;
 }
+
 .open-button {
-  appearance:none; border:1px solid rgba(230,210,255,.65); border-radius:40px;
-  padding:13px 28px; background:rgba(160,122,193,.15); color:white;
-  font-family:'Cormorant Garamond',serif; font-size:16px; letter-spacing:1.5px;
-  cursor:pointer; box-shadow:0 0 16px rgba(178,142,224,.2),inset 0 0 14px rgba(220,199,255,.08);
+  appearance:none;
+  border:1px solid rgba(230,210,255,.65);
+  border-radius:40px;
+  padding:13px 28px;
+  background:rgba(160,122,193,.15);
+  color:white;
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px;
+  letter-spacing:1.5px;
+  cursor:pointer;
+  box-shadow:0 0 16px rgba(178,142,224,.2),inset 0 0 14px rgba(220,199,255,.08);
   transition:.3s ease;
 }
-.open-button:active { transform:scale(.97); background:rgba(180,145,220,.28); }
+
+.open-button:active {
+  transform:scale(.97);
+  background:rgba(180,145,220,.28);
+}
 
 /* Main scene */
 #main-screen { z-index:10; }
+
 #photos {
-  position:absolute; inset:0; z-index:3; overflow:hidden; pointer-events:none;
+  position:absolute;
+  inset:0;
+  z-index:3;
+  overflow:hidden;
+  pointer-events:none;
 }
 
-/* Individual falling Polaroid photographs */
+/* Individual falling Polaroids */
 .falling-photo-frame {
-  position:absolute; top:-260px; left:0;
-  width:var(--photo-width); height:var(--photo-height);
+  position:absolute;
+  top:-260px;
+  left:0;
+  width:var(--photo-width);
+  height:var(--photo-height);
   padding:8px 8px 27px;
   background:#fff;
   border-radius:2px;
@@ -170,26 +298,39 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   animation:none;
   visibility:hidden;
 }
+
+/* Keep the complete original photograph visible */
 .falling-photo-image {
   display:block;
   width:100%;
   height:100%;
-  object-fit:cover;
+  object-fit:contain;
   object-position:center center;
-  background:#eee;
+  background:#fff;
   border:0;
   padding:0;
   margin:0;
 }
+
 .photo-decoration-layer {
-  position:absolute; inset:0; width:100%; height:100%;
-  pointer-events:none; overflow:hidden;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  overflow:hidden;
 }
+
 .frame-star {
-  position:absolute; display:block; color:#b49aca; line-height:1;
+  position:absolute;
+  display:block;
+  color:#b49aca;
+  line-height:1;
   text-shadow:0 0 3px rgba(176,145,207,.35);
-  font-family:Georgia,serif; user-select:none;
+  font-family:Georgia,serif;
+  user-select:none;
 }
+
 .frame-star.small { font-size:6px; opacity:.8; }
 .frame-star.medium { font-size:9px; opacity:.9; }
 .frame-star.bright { font-size:12px; opacity:.95; }
@@ -204,32 +345,61 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 .frame-star.bottom-d { right:42%; bottom:6px; }
 
 .center-message {
-  position:absolute; z-index:5; left:50%; top:50%;
-  transform:translate(-50%,-50%); width:calc(100% - 20px); max-width:520px;
-  display:flex; align-items:center; justify-content:center;
-  text-align:center; pointer-events:none;
+  position:absolute;
+  z-index:5;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  width:calc(100% - 20px);
+  max-width:520px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  pointer-events:none;
 }
+
 .message-line {
-  display:inline-flex; flex-direction:row; flex-wrap:nowrap;
-  align-items:center; justify-content:center; gap:6px;
-  max-width:100%; white-space:nowrap;
+  display:inline-flex;
+  flex-direction:row;
+  flex-wrap:nowrap;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  max-width:100%;
+  white-space:nowrap;
 }
+
 .message-text {
-  font-family:'Allura',cursive; font-size:clamp(25px,7.1vw,48px);
-  font-weight:400; line-height:1.12; white-space:nowrap; color:#fff;
+  font-family:'Allura',cursive;
+  font-size:clamp(25px,7.1vw,48px);
+  font-weight:400;
+  line-height:1.12;
+  white-space:nowrap;
+  color:#fff;
   text-shadow:0 0 5px rgba(255,255,255,.95),0 0 14px rgba(224,207,255,.95),
     0 0 28px rgba(184,145,237,.85),0 0 48px rgba(155,112,216,.55);
 }
+
 .message-heart {
-  width:23px; height:23px; margin:0; flex:0 0 auto;
+  width:23px;
+  height:23px;
+  margin:0;
+  flex:0 0 auto;
   filter:drop-shadow(0 0 5px rgba(255,255,255,.95)) drop-shadow(0 0 13px rgba(211,187,255,.9));
 }
+
 .message-heart path { fill:#fff; }
 
 @keyframes photoFall {
-  0% { transform:translate3d(0,-190px,0) rotate(var(--rotation)); }
-  100% { transform:translate3d(var(--drift),calc(100vh + 240px),0) rotate(calc(var(--rotation) + var(--spin))); }
+  0% {
+    transform:translate3d(0,-190px,0) rotate(var(--rotation));
+  }
+  100% {
+    transform:translate3d(var(--drift),calc(100vh + 240px),0) rotate(calc(var(--rotation) + var(--spin)));
+  }
 }
+
 @media (max-width:600px) {
   .message-text { font-size:clamp(23px,6.9vw,27px); }
   .message-heart { width:19px; height:19px; margin:0; }
@@ -237,30 +407,42 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   .nebula-clouds::before { filter:blur(19px); }
   .nebula-clouds::after { filter:blur(23px); }
 }
+
 @media (prefers-reduced-motion:reduce) {
-  .nebula-clouds::before,.nebula-clouds::after,.star,.sparkle,.shooting-star {
+  .nebula-clouds::before,
+  .nebula-clouds::after,
+  .star,
+  .sparkle,
+  .shooting-star {
     animation-duration:1ms !important;
   }
 }
 </style>
 </head>
+
 <body>
 
 <section id="opening" class="screen">
   <div class="nebula-clouds" aria-hidden="true">
-    <span class="nebula-ribbon one"></span><span class="nebula-ribbon two"></span>
+    <span class="nebula-ribbon one"></span>
+    <span class="nebula-ribbon two"></span>
   </div>
+
   <div class="stars" id="opening-stars"></div>
+
   <div class="shooting-star" style="top:24%;left:82%;animation-delay:1s"></div>
   <div class="shooting-star" style="top:55%;left:70%;animation-delay:4s"></div>
   <div class="shooting-star" style="top:76%;left:92%;animation-delay:6s"></div>
+
   <div class="opening-content">
     <div class="opening-eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
+
     <div class="opening-moon">
       <svg viewBox="0 0 50 50" aria-hidden="true">
         <path d="M31 5 C17 7 10 19 14 31 C18 43 31 47 42 39 C31 40 22 33 21 23 C20 15 24 9 31 5Z" fill="#e9d9ff"/>
       </svg>
     </div>
+
     <h1 class="opening-title">Under the Shooting Stars</h1>
     <p class="opening-subtitle">Some things are worth taking a moment for...</p>
     <button class="open-button" id="open-button">Open Your Surprise ♡</button>
@@ -269,14 +451,19 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 
 <section id="main-screen" class="screen hidden">
   <div class="nebula-clouds" aria-hidden="true">
-    <span class="nebula-ribbon one"></span><span class="nebula-ribbon two"></span>
+    <span class="nebula-ribbon one"></span>
+    <span class="nebula-ribbon two"></span>
   </div>
+
   <div class="stars" id="main-stars"></div>
+
   <div class="shooting-star" style="top:18%;left:90%;animation-delay:1.5s"></div>
   <div class="shooting-star" style="top:39%;left:75%;animation-delay:4s"></div>
   <div class="shooting-star" style="top:63%;left:95%;animation-delay:2.5s"></div>
   <div class="shooting-star" style="top:82%;left:65%;animation-delay:6s"></div>
+
   <div id="photos"></div>
+
   <div class="center-message">
     <div class="message-line">
       <span class="message-text">I'll Always Choose You</span>
@@ -432,25 +619,29 @@ const unavailablePhotos = new Set([
   "wedding-photo-12.png"
 ]);
 
-function createStars(containerId, count) {
+function createStars(containerId,count) {
   const container = document.getElementById(containerId);
   if (!container) return;
 
   for (let i=0; i<count; i++) {
     const star = document.createElement("span");
     star.className = "star";
+
     const size = Math.random() < .12 ? 3 + Math.random()*1.5 : 1 + Math.random()*1.5;
+
     star.style.width = size + "px";
     star.style.height = size + "px";
     star.style.left = Math.random()*100 + "%";
     star.style.top = Math.random()*100 + "%";
     star.style.setProperty("--twinkle-duration",(2+Math.random()*4)+"s");
     star.style.setProperty("--delay",(Math.random()*5)+"s");
+
     if (size > 3) star.classList.add("large");
     container.appendChild(star);
   }
 
   const sparkleCount = Math.floor(count/24);
+
   for (let i=0; i<sparkleCount; i++) {
     const sparkle = document.createElement("span");
     sparkle.className = "sparkle";
@@ -499,13 +690,19 @@ refillPhotoDeck();
 
 const photosContainer = document.getElementById("photos");
 
-/* Randomized Polaroid dimensions */
+/*
+  More noticeable randomized Polaroid sizes.
+  Each entry is [frame width, frame height].
+*/
 const polaroidSizes = [
-  [116,150],
-  [124,162],
-  [132,174],
-  [140,186],
-  [148,198]
+  [104,142],
+  [116,158],
+  [128,174],
+  [140,190],
+  [152,206],
+  [164,222],
+  [122,194],
+  [146,218]
 ];
 
 let activePhotoCount = 0;
@@ -572,7 +769,7 @@ async function createFallingPhoto(attempt=0) {
     console.warn("Skipping an incomplete Polaroid photo:",error);
 
     if (attempt < 2) {
-      createFallingPhoto(attempt + 1);
+      createFallingPhoto(attempt+1);
     }
 
     return;
@@ -624,6 +821,7 @@ async function createFallingPhoto(attempt=0) {
 
   function removeFrame() {
     if (removed) return;
+
     removed = true;
     clearTimeout(cleanupTimer);
     frame.remove();
@@ -685,12 +883,14 @@ function startMusicFromTap() {
 
 function onYouTubeIframeAPIReady() {
   if (youtubePlayerCreating || youtubePlayer) return;
+
   youtubePlayerCreating = true;
 
   youtubePlayer = new YT.Player("youtube-player",{
     height:"200",
     width:"200",
     videoId:videoId,
+
     playerVars:{
       autoplay:0,
       controls:0,
@@ -704,6 +904,7 @@ function onYouTubeIframeAPIReady() {
       enablejsapi:1,
       origin:window.location.origin
     },
+
     events:{
       onReady:function(event) {
         youtubeReady = true;
@@ -769,5 +970,6 @@ document.getElementById("open-button").addEventListener("click",function() {
   startPhotos();
 });
 </script>
+
 </body>
 </html>
