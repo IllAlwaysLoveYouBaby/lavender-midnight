@@ -16,7 +16,7 @@ html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #100b1c;
+  background: #0c0817;
 }
 
 body {
@@ -24,114 +24,132 @@ body {
   color: white;
 }
 
-/* =========================
-   GALAXY BACKGROUND
-========================= */
-
 .screen {
   position: fixed;
   inset: 0;
   overflow: hidden;
   isolation: isolate;
   background:
-    radial-gradient(ellipse at 50% 45%,
-      #292039 0%,
-      #1c142b 48%,
-      #100b1c 100%);
+    radial-gradient(ellipse at 50% 45%, #30213f 0%, #1b142a 48%, #0c0817 100%);
 }
 
-/* Separate nebula layer so it stays visible behind the stars */
+/* =====================================
+   VISIBLE LAVENDER NEBULA CLOUDS
+===================================== */
 
 .nebula-clouds {
   position: absolute;
-  inset: -20%;
+  inset: -25%;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 1;
+}
+
+.nebula-clouds span {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  filter: blur(48px);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.cloud-one {
+  width: 75%;
+  height: 35%;
+  left: -5%;
+  top: 15%;
+  background: radial-gradient(ellipse, rgba(154,111,194,.43), rgba(117,77,163,.22) 43%, transparent 74%);
+  transform: rotate(-24deg);
+  animation: cloudDriftOne 32s ease-in-out infinite alternate;
+}
+
+.cloud-two {
+  width: 72%;
+  height: 42%;
+  right: -8%;
+  top: 30%;
+  background: radial-gradient(ellipse, rgba(119,103,190,.40), rgba(105,76,157,.22) 45%, transparent 75%);
+  transform: rotate(28deg);
+  animation: cloudDriftTwo 39s ease-in-out infinite alternate;
+}
+
+.cloud-three {
+  width: 78%;
+  height: 35%;
+  left: 15%;
+  bottom: 3%;
+  background: radial-gradient(ellipse, rgba(173,119,192,.34), rgba(121,81,166,.20) 45%, transparent 76%);
+  transform: rotate(-15deg);
+  animation: cloudDriftThree 36s ease-in-out infinite alternate;
+}
+
+.cloud-four {
+  width: 58%;
+  height: 32%;
+  left: 32%;
+  top: 3%;
+  background: radial-gradient(ellipse, rgba(177,143,211,.27), rgba(125,91,173,.14) 48%, transparent 76%);
+  transform: rotate(18deg);
+  animation: cloudDriftOne 44s ease-in-out infinite alternate-reverse;
+}
+
+.cloud-five {
+  width: 65%;
+  height: 30%;
+  left: -12%;
+  bottom: 12%;
+  background: radial-gradient(ellipse, rgba(111,104,181,.32), rgba(92,76,153,.16) 48%, transparent 76%);
+  transform: rotate(32deg);
+  animation: cloudDriftTwo 42s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes cloudDriftOne {
+  from { translate: -3% -2%; scale: .95; }
+  to { translate: 5% 4%; scale: 1.13; }
+}
+
+@keyframes cloudDriftTwo {
+  from { translate: 3% 2%; scale: 1.05; }
+  to { translate: -5% -3%; scale: .92; }
+}
+
+@keyframes cloudDriftThree {
+  from { translate: -2% 3%; scale: .94; }
+  to { translate: 4% -3%; scale: 1.12; }
+}
+
+/* Soft, wispy cloud detail */
+
+.nebula-haze {
+  position: absolute;
+  inset: -15%;
   z-index: 0;
   pointer-events: none;
-  overflow: hidden;
   background:
-    radial-gradient(ellipse 42% 27% at 18% 28%,
-      rgba(157,119,194,.36) 0%,
-      rgba(125,88,167,.22) 35%,
-      transparent 76%),
-    radial-gradient(ellipse 38% 30% at 78% 25%,
-      rgba(133,108,185,.34) 0%,
-      rgba(103,77,153,.20) 40%,
-      transparent 78%),
-    radial-gradient(ellipse 46% 32% at 58% 72%,
-      rgba(164,119,184,.30) 0%,
-      rgba(111,79,151,.17) 43%,
-      transparent 80%),
-    radial-gradient(ellipse 34% 26% at 15% 82%,
-      rgba(104,91,167,.30) 0%,
-      rgba(85,66,139,.16) 45%,
-      transparent 80%);
-  filter: blur(32px);
-  animation: nebulaFloat 34s ease-in-out infinite alternate;
-}
-
-.nebula-clouds::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 35% 18% at 36% 48%,
-      rgba(190,151,211,.22) 0%,
-      rgba(145,108,184,.12) 38%,
-      transparent 76%),
-    radial-gradient(ellipse 32% 23% at 85% 65%,
-      rgba(153,124,194,.23) 0%,
-      rgba(112,83,163,.12) 45%,
-      transparent 78%),
-    radial-gradient(ellipse 28% 20% at 8% 56%,
-      rgba(133,109,183,.20) 0%,
-      transparent 78%);
-  filter: blur(24px);
-  animation: nebulaFloatTwo 42s ease-in-out infinite alternate;
-}
-
-.nebula-clouds::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 24% 12% at 50% 20%,
-      rgba(213,184,231,.13),
-      transparent 78%),
-    radial-gradient(ellipse 30% 14% at 24% 68%,
-      rgba(177,143,210,.15),
-      transparent 78%),
-    radial-gradient(ellipse 26% 15% at 75% 42%,
-      rgba(184,151,218,.14),
-      transparent 78%);
+    radial-gradient(ellipse at 22% 38%, rgba(202,167,226,.13), transparent 24%),
+    radial-gradient(ellipse at 73% 30%, rgba(171,148,224,.15), transparent 27%),
+    radial-gradient(ellipse at 57% 78%, rgba(190,143,211,.13), transparent 25%),
+    radial-gradient(ellipse at 8% 78%, rgba(130,116,194,.12), transparent 25%);
   filter: blur(30px);
-  animation: nebulaFloatThree 48s ease-in-out infinite alternate;
+  animation: hazeMove 38s ease-in-out infinite alternate;
 }
 
-@keyframes nebulaFloat {
-  0% { transform: translate(-2%, -1%) scale(1); }
-  50% { transform: translate(2%, 2%) scale(1.08); }
-  100% { transform: translate(-1%, 3%) scale(1.04); }
+@keyframes hazeMove {
+  from { transform: translate(-2%, 1%) scale(1); }
+  to { transform: translate(3%, -2%) scale(1.1); }
 }
 
-@keyframes nebulaFloatTwo {
-  0% { transform: translate(2%, 1%) scale(1.03); }
-  100% { transform: translate(-3%, -2%) scale(1.12); }
-}
-
-@keyframes nebulaFloatThree {
-  0% { transform: translate(-1%, 2%); }
-  100% { transform: translate(2%, -2%); }
-}
-
-/* =========================
+/* =====================================
    BACKGROUND STARS
-========================= */
+===================================== */
 
 .stars {
   position: absolute;
   inset: 0;
-  pointer-events: none;
   z-index: 1;
+  pointer-events: none;
 }
 
 .star {
@@ -139,31 +157,22 @@ body {
   width: 2px;
   height: 2px;
   border-radius: 50%;
-  background: #fff;
-  box-shadow: 0 0 7px 1px rgba(255,255,255,.75);
+  background: white;
+  box-shadow: 0 0 7px 1px rgba(255,255,255,.8);
   animation: twinkle 3s ease-in-out infinite;
 }
 
 @keyframes twinkle {
-  0%, 100% {
-    opacity: .2;
-    transform: scale(.75);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.6);
-  }
+  0%, 100% { opacity: .2; transform: scale(.75); }
+  50% { opacity: 1; transform: scale(1.6); }
 }
 
 .sky-sparkle {
   position: absolute;
   width: 9px;
   height: 9px;
-  background: rgba(245,236,255,.9);
-  clip-path: polygon(
-    50% 0%, 62% 38%, 100% 50%, 62% 62%,
-    50% 100%, 38% 62%, 0% 50%, 38% 38%
-  );
+  background: rgba(245,236,255,.95);
+  clip-path: polygon(50% 0%, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0% 50%, 38% 38%);
   filter: drop-shadow(0 0 5px rgba(231,213,255,.9));
   animation: sparklePulse 3.5s ease-in-out infinite;
 }
@@ -173,26 +182,20 @@ body {
   50% { opacity: 1; transform: scale(1.2) rotate(20deg); }
 }
 
-/* =========================
-   SHOOTING STARS
-========================= */
+/* =====================================
+   SHOOTING STARS IN THE SKY
+===================================== */
 
 .shooting-star {
   position: absolute;
   z-index: 2;
-  width: 150px;
+  width: 155px;
   height: 1.5px;
   opacity: 0;
   pointer-events: none;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(226,211,255,.15),
-    rgba(255,255,255,.95),
-    transparent
-  );
+  background: linear-gradient(90deg, transparent, rgba(226,211,255,.25), white, transparent);
   transform: rotate(-35deg);
-  filter: drop-shadow(0 0 4px rgba(226,211,255,.8));
+  filter: drop-shadow(0 0 5px rgba(226,211,255,.9));
   animation: shooting 8s ease-in-out infinite;
 }
 
@@ -209,20 +212,14 @@ body {
 }
 
 @keyframes shooting {
-  0%, 72% {
-    opacity: 0;
-    transform: translate(0,0) rotate(-35deg);
-  }
+  0%, 72% { opacity: 0; transform: translate(0,0) rotate(-35deg); }
   74% { opacity: 1; }
-  82%, 100% {
-    opacity: 0;
-    transform: translate(-330px,210px) rotate(-35deg);
-  }
+  82%, 100% { opacity: 0; transform: translate(-330px,210px) rotate(-35deg); }
 }
 
-/* =========================
+/* =====================================
    OPENING SCREEN
-========================= */
+===================================== */
 
 #opening {
   z-index: 10;
@@ -261,14 +258,13 @@ body {
   font-size: clamp(48px, 13vw, 76px);
   line-height: 1.1;
   font-weight: 400;
-  color: #fff;
+  color: white;
   text-shadow: 0 0 18px rgba(221,201,255,.3);
 }
 
 .opening-subtitle {
   margin-top: 18px;
   font-size: 19px;
-  font-weight: 400;
   letter-spacing: 1px;
   color: rgba(255,255,255,.88);
 }
@@ -294,9 +290,9 @@ body {
   background: rgba(255,255,255,.18);
 }
 
-/* =========================
-   MAIN SCREEN
-========================= */
+/* =====================================
+   MAIN SCREEN AND PHOTOS
+===================================== */
 
 #main {
   display: none;
@@ -312,23 +308,19 @@ body {
   z-index: 3;
 }
 
-/* =========================
-   POLAROID FRAMES
-========================= */
+/* Polaroid has a real white frame and bottom margin */
 
 .falling-photo-frame {
   position: absolute;
   top: -170px;
   opacity: 0;
+  padding: 6px 6px 23px;
+  background: #fff;
+  border-radius: 2px;
+  box-shadow: 0 4px 18px rgba(10,5,20,.45);
   animation: fall var(--fall-duration) linear forwards;
   will-change: transform;
 }
-
-/*
-  The bottom padding is intentionally larger.
-  It creates a clear white decorative strip.
-  The photo itself no longer sits underneath the artwork.
-*/
 
 .falling-photo-image {
   display: block;
@@ -336,14 +328,13 @@ body {
   height: 100%;
   object-fit: cover;
   object-position: center;
-  border: 6px solid white;
-  padding: 5px 5px 17px;
+  border: 0;
+  padding: 0;
   background: white;
-  border-radius: 3px;
-  box-shadow: 0 4px 18px rgba(10,5,20,.4);
+  border-radius: 0;
 }
 
-/* Decoration is restricted to the white frame margins */
+/* The SVG overlay only decorates the white frame margins */
 
 .photo-decoration-layer {
   position: absolute;
@@ -369,23 +360,13 @@ body {
   85% { opacity: 1; }
   100% {
     opacity: 0;
-    transform:
-      translate3d(var(--drift),110vh,0)
-      rotate(calc(var(--rotation) + 25deg));
+    transform: translate3d(var(--drift),110vh,0) rotate(calc(var(--rotation) + 25deg));
   }
 }
 
-/* =========================
-   POLAROID CELESTIAL ART
-   No overlapping decorations.
-   No constellation lines.
-========================= */
-
-function-placeholder { display: none; }
-
-/* =========================
+/* =====================================
    CENTER MESSAGE
-========================= */
+===================================== */
 
 .center-message {
   position: absolute;
@@ -395,7 +376,6 @@ function-placeholder { display: none; }
   transform: translate(-50%, -50%);
   width: calc(100% - 20px);
   max-width: 520px;
-  padding: 0;
   text-align: center;
   display: flex;
   justify-content: center;
@@ -433,9 +413,9 @@ function-placeholder { display: none; }
     drop-shadow(0 0 38px rgba(190,160,255,.65));
 }
 
-/* =========================
+/* =====================================
    HIDDEN YOUTUBE PLAYER
-========================= */
+===================================== */
 
 #youtube-player-container {
   position: fixed;
@@ -454,9 +434,7 @@ function-placeholder { display: none; }
   border: 0;
 }
 
-/* =========================
-   SMALL SCREENS
-========================= */
+/* SMALL SCREENS */
 
 @media (max-width: 380px) {
   .opening-subtitle { font-size: 17px; }
@@ -475,9 +453,7 @@ function-placeholder { display: none; }
     font-size: clamp(23px, 6.9vw, 27px);
   }
 
-  .white-heart {
-    width: 19px;
-  }
+  .white-heart { width: 19px; }
 }
 </style>
 </head>
@@ -491,7 +467,14 @@ function-placeholder { display: none; }
 <!-- OPENING SCREEN -->
 
 <div class="screen" id="opening">
-  <div class="nebula-clouds"></div>
+  <div class="nebula-clouds">
+    <span class="cloud-one"></span>
+    <span class="cloud-two"></span>
+    <span class="cloud-three"></span>
+    <span class="cloud-four"></span>
+    <span class="cloud-five"></span>
+  </div>
+  <div class="nebula-haze"></div>
   <div class="stars" id="opening-stars"></div>
 
   <div class="shooting-star" style="top:18%;left:85%;animation-delay:1s"></div>
@@ -502,19 +485,22 @@ function-placeholder { display: none; }
     <div class="opening-eyebrow">A LITTLE MOMENT, JUST FOR YOU</div>
     <div class="moon">☾</div>
     <div class="opening-title">Under the Shooting Stars</div>
-    <div class="opening-subtitle">
-      Some things are worth taking a moment for...
-    </div>
-    <button class="open-button" id="open-button">
-      Open Your Surprise ♡
-    </button>
+    <div class="opening-subtitle">Some things are worth taking a moment for...</div>
+    <button class="open-button" id="open-button">Open Your Surprise ♡</button>
   </div>
 </div>
 
 <!-- MAIN SCREEN -->
 
 <div class="screen" id="main">
-  <div class="nebula-clouds"></div>
+  <div class="nebula-clouds">
+    <span class="cloud-one"></span>
+    <span class="cloud-two"></span>
+    <span class="cloud-three"></span>
+    <span class="cloud-four"></span>
+    <span class="cloud-five"></span>
+  </div>
+  <div class="nebula-haze"></div>
   <div class="stars" id="main-stars"></div>
 
   <div class="shooting-star" style="top:12%;left:95%;animation-delay:2s"></div>
@@ -526,166 +512,150 @@ function-placeholder { display: none; }
   <div class="center-message">
     <span class="message-text">I'll Always Choose You</span>
     <svg class="white-heart" viewBox="0 0 24 24" aria-label="White heart" role="img">
-      <path d="M12 21.35
-        C11.5 20.9 10.9 20.35 10.2 19.7
-        C5.1 15.1 2 12.2 2 8.5
-        C2 5.4 4.4 3 7.5 3
-        C9.3 3 10.9 3.8 12 5.1
-        C13.1 3.8 14.7 3 16.5 3
-        C19.6 3 22 5.4 22 8.5
-        C22 12.2 18.9 15.1 13.8 19.7
-        Z"/>
+      <path d="M12 21.35 C11.5 20.9 10.9 20.35 10.2 19.7 C5.1 15.1 2 12.2 2 8.5 C2 5.4 4.4 3 7.5 3 C9.3 3 10.9 3.8 12 5.1 C13.1 3.8 14.7 3 16.5 3 C19.6 3 22 5.4 22 8.5 C22 12.2 18.9 15.1 13.8 19.7 Z"/>
     </svg>
   </div>
 </div>
 
 <script>
 
-/* =========================
-   PHOTO FILES
-========================= */
+/* PHOTO FILES */
 
 const photoFiles = [
-  "Picture_36_Original_Original.jpeg",
-  "PXL_20201225_045227157.NIGHT_Original_Original.jpeg",
-  "IMG_9485_Original.jpeg",
-  "IMG_9411_Original.jpeg",
-  "IMG_8192_Original.jpeg",
-  "IMG_7911_Original.jpeg",
-  "IMG_7612_Original.jpeg",
-  "IMG_7552_Original.jpeg",
-  "IMG_7431_Original.jpeg",
-  "IMG_6943_Original.jpeg",
-  "IMG_6928_Original.jpeg",
-  "IMG_6913_Original.jpeg",
-  "IMG_6013_Original.jpeg",
-  "IMG_5882_Original.jpeg",
-  "IMG_5283_Original.jpeg",
-  "IMG_4910_Original.jpeg",
-  "IMG_4477_Original.jpeg",
-  "IMG_4423_Original.jpeg",
-  "IMG_4418_Original.jpeg",
-  "IMG_4376_Original.jpeg",
-  "IMG_4248_Original.jpeg",
-  "IMG_4101_Original.jpeg",
-  "IMG_3861_Original.jpeg",
-  "IMG_3852_Original.jpeg",
-  "IMG_3568_Original.jpeg",
-  "IMG_3386_Original.jpeg",
-  "IMG_3251_Original.jpeg",
-  "IMG_3146_Original.jpeg",
-  "IMG_2786_Original.jpeg",
-  "IMG_2670_Original.jpeg",
-  "IMG_2457_Original.jpeg",
-  "IMG_2126_Original.jpeg",
-  "IMG_1766_Original.jpeg",
-  "IMG_1707_Original.jpeg",
-  "IMG_1671_Original.jpeg",
-  "IMG_1637_Original.jpeg",
-  "IMG_1611_Original.jpeg",
-  "IMG_1572_Original.jpeg",
-  "IMG_1475_Original.jpeg",
-  "IMG_0866_Original.jpeg",
-  "IMG_0880_Original.jpeg",
-  "IMG_0710_Original.jpeg",
-  "IMG_0668_Original.jpeg",
-  "IMG_0586_Original.jpeg",
-  "IMG_0581_Original.jpeg",
-  "IMG_0578_Original.jpeg",
-  "IMG_0287_Original.jpeg",
-  "IMG_0242_Original.jpeg",
-  "FBC1621D-16B5-47FD-8211-F0C568D772B5_Original.jpeg",
-  "F7343407-203D-45D6-8BB2-4D16D2D8D40A_Original.jpeg",
-  "D41356E5-D304-4600-A436-F31E1A256817_Original.jpeg",
-  "948A11A9-4C71-4F70-B5D5-367342B0C1FA_Original.jpeg",
-  "8F12514D-A331-489B-B427-AEFD392EAAB6_Original.jpeg",
-  "7E11638B-414A-405A-83F5-AEB1AB1D56B3_Original.jpeg",
-  "1663_Original_Original_Original.jpeg",
-  "090320F3-BD17-477A-9EE2-FDBC2A765FB8_Original.jpeg",
-  "IMG_0911_Original.jpeg",
-  "IMG_5759_Original.jpeg",
-  "IMG_3926_Original.jpeg",
-  "9F274428-57F9-4635-8F59-2F71D23A9E15_Original.jpeg",
-  "wedding-photo-1.jpg",
-  "wedding-photo-2.jpg",
-  "wedding-photo-3.png",
-  "wedding-photo-4.png",
-  "wedding-photo-5.png",
-  "wedding-photo-6.png",
-  "wedding-photo-7.png",
-  "wedding-photo-8.png",
-  "wedding-photo-9.png",
-  "wedding-photo-10.png",
-  "wedding-photo-11.png",
-  "wedding-photo-12.png",
-  "wedding-photo-13.png",
-  "wedding-photo-14.png",
-  "wedding-photo-15.png",
-  "wedding-photo-16.png",
-  "wedding-photo-17.png",
-  "IMG_0340_Original.jpeg",
-  "IMG_0300_Original.jpeg",
-  "IMG_0337_Original.jpeg",
-  "IMG_0485_Original.jpeg",
-  "IMG_0659_Original.jpeg",
-  "IMG_0662_Original.jpeg",
-  "IMG_1489_Original.jpeg",
-  "IMG_0056_Original.jpeg",
-  "IMG_0518_Original.jpeg",
-  "IMG_2535_Original.jpeg",
-  "IMG_2774_Original.jpeg",
-  "IMG_4296_Original.jpeg",
-  "IMG_4299_Original.jpeg",
-  "IMG_0604_Original.jpeg",
-  "IMG_0792_Original.jpeg",
-  "IMG_1777_Original.jpeg",
-  "IMG_0541_Original.jpeg",
-  "IMG_0564_Original.jpeg",
-  "IMG_0803_Original.jpeg",
-  "IMG_1778_Original.jpeg",
-  "IMG_1830_Original.jpeg",
-  "IMG_3562_Original.jpeg",
-  "IMG_3930_Original.jpeg",
-  "IMG_4036_Original.jpeg",
-  "IMG_4250_Original.jpeg",
-  "IMG_4254_Original.jpeg",
-  "IMG_0842_Original.jpeg",
-
-  /* 26 NEW PHOTOS */
-
-  "IMG_5530_Original.jpeg",
-  "IMG_5489_Original.jpeg",
-  "IMG_5431_Original.jpeg",
-  "IMG_5373_Original.jpeg",
-  "IMG_5340_Original.jpeg",
-  "IMG_5351_Original.jpeg",
-  "IMG_5330_Original.jpeg",
-  "IMG_5334_Original.jpeg",
-  "IMG_5294_Original.jpeg",
-  "IMG_5292_Original.jpeg",
-  "IMG_1369.png",
-  "IMG_1362.jpeg",
-  "IMG_5938_Original.jpeg",
-  "IMG_5920_Original.jpeg",
-  "IMG_5648_Original.jpeg",
-  "IMG_5604_Original.jpeg",
-  "IMG_5556_Original.jpeg",
-  "D26ACCC3-4FBB-4C7F-B1D5-2B916689356C_Original.jpeg",
-  "241B1AF9-DA85-4B6F-948C-CB8982D809C5_Original.jpeg",
-  "D0C7AE92-C412-4CD0-A570-6F12D9CEDDB5_Original.jpeg",
-  "4E8557BF-DA01-4D22-BA1F-088C0E86014C_Original.jpeg",
-  "6DCB8FA1-C204-41B9-B439-CB6E6F51DF1A_Original.jpeg",
-  "6EEE39A6-2035-4F2B-88AC-011BD7F05C7D_Original.jpeg",
-  "19DD59E4-43C2-463B-A70B-96588933B44F_Original.jpeg",
-  "8F4746F3-B883-4DE1-8AD9-E14C94805202_Original.jpeg",
-  "5A9A7BF3-806C-4CC1-96AE-F2E8FABA7D18_Original.jpeg",
-
-  "Wedding4.jpeg"
+"Picture_36_Original_Original.jpeg",
+"PXL_20201225_045227157.NIGHT_Original_Original.jpeg",
+"IMG_9485_Original.jpeg",
+"IMG_9411_Original.jpeg",
+"IMG_8192_Original.jpeg",
+"IMG_7911_Original.jpeg",
+"IMG_7612_Original.jpeg",
+"IMG_7552_Original.jpeg",
+"IMG_7431_Original.jpeg",
+"IMG_6943_Original.jpeg",
+"IMG_6928_Original.jpeg",
+"IMG_6913_Original.jpeg",
+"IMG_6013_Original.jpeg",
+"IMG_5882_Original.jpeg",
+"IMG_5283_Original.jpeg",
+"IMG_4910_Original.jpeg",
+"IMG_4477_Original.jpeg",
+"IMG_4423_Original.jpeg",
+"IMG_4418_Original.jpeg",
+"IMG_4376_Original.jpeg",
+"IMG_4248_Original.jpeg",
+"IMG_4101_Original.jpeg",
+"IMG_3861_Original.jpeg",
+"IMG_3852_Original.jpeg",
+"IMG_3568_Original.jpeg",
+"IMG_3386_Original.jpeg",
+"IMG_3251_Original.jpeg",
+"IMG_3146_Original.jpeg",
+"IMG_2786_Original.jpeg",
+"IMG_2670_Original.jpeg",
+"IMG_2457_Original.jpeg",
+"IMG_2126_Original.jpeg",
+"IMG_1766_Original.jpeg",
+"IMG_1707_Original.jpeg",
+"IMG_1671_Original.jpeg",
+"IMG_1637_Original.jpeg",
+"IMG_1611_Original.jpeg",
+"IMG_1572_Original.jpeg",
+"IMG_1475_Original.jpeg",
+"IMG_0866_Original.jpeg",
+"IMG_0880_Original.jpeg",
+"IMG_0710_Original.jpeg",
+"IMG_0668_Original.jpeg",
+"IMG_0586_Original.jpeg",
+"IMG_0581_Original.jpeg",
+"IMG_0578_Original.jpeg",
+"IMG_0287_Original.jpeg",
+"IMG_0242_Original.jpeg",
+"FBC1621D-16B5-47FD-8211-F0C568D772B5_Original.jpeg",
+"F7343407-203D-45D6-8BB2-4D16D2D8D40A_Original.jpeg",
+"D41356E5-D304-4600-A436-F31E1A256817_Original.jpeg",
+"948A11A9-4C71-4F70-B5D5-367342B0C1FA_Original.jpeg",
+"8F12514D-A331-489B-B427-AEFD392EAAB6_Original.jpeg",
+"7E11638B-414A-405A-83F5-AEB1AB1D56B3_Original.jpeg",
+"1663_Original_Original_Original.jpeg",
+"090320F3-BD17-477A-9EE2-FDBC2A765FB8_Original.jpeg",
+"IMG_0911_Original.jpeg",
+"IMG_5759_Original.jpeg",
+"IMG_3926_Original.jpeg",
+"9F274428-57F9-4635-8F59-2F71D23A9E15_Original.jpeg",
+"wedding-photo-1.jpg",
+"wedding-photo-2.jpg",
+"wedding-photo-3.png",
+"wedding-photo-4.png",
+"wedding-photo-5.png",
+"wedding-photo-6.png",
+"wedding-photo-7.png",
+"wedding-photo-8.png",
+"wedding-photo-9.png",
+"wedding-photo-10.png",
+"wedding-photo-11.png",
+"wedding-photo-12.png",
+"wedding-photo-13.png",
+"wedding-photo-14.png",
+"wedding-photo-15.png",
+"wedding-photo-16.png",
+"wedding-photo-17.png",
+"IMG_0340_Original.jpeg",
+"IMG_0300_Original.jpeg",
+"IMG_0337_Original.jpeg",
+"IMG_0485_Original.jpeg",
+"IMG_0659_Original.jpeg",
+"IMG_0662_Original.jpeg",
+"IMG_1489_Original.jpeg",
+"IMG_0056_Original.jpeg",
+"IMG_0518_Original.jpeg",
+"IMG_2535_Original.jpeg",
+"IMG_2774_Original.jpeg",
+"IMG_4296_Original.jpeg",
+"IMG_4299_Original.jpeg",
+"IMG_0604_Original.jpeg",
+"IMG_0792_Original.jpeg",
+"IMG_1777_Original.jpeg",
+"IMG_0541_Original.jpeg",
+"IMG_0564_Original.jpeg",
+"IMG_0803_Original.jpeg",
+"IMG_1778_Original.jpeg",
+"IMG_1830_Original.jpeg",
+"IMG_3562_Original.jpeg",
+"IMG_3930_Original.jpeg",
+"IMG_4036_Original.jpeg",
+"IMG_4250_Original.jpeg",
+"IMG_4254_Original.jpeg",
+"IMG_0842_Original.jpeg",
+"IMG_5530_Original.jpeg",
+"IMG_5489_Original.jpeg",
+"IMG_5431_Original.jpeg",
+"IMG_5373_Original.jpeg",
+"IMG_5340_Original.jpeg",
+"IMG_5351_Original.jpeg",
+"IMG_5330_Original.jpeg",
+"IMG_5334_Original.jpeg",
+"IMG_5294_Original.jpeg",
+"IMG_5292_Original.jpeg",
+"IMG_1369.png",
+"IMG_1362.jpeg",
+"IMG_5938_Original.jpeg",
+"IMG_5920_Original.jpeg",
+"IMG_5648_Original.jpeg",
+"IMG_5604_Original.jpeg",
+"IMG_5556_Original.jpeg",
+"D26ACCC3-4FBB-4C7F-B1D5-2B916689356C_Original.jpeg",
+"241B1AF9-DA85-4B6F-948C-CB8982D809C5_Original.jpeg",
+"D0C7AE92-C412-4CD0-A570-6F12D9CEDDB5_Original.jpeg",
+"4E8557BF-DA01-4D22-BA1F-088C0E86014C_Original.jpeg",
+"6DCB8FA1-C204-41B9-B439-CB6E6F51DF1A_Original.jpeg",
+"6EEE39A6-2035-4F2B-88AC-011BD7F05C7D_Original.jpeg",
+"19DD59E4-43C2-463B-A70B-96588933B44F_Original.jpeg",
+"8F4746F3-B883-4DE1-8AD9-E14C94805202_Original.jpeg",
+"5A9A7BF3-806C-4CC1-96AE-F2E8FABA7D18_Original.jpeg",
+"Wedding4.jpeg"
 ];
 
-/* =========================
-   BACKGROUND STARS
-========================= */
+/* BACKGROUND STARS */
 
 function createStars(containerId, count) {
   const container = document.getElementById(containerId);
@@ -698,7 +668,7 @@ function createStars(containerId, count) {
     star.style.animationDelay = Math.random() * 5 + "s";
     star.style.animationDuration = (2 + Math.random() * 4) + "s";
 
-    if (Math.random() < 0.16) {
+    if (Math.random() < .16) {
       star.style.width = "3px";
       star.style.height = "3px";
       star.style.boxShadow = "0 0 10px 2px rgba(255,255,255,.85)";
@@ -721,9 +691,7 @@ function createStars(containerId, count) {
 createStars("opening-stars", 125);
 createStars("main-stars", 145);
 
-/* =========================
-   PHOTO SHUFFLE / NO REPEATS
-========================= */
+/* PHOTO SHUFFLE / NO REPEATS */
 
 const photos = document.getElementById("photos");
 
@@ -734,14 +702,10 @@ let photoStarted = false;
 let photoTimer = null;
 let pendingPhotos = 0;
 
-/* THESE TWO FILES FAILED THE PHOTO CHECKER */
-
 const unavailablePhotos = new Set([
   "IMG_4101_Original.jpeg",
   "wedding-photo-12.png"
 ]);
-
-/* RETRY TEMPORARY LOADING FAILURES */
 
 const photoRetryCounts = new Map();
 const MAX_PHOTO_RETRIES = 2;
@@ -766,21 +730,13 @@ function startNewPhotoCycle() {
 
   photoDeck = shuffle(availablePhotos);
 
-  if (
-    photoDeck.length > 1 &&
-    photoDeck[0] === lastDisplayedPhoto
-  ) {
-    [photoDeck[0], photoDeck[1]] =
-      [photoDeck[1], photoDeck[0]];
+  if (photoDeck.length > 1 && photoDeck[0] === lastDisplayedPhoto) {
+    [photoDeck[0], photoDeck[1]] = [photoDeck[1], photoDeck[0]];
   }
 
   photoRetryCounts.clear();
 
-  console.log(
-    "Starting photo cycle with",
-    photoDeck.length,
-    "available photos."
-  );
+  console.log("Starting photo cycle with", photoDeck.length, "available photos.");
 }
 
 function getNextPhoto() {
@@ -794,9 +750,7 @@ function getNextPhoto() {
   return photoDeck.shift();
 }
 
-/* =========================
-   RANDOM PHOTO DIMENSIONS
-========================= */
+/* RANDOM PHOTO SIZES */
 
 function getRandomPhotoSize() {
   const sizes = [
@@ -808,10 +762,7 @@ function getRandomPhotoSize() {
     { width: 128, height: 160 }
   ];
 
-  const selected = sizes[
-    Math.floor(Math.random() * sizes.length)
-  ];
-
+  const selected = sizes[Math.floor(Math.random() * sizes.length)];
   const maxWidth = Math.max(70, window.innerWidth - 20);
   const scale = Math.min(1, maxWidth / selected.width);
 
@@ -821,160 +772,138 @@ function getRandomPhotoSize() {
   };
 }
 
-/* =========================
-   POLAROID BORDER DECORATIONS
-
-   Artwork is placed only in:
-   - the narrow top white margin
-   - the larger bottom white margin
-
-   No artwork is placed over the photo.
-   No connecting lines are used.
-========================= */
+/* =====================================
+   POLAROID CELESTIAL DECORATIONS
+   Curved connecting details, starbursts,
+   crescent moons and tiny shooting stars.
+===================================== */
 
 function addPhotoDecorations(layer) {
 
-  const star = (x, y, size, opacity = 1) => `
-    <path
-      d="
-        M ${x} ${y-size}
-        Q ${x+1} ${y-1} ${x+size} ${y}
-        Q ${x+1} ${y+1} ${x} ${y+size}
-        Q ${x-1} ${y+1} ${x-size} ${y}
-        Q ${x-1} ${y-1} ${x} ${y-size}
-        Z
-      "
-      fill="#a88acb"
-      opacity="${opacity}"
-    />
+  const star = (x, y, s, opacity = 1) => `
+    <path d="
+      M ${x} ${y-s}
+      C ${x+1} ${y-1} ${x+s} ${y}
+        ${x+1} ${y+1}
+      C ${x} ${y+s} ${x-1} ${y+1}
+        ${x-s} ${y}
+      C ${x-1} ${y-1} ${x} ${y-s}
+      Z"
+      fill="#b69bdc"
+      opacity="${opacity}"/>
   `;
 
-  const sparkle = (x, y, size, opacity = .9) => `
-    <path
-      d="
-        M ${x} ${y-size}
-        L ${x+1} ${y-1}
-        L ${x+size} ${y}
-        L ${x+1} ${y+1}
-        L ${x} ${y+size}
-        L ${x-1} ${y+1}
-        L ${x-size} ${y}
-        L ${x-1} ${y-1}
-        Z
-      "
-      fill="#c5b1e2"
-      opacity="${opacity}"
-    />
-  `;
-
-  const tinyDot = (x, y, r = 1.1) => `
-    <circle cx="${x}" cy="${y}" r="${r}" fill="#bca5dc" opacity=".9"/>
+  const sparkle = (x, y, s, opacity = .9) => `
+    <path d="
+      M ${x} ${y-s}
+      L ${x+1} ${y-1}
+      L ${x+s} ${y}
+      L ${x+1} ${y+1}
+      L ${x} ${y+s}
+      L ${x-1} ${y+1}
+      L ${x-s} ${y}
+      L ${x-1} ${y-1}
+      Z"
+      fill="#d5c2ef"
+      opacity="${opacity}"/>
   `;
 
   const moon = (x, y, scale, flip = false) => `
     <g transform="translate(${x} ${y}) scale(${flip ? -scale : scale},${scale})">
       <path
-        d="
-          M 0 -6.5
-          C -5 -5.5 -7 1 -3.8 5
-          C -.5 9 5.5 7.5 8 2.5
-          C 4.2 5 1 3.2 -.4 .4
-          C -1.8 -2.5 -1.1 -4.8 0 -6.5
-          Z
-        "
-        fill="#b39bd5"
-        stroke="#e3d5f4"
+        d="M 1 -8
+           C -7 -7 -10 1 -5 7
+           C 0 12 8 8 10 1
+           C 5 6 0 4 -2 0
+           C -4 -4 -2 -7 1 -8 Z"
+        fill="#b59bdc"
+        stroke="#e6d9f7"
         stroke-width=".65"
       />
     </g>
   `;
 
+  const shooting = (x, y, angle = -18) => `
+    <g transform="translate(${x} ${y}) rotate(${angle})">
+      <path d="M -13 0 Q -5 -1 0 0"
+        stroke="#bba4df"
+        stroke-width=".8"
+        stroke-linecap="round"
+        opacity=".8"
+        fill="none"/>
+      <circle cx="1" cy="0" r="1.5" fill="#f2eaff"/>
+      <circle cx="1" cy="0" r="2.7" fill="#d5c2ef" opacity=".35"/>
+    </g>
+  `;
+
   /*
-    Each layout is intentionally sparse.
-    One crescent per design, with stars kept
-    at separate positions in the white margins.
+    Fine curved paths connect a few small details.
+    All paths stay within the white border areas.
   */
 
   const patterns = [
 
-    /* Crescent at lower left */
-
     () => `
-      ${star(31, 7, 2.8, .9)}
-      ${sparkle(49, 7, 2.1, .8)}
-      ${tinyDot(68, 7)}
-      ${moon(15, 151, .82)}
-      ${star(39, 151, 3.1, .95)}
-      ${sparkle(65, 151, 2.5, .85)}
-      ${star(91, 151, 2.8, .9)}
-      ${tinyDot(111, 151)}
+      <path d="M 24 8 Q 39 2 53 8" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
+      <path d="M 72 151 Q 88 145 104 151" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
+      ${moon(14,151,.78)}
+      ${star(39,8,3.2)}
+      ${sparkle(58,8,2.2)}
+      ${star(85,151,3.2)}
+      ${sparkle(108,151,2.4)}
+      ${shooting(104,8,-12)}
     `,
 
-    /* Crescent at lower right */
-
     () => `
-      ${tinyDot(17, 7)}
-      ${sparkle(39, 7, 2.1, .8)}
-      ${star(62, 7, 2.8, .9)}
-      ${star(88, 7, 2.3, .8)}
-      ${tinyDot(108, 7)}
-      ${star(18, 151, 2.8, .9)}
-      ${sparkle(43, 151, 2.5, .85)}
-      ${star(69, 151, 3.1, .95)}
-      ${moon(111, 151, .82, true)}
+      <path d="M 22 151 Q 39 145 55 151" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
+      <path d="M 73 8 Q 89 2 105 8" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
+      ${moon(113,8,.78,true)}
+      ${star(87,8,3.2)}
+      ${sparkle(65,8,2.2)}
+      ${star(41,151,3.2)}
+      ${sparkle(18,151,2.4)}
+      ${shooting(22,8,12)}
     `,
 
-    /* Crescent at upper left */
-
     () => `
-      ${moon(15, 7, .72)}
-      ${star(39, 7, 2.8, .9)}
-      ${sparkle(63, 7, 2.1, .8)}
-      ${tinyDot(89, 7)}
-      ${star(109, 7, 2.3, .85)}
-      ${star(25, 151, 3, .9)}
-      ${sparkle(52, 151, 2.4, .85)}
-      ${star(83, 151, 2.8, .9)}
-      ${tinyDot(108, 151)}
+      <path d="M 23 8 Q 40 2 55 8" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
+      <path d="M 70 151 Q 86 145 103 151" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
+      ${moon(14,8,.72)}
+      ${star(40,8,3.2)}
+      ${sparkle(61,8,2.2)}
+      ${star(86,151,3.1)}
+      ${sparkle(108,151,2.4)}
+      ${shooting(101,151,-15)}
     `,
 
-    /* Crescent at upper right */
-
     () => `
-      ${tinyDot(18, 7)}
-      ${star(42, 7, 2.5, .85)}
-      ${sparkle(66, 7, 2.2, .8)}
-      ${star(89, 7, 2.8, .9)}
-      ${moon(111, 7, .72, true)}
-      ${star(17, 151, 2.8, .9)}
-      ${sparkle(43, 151, 2.3, .85)}
-      ${star(72, 151, 3, .9)}
-      ${tinyDot(99, 151)}
+      <path d="M 23 151 Q 40 145 55 151" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
+      <path d="M 72 8 Q 89 2 104 8" stroke="#c4afe2" stroke-width=".55" fill="none" opacity=".55"/>
+      ${moon(113,151,.72,true)}
+      ${star(88,151,3.2)}
+      ${sparkle(64,151,2.2)}
+      ${star(41,8,3.1)}
+      ${sparkle(18,8,2.4)}
+      ${shooting(25,151,15)}
     `
   ];
 
-  const selectedPattern =
-    patterns[Math.floor(Math.random() * patterns.length)];
+  const selectedPattern = patterns[Math.floor(Math.random() * patterns.length)];
 
   layer.innerHTML = `
-    <svg
-      viewBox="0 0 128 160"
-      preserveAspectRatio="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-hidden="true"
-    >
+    <svg viewBox="0 0 128 160"
+         preserveAspectRatio="none"
+         xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true">
       ${selectedPattern()}
     </svg>
   `;
 }
 
-/* =========================
-   CREATE FALLING PHOTO
-========================= */
+/* CREATE FALLING PHOTO */
 
 function createFallingPhoto() {
   const filename = getNextPhoto();
-
   if (!filename) return;
 
   const frame = document.createElement("div");
@@ -991,7 +920,7 @@ function createFallingPhoto() {
   frame.style.height = size.height + "px";
 
   const availableWidth = Math.max(0, window.innerWidth - size.width);
-  frame.style.left = (Math.random() * availableWidth) + "px";
+  frame.style.left = Math.random() * availableWidth + "px";
 
   frame.style.setProperty("--rotation", rotation + "deg");
   frame.style.setProperty("--fall-duration", duration + "s");
@@ -1014,9 +943,7 @@ function createFallingPhoto() {
     pendingPhotos--;
     photoRetryCounts.delete(filename);
     lastDisplayedPhoto = filename;
-
     photos.appendChild(frame);
-
     console.log("Photo displayed:", filename);
   };
 
@@ -1028,36 +955,22 @@ function createFallingPhoto() {
     if (retries < MAX_PHOTO_RETRIES) {
       photoRetryCounts.set(filename, retries + 1);
       photoDeck.push(filename);
-
-      console.warn(
-        "Retrying photo:",
-        filename,
-        "Attempt:",
-        retries + 1
-      );
+      console.warn("Retrying photo:", filename, "Attempt:", retries + 1);
     } else {
       failedPhotos.add(filename);
       photoRetryCounts.delete(filename);
-
-      console.warn(
-        "Skipping photo after retries:",
-        filename
-      );
+      console.warn("Skipping photo after retries:", filename);
     }
 
     frame.remove();
   };
 
-  frame.addEventListener("animationend", () => {
-    frame.remove();
-  });
+  frame.addEventListener("animationend", () => frame.remove());
 
   img.src = "./" + encodeURIComponent(filename);
 }
 
-/* =========================
-   PHOTO START SEQUENCE
-========================= */
+/* PHOTO START SEQUENCE */
 
 function startPhotos() {
   if (photoStarted) return;
@@ -1065,7 +978,6 @@ function startPhotos() {
   photoStarted = true;
 
   createFallingPhoto();
-
   setTimeout(createFallingPhoto, 1500);
   setTimeout(createFallingPhoto, 3000);
 
@@ -1075,9 +987,7 @@ function startPhotos() {
   }, 8000);
 }
 
-/* =========================
-   HIDDEN YOUTUBE PLAYER
-========================= */
+/* HIDDEN YOUTUBE PLAYER */
 
 const videoId = "yLZoVTayvxY";
 
@@ -1090,7 +1000,6 @@ function onYouTubeIframeAPIReady() {
     width: "200",
     height: "200",
     videoId: videoId,
-
     playerVars: {
       autoplay: 0,
       controls: 0,
@@ -1101,7 +1010,6 @@ function onYouTubeIframeAPIReady() {
       loop: 1,
       playlist: videoId
     },
-
     events: {
       onReady: function(event) {
         youtubePlayerReady = true;
@@ -1111,7 +1019,6 @@ function onYouTubeIframeAPIReady() {
           startMusicWhenReady = false;
         }
       },
-
       onStateChange: function(event) {
         if (event.data === YT.PlayerState.ENDED) {
           event.target.playVideo();
@@ -1131,16 +1038,13 @@ function onYouTubeIframeAPIReady() {
   firstScript.parentNode.insertBefore(tag, firstScript);
 })();
 
-/* =========================
-   OPEN SURPRISE
-========================= */
+/* OPEN SURPRISE */
 
 const opening = document.getElementById("opening");
 const main = document.getElementById("main");
 const openButton = document.getElementById("open-button");
 
 openButton.addEventListener("click", function() {
-
   if (youtubePlayer && youtubePlayerReady) {
     youtubePlayer.playVideo();
   } else {
