@@ -20,6 +20,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 }
 .hidden { display:none !important; }
 
+/* Nebula clouds */
 .nebula-clouds {
   position:absolute; inset:-12%; z-index:0; overflow:hidden;
   pointer-events:none; opacity:1;
@@ -149,13 +150,13 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
 }
 .open-button:active { transform:scale(.97); background:rgba(180,145,220,.28); }
 
-/* Main screen */
+/* Main scene */
 #main-screen { z-index:10; }
 #photos {
   position:absolute; inset:0; z-index:3; overflow:hidden; pointer-events:none;
 }
 
-/* Classic photobooth paper: four distinct frames, one outer border */
+/* Classic photobooth strip */
 .falling-photo-frame {
   position:absolute; top:-430px; left:0;
   width:var(--photo-width); height:var(--photo-height);
@@ -182,7 +183,7 @@ body { font-family:'Cormorant Garamond',serif; color:white; }
   background:#fff; border:0; padding:0; margin:0;
 }
 
-/* Lavender stars on the white border, not on the pictures */
+/* Lavender stars on photobooth border */
 .photo-decoration-layer {
   position:absolute; inset:0; width:100%; height:100%;
   pointer-events:none; overflow:hidden;
@@ -469,6 +470,7 @@ function createStars(containerId, count) {
 createStars("opening-stars",125);
 createStars("main-stars",175);
 
+/* A small set of stars scattered around the white frame, not over the image. */
 const frameDecorations = [
   '<span class="frame-star bright top-a">✦</span><span class="frame-star small top-b">✧</span><span class="frame-star medium top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✧</span><span class="frame-star small bottom-b">✦</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>',
   '<span class="frame-star medium top-a">✧</span><span class="frame-star small top-b">✦</span><span class="frame-star bright top-c">✦</span><span class="frame-star small side-a">✦</span><span class="frame-star small side-b">✧</span><span class="frame-star small bottom-a">✦</span><span class="frame-star bright bottom-b">✦</span><span class="frame-star medium bottom-c">✧</span><span class="frame-star small bottom-d">✦</span>',
@@ -495,7 +497,8 @@ function nextPhoto() {
 }
 refillPhotoDeck();
 
-/* Preload the first four images before the opening screen is dismissed */
+/* Preload the first four images while the opening screen is still visible,
+   so the first photobooth strip can appear promptly after the tap. */
 let preloadedFirstStrip = null;
 function preloadFirstStrip() {
   if (preloadedFirstStrip) return;
@@ -520,11 +523,12 @@ preloadFirstStrip();
 
 const photosContainer = document.getElementById("photos");
 const stripSizes = [[112,356],[118,374],[124,392],[130,410],[136,428]];
+const MAX_ACTIVE_PHOTOS = 5;
 let activePhotoCount = 0;
 let waitingForFirstStrip = false;
 
 function createFallingPhoto(attempt=0) {
-  if (activePhotoCount >= 13) return;
+  if (activePhotoCount >= MAX_ACTIVE_PHOTOS) return;
 
   let filenames, images;
   if (preloadedFirstStrip && preloadedFirstStrip.ready) {
@@ -533,6 +537,8 @@ function createFallingPhoto(attempt=0) {
     preloadedFirstStrip = null;
   } else {
     if (preloadedFirstStrip && !preloadedFirstStrip.ready) {
+      /* The preload is still underway; let it finish rather than starting
+         four duplicate image requests for the first strip. */
       if (!waitingForFirstStrip) {
         waitingForFirstStrip = true;
         const waitForPreload = () => {
@@ -561,7 +567,7 @@ function createFallingPhoto(attempt=0) {
   const rotation = -13 + Math.random()*26;
   const drift = -65 + Math.random()*130;
   const spin = -10 + Math.random()*20;
-  const duration = 35 + Math.random()*10;
+  const duration = 30 + Math.random()*6;
   const design = Math.floor(Math.random()*frameDecorations.length);
 
   frame.className = "falling-photo-frame";
@@ -571,7 +577,7 @@ function createFallingPhoto(attempt=0) {
   frame.style.setProperty("--rotation",rotation+"deg");
   frame.style.setProperty("--drift",drift+"px");
   frame.style.setProperty("--spin",spin+"deg");
-  frame.style.setProperty("--fall-duration",duration+"s");
+  frame.style.setProperty("--fall-duration",duration+"s";
 
   stripImages.className = "photo-strip-images";
   images.forEach((image,index) => {
@@ -624,13 +630,13 @@ function startPhotos() {
   if (photoTimersStarted) return;
   photoTimersStarted = true;
   createFallingPhoto();
-  setTimeout(createFallingPhoto,750);
-  setTimeout(createFallingPhoto,1500);
-  setTimeout(createFallingPhoto,3000);
-  setInterval(createFallingPhoto,5000);
+  setTimeout(createFallingPhoto,4000);
+  setTimeout(createFallingPhoto,9000);
+  setTimeout(createFallingPhoto,15000);
+  setInterval(createFallingPhoto,10000);
 }
 
-/* Hidden YouTube player: new song, continuous looping */
+/* Hidden YouTube player; starts from the opening-button tap and loops. */
 const videoId = "Qv20J91J7mA";
 let youtubePlayer = null;
 let youtubeReady = false;
@@ -646,6 +652,8 @@ function onYouTubeIframeAPIReady() {
     events:{
       onReady:function(event) {
         youtubeReady = true;
+        /* Explicitly cue the selected ID so an older cached player cannot
+           continue with the previous track. Playback still waits for the tap. */
         if (musicRequested) {
           event.target.loadVideoById({videoId:videoId,startSeconds:0});
         } else {
