@@ -297,12 +297,6 @@ body {
   visibility:hidden;
 }
 
-/*
-  Dedicated photo window:
-  8px white border at top and sides,
-  27px white Polaroid border at bottom.
-  The image is contained inside this exact area.
-*/
 .falling-photo-image {
   position:absolute;
   display:block;
@@ -773,11 +767,7 @@ async function createFallingPhoto(attempt=0) {
   const frame = document.createElement("div");
   const decoration = document.createElement("div");
 
-  /*
-    Generate a fresh random scale for every individual Polaroid.
-    The width and height stay proportional, preserving the frame shape.
-    This creates a much more noticeable size range.
-  */
+  /* Random size for every individual Polaroid */
   const scale = 0.78 + Math.random()*0.44;
   const width = Math.round(136*scale);
   const height = Math.round(184*scale);
@@ -786,12 +776,14 @@ async function createFallingPhoto(attempt=0) {
   const rotation = -13 + Math.random()*26;
   const drift = -65 + Math.random()*130;
   const spin = -10 + Math.random()*20;
-  const duration = 35 + Math.random()*10;
+
+  /* Slower, more relaxed falling speed */
+  const duration = 40 + Math.random()*10;
+
   const design = Math.floor(Math.random()*frameDecorations.length);
 
   frame.className = "falling-photo-frame";
 
-  /* Apply actual dimensions directly to the frame */
   frame.style.width = width+"px";
   frame.style.height = height+"px";
   frame.style.left = left+"px";
@@ -842,21 +834,47 @@ async function createFallingPhoto(attempt=0) {
   });
 }
 
-/* Preserve the existing photo drop sequence */
+/*
+  Revised Polaroid drop sequence:
+
+  First photo: immediately.
+  Second photo: 5 seconds later.
+  Third photo: 4 seconds after the second.
+  Remaining photos: every 5 seconds.
+
+  This removes the rapid opening burst and creates
+  more breathing room between incoming photos.
+*/
 let photoTimersStarted = false;
+let photoIntervalTimer = null;
 
 function startPhotos() {
   if (photoTimersStarted) return;
 
   photoTimersStarted = true;
 
+  /* First Polaroid appears immediately */
   createFallingPhoto();
 
-  setTimeout(() => createFallingPhoto(),750);
-  setTimeout(() => createFallingPhoto(),1500);
-  setTimeout(() => createFallingPhoto(),3000);
+  /* Second Polaroid arrives after 5 seconds */
+  setTimeout(() => {
+    createFallingPhoto();
+  },5000);
 
-  setInterval(() => createFallingPhoto(),5000);
+  /* Third Polaroid arrives 4 seconds after the second */
+  setTimeout(() => {
+    createFallingPhoto();
+  },9000);
+
+  /* Continue with a steady 5-second interval */
+  setTimeout(() => {
+    createFallingPhoto();
+
+    photoIntervalTimer = setInterval(() => {
+      createFallingPhoto();
+    },5000);
+
+  },14000);
 }
 
 /* Hidden YouTube player — original Us, Now song */
