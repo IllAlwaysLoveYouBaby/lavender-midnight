@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#10091c">
 <title>Lavender Midnight</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Allura&family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
@@ -475,12 +476,18 @@ body {
   </div>
 </section>
 
+<!-- YouTube player -->
 <div id="youtube-player-container" aria-hidden="true"
      style="position:fixed;left:-220px;top:0;width:200px;height:200px;overflow:hidden;">
   <div id="youtube-player" style="width:200px;height:200px;"></div>
 </div>
 
 <script>
+
+/* =========================================================
+   PHOTOS
+========================================================= */
+
 const photoFiles = [
 "Picture_36_Original_Original.jpeg",
 "PXL_20201225_045227157.NIGHT_Original_Original.jpeg",
@@ -635,7 +642,7 @@ function createStars(containerId,count) {
     star.style.left = Math.random()*100 + "%";
     star.style.top = Math.random()*100 + "%";
     star.style.setProperty("--twinkle-duration",(2+Math.random()*4)+"s");
-    star.style.setProperty("--delay",(Math.random()*5)+"s";
+    star.style.setProperty("--delay",(Math.random()*5)+"s");
 
     if (size > 3) star.classList.add("large");
     container.appendChild(star);
@@ -662,7 +669,6 @@ const frameDecorations = [
   '<span class="frame-star bright top-a">✦</span><span class="frame-star medium top-b">✧</span><span class="frame-star small top-c">✦</span><span class="frame-star small side-a">✧</span><span class="frame-star small side-b">✦</span><span class="frame-star medium bottom-a">✦</span><span class="frame-star small bottom-b">✧</span><span class="frame-star bright bottom-c">✦</span><span class="frame-star small bottom-d">✧</span>'
 ];
 
-/* Randomized photo deck */
 let photoDeck = [];
 let photoDeckIndex = 0;
 
@@ -742,7 +748,6 @@ function loadPhotoImage(filename) {
   });
 }
 
-/* Create one individual falling Polaroid */
 async function createFallingPhoto(attempt=0) {
   if (activePhotoCount >= MAX_ACTIVE_PHOTOS) return;
 
@@ -776,11 +781,9 @@ async function createFallingPhoto(attempt=0) {
   const spin = -10 + Math.random()*20;
 
   const duration = 40 + Math.random()*10;
-
   const design = Math.floor(Math.random()*frameDecorations.length);
 
   frame.className = "falling-photo-frame";
-
   frame.style.width = width+"px";
   frame.style.height = height+"px";
   frame.style.left = left+"px";
@@ -831,13 +834,6 @@ async function createFallingPhoto(attempt=0) {
   });
 }
 
-/*
-  First photo: 3 seconds after opening.
-  Second photo: 8 seconds after opening.
-  Third photo: 12 seconds after opening.
-  Fourth photo: 17 seconds after opening.
-  Then every 5 seconds.
-*/
 let photoTimersStarted = false;
 let photoIntervalTimer = null;
 
@@ -868,7 +864,11 @@ function startPhotos() {
   },17000);
 }
 
-/* Hidden YouTube player — updated song */
+/* =========================================================
+   MUSIC — NEW SONG
+   Video ID: 1e-XYTmG7Fk
+========================================================= */
+
 const videoId = "1e-XYTmG7Fk";
 
 let youtubePlayer = null;
@@ -884,10 +884,9 @@ function startMusicFromTap() {
   }
 
   try {
-    youtubePlayer.loadVideoById(videoId);
     youtubePlayer.playVideo();
   } catch (error) {
-    console.warn("Music playback could not start:", error);
+    console.warn("Music playback could not start:",error);
   }
 }
 
@@ -899,7 +898,9 @@ function onYouTubeIframeAPIReady() {
   youtubePlayer = new YT.Player("youtube-player", {
     height:"200",
     width:"200",
-    videoId:videoId,
+
+    /* The new song is loaded directly into the player */
+    videoId:"1e-XYTmG7Fk",
 
     playerVars:{
       autoplay:0,
@@ -908,7 +909,7 @@ function onYouTubeIframeAPIReady() {
       fs:0,
       playsinline:1,
       loop:1,
-      playlist:videoId,
+      playlist:"1e-XYTmG7Fk",
       modestbranding:1,
       rel:0,
       enablejsapi:1,
@@ -920,10 +921,7 @@ function onYouTubeIframeAPIReady() {
         youtubeReady = true;
 
         if (musicRequested) {
-          event.target.loadVideoById(videoId);
           event.target.playVideo();
-        } else {
-          event.target.cueVideoById(videoId);
         }
       },
 
@@ -941,7 +939,7 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-/* Load YouTube IFrame API immediately */
+/* Load YouTube API */
 (function loadYouTubeAPI() {
   if (window.YT && window.YT.Player) {
     onYouTubeIframeAPIReady();
@@ -965,8 +963,13 @@ function onYouTubeIframeAPIReady() {
   }
 })();
 
-/* Opening button */
+/* =========================================================
+   OPENING BUTTON
+========================================================= */
+
 document.getElementById("open-button").addEventListener("click",function() {
+
+  /* Request playback of the new song */
   startMusicFromTap();
 
   document.getElementById("opening").classList.add("hidden");
@@ -974,6 +977,7 @@ document.getElementById("open-button").addEventListener("click",function() {
 
   startPhotos();
 });
+
 </script>
 
 </body>
