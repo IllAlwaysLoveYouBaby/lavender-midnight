@@ -635,7 +635,7 @@ function createStars(containerId,count) {
     star.style.left = Math.random()*100 + "%";
     star.style.top = Math.random()*100 + "%";
     star.style.setProperty("--twinkle-duration",(2+Math.random()*4)+"s");
-    star.style.setProperty("--delay",(Math.random()*5)+"s");
+    star.style.setProperty("--delay",(Math.random()*5)+"s";
 
     if (size > 3) star.classList.add("large");
     container.appendChild(star);
@@ -766,11 +766,6 @@ async function createFallingPhoto(attempt=0) {
   const frame = document.createElement("div");
   const decoration = document.createElement("div");
 
-  /*
-    More noticeable randomized Polaroid sizes.
-    Each frame keeps the same width-to-height ratio,
-    while varying between 65% and 130% of the base size.
-  */
   const scale = 0.65 + Math.random()*0.65;
   const width = Math.round(136*scale);
   const height = Math.round(184*scale);
@@ -780,7 +775,6 @@ async function createFallingPhoto(attempt=0) {
   const drift = -65 + Math.random()*130;
   const spin = -10 + Math.random()*20;
 
-  /* Slower, more relaxed falling speed */
   const duration = 40 + Math.random()*10;
 
   const design = Math.floor(Math.random()*frameDecorations.length);
@@ -838,8 +832,6 @@ async function createFallingPhoto(attempt=0) {
 }
 
 /*
-  Revised Polaroid drop sequence:
-
   First photo: 3 seconds after opening.
   Second photo: 8 seconds after opening.
   Third photo: 12 seconds after opening.
@@ -854,22 +846,18 @@ function startPhotos() {
 
   photoTimersStarted = true;
 
-  /* First Polaroid appears after a 3-second delay */
   setTimeout(() => {
     createFallingPhoto();
   },3000);
 
-  /* Second Polaroid arrives 5 seconds after the first */
   setTimeout(() => {
     createFallingPhoto();
   },8000);
 
-  /* Third Polaroid arrives 4 seconds after the second */
   setTimeout(() => {
     createFallingPhoto();
   },12000);
 
-  /* Fourth Polaroid arrives 5 seconds after the third */
   setTimeout(() => {
     createFallingPhoto();
 
@@ -880,8 +868,8 @@ function startPhotos() {
   },17000);
 }
 
-/* Hidden YouTube player — single song */
-const videoId = "L9L_5281yAE";
+/* Hidden YouTube player — updated song */
+const videoId = "1e-XYTmG7Fk";
 
 let youtubePlayer = null;
 let youtubeReady = false;
@@ -891,15 +879,15 @@ let youtubePlayerCreating = false;
 function startMusicFromTap() {
   musicRequested = true;
 
-  if (!youtubeReady || !youtubePlayer) return;
+  if (!youtubeReady || !youtubePlayer) {
+    return;
+  }
 
   try {
-    youtubePlayer.loadVideoById({
-      videoId:videoId,
-      startSeconds:0
-    });
+    youtubePlayer.loadVideoById(videoId);
+    youtubePlayer.playVideo();
   } catch (error) {
-    console.warn("Music playback could not start:",error);
+    console.warn("Music playback could not start:", error);
   }
 }
 
@@ -908,7 +896,7 @@ function onYouTubeIframeAPIReady() {
 
   youtubePlayerCreating = true;
 
-  youtubePlayer = new YT.Player("youtube-player",{
+  youtubePlayer = new YT.Player("youtube-player", {
     height:"200",
     width:"200",
     videoId:videoId,
@@ -932,15 +920,10 @@ function onYouTubeIframeAPIReady() {
         youtubeReady = true;
 
         if (musicRequested) {
-          event.target.loadVideoById({
-            videoId:videoId,
-            startSeconds:0
-          });
+          event.target.loadVideoById(videoId);
+          event.target.playVideo();
         } else {
-          event.target.cueVideoById({
-            videoId:videoId,
-            startSeconds:0
-          });
+          event.target.cueVideoById(videoId);
         }
       },
 
