@@ -890,7 +890,7 @@ function startPhotos() {
 
 /* =========================================================
    YOUTUBE MUSIC PLAYER
-   NEW SONG: gs7RpJ2R6gQ
+   UPDATED SONG: gs7RpJ2R6gQ
 ========================================================= */
 
 const musicVideoId = "gs7RpJ2R6gQ";
@@ -948,17 +948,28 @@ function createYouTubePlayer() {
 
         event.target.setVolume(100);
 
-        /* If the opening button was already tapped,
-           try to start playback once the player is ready. */
+        /* Explicitly select the new video.
+           If the visitor has already tapped, play it.
+           Otherwise, cue it until the visitor taps. */
         if (musicRequested) {
-          event.target.playVideo();
+          event.target.loadVideoById({
+            videoId:musicVideoId,
+            startSeconds:0
+          });
+        } else {
+          event.target.cueVideoById({
+            videoId:musicVideoId,
+            startSeconds:0
+          });
         }
       },
 
       onStateChange:function(event) {
         if (event.data === YT.PlayerState.ENDED) {
-          event.target.seekTo(0,true);
-          event.target.playVideo();
+          event.target.loadVideoById({
+            videoId:musicVideoId,
+            startSeconds:0
+          });
         }
       },
 
@@ -1015,13 +1026,16 @@ if (openButton) {
 
   openButton.addEventListener("click",function() {
 
-    /* Remember that the visitor requested music */
+    /* Remember the visitor's music request */
     musicRequested = true;
 
-    /* Request playback directly from the button tap */
+    /* Explicitly load and play the updated song */
     if (youtubeReady && youtubePlayer) {
       try {
-        youtubePlayer.playVideo();
+        youtubePlayer.loadVideoById({
+          videoId:musicVideoId,
+          startSeconds:0
+        });
       } catch (error) {
         console.warn("Music playback request failed:",error);
       }
