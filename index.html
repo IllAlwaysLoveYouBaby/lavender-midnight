@@ -865,8 +865,8 @@ function startPhotos() {
 }
 
 /* =========================================================
-   MUSIC — NEW SONG
-   Video ID: 1e-XYTmG7Fk
+   MUSIC — FIXED INITIALIZATION AND PLAYBACK
+   New song: 1e-XYTmG7Fk
 ========================================================= */
 
 const videoId = "1e-XYTmG7Fk";
@@ -879,14 +879,17 @@ let youtubePlayerCreating = false;
 function startMusicFromTap() {
   musicRequested = true;
 
-  if (!youtubeReady || !youtubePlayer) {
-    return;
-  }
+  if (youtubeReady && youtubePlayer) {
+    try {
+      youtubePlayer.loadVideoById({
+        videoId:videoId,
+        startSeconds:0
+      });
 
-  try {
-    youtubePlayer.playVideo();
-  } catch (error) {
-    console.warn("Music playback could not start:",error);
+      youtubePlayer.playVideo();
+    } catch (error) {
+      console.warn("Music playback could not start:",error);
+    }
   }
 }
 
@@ -899,8 +902,7 @@ function onYouTubeIframeAPIReady() {
     height:"200",
     width:"200",
 
-    /* The new song is loaded directly into the player */
-    videoId:"1e-XYTmG7Fk",
+    videoId:videoId,
 
     playerVars:{
       autoplay:0,
@@ -909,7 +911,7 @@ function onYouTubeIframeAPIReady() {
       fs:0,
       playsinline:1,
       loop:1,
-      playlist:"1e-XYTmG7Fk",
+      playlist:videoId,
       modestbranding:1,
       rel:0,
       enablejsapi:1,
@@ -920,14 +922,18 @@ function onYouTubeIframeAPIReady() {
       onReady:function(event) {
         youtubeReady = true;
 
+        /* If the opening button was tapped before the player was ready,
+           load and start the song when the player becomes available. */
         if (musicRequested) {
+          event.target.loadVideoById(videoId);
           event.target.playVideo();
+        } else {
+          event.target.cueVideoById(videoId);
         }
       },
 
       onStateChange:function(event) {
         if (event.data === YT.PlayerState.ENDED) {
-          event.target.seekTo(0,true);
           event.target.playVideo();
         }
       },
@@ -939,7 +945,7 @@ function onYouTubeIframeAPIReady() {
   });
 }
 
-/* Load YouTube API */
+/* Load YouTube API immediately */
 (function loadYouTubeAPI() {
   if (window.YT && window.YT.Player) {
     onYouTubeIframeAPIReady();
@@ -963,13 +969,10 @@ function onYouTubeIframeAPIReady() {
   }
 })();
 
-/* =========================================================
-   OPENING BUTTON
-========================================================= */
-
+/* Opening button */
 document.getElementById("open-button").addEventListener("click",function() {
 
-  /* Request playback of the new song */
+  /* Trigger music directly from the user's tap */
   startMusicFromTap();
 
   document.getElementById("opening").classList.add("hidden");
