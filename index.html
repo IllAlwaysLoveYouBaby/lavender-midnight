@@ -1,18 +1,23 @@
+
 <script>
 
 /* =========================================================
-   MUSIC — PRE-INITIALIZED YOUTUBE PLAYER
-   Song ID: 1e-XYTmG7Fk
+   MUSIC — YOUTUBE PLAYER
+   New Video ID: WY7FS8lvB-k
 ========================================================= */
 
-const videoId = "1e-XYTmG7Fk";
+const videoId = "WY7FS8lvB-k";
 
 let youtubePlayer = null;
 let youtubeReady = false;
 let musicRequested = false;
 let playerCreationStarted = false;
+let photosStarted = false;
 
-/* Initialize the player as early as possible */
+/* =========================================================
+   CREATE YOUTUBE PLAYER
+========================================================= */
+
 function createYouTubePlayer() {
 
   if (
@@ -20,7 +25,16 @@ function createYouTubePlayer() {
     youtubePlayer ||
     !window.YT ||
     !window.YT.Player
-  ) return;
+  ) {
+    return;
+  }
+
+  const playerElement = document.getElementById("youtube-player");
+
+  if (!playerElement) {
+    console.error("YouTube player container is missing.");
+    return;
+  }
 
   playerCreationStarted = true;
 
@@ -28,6 +42,7 @@ function createYouTubePlayer() {
 
     height: "200",
     width: "200",
+
     videoId: videoId,
 
     playerVars: {
@@ -46,11 +61,12 @@ function createYouTubePlayer() {
 
     events: {
 
+      /* PLAYER READY */
       onReady: function(event) {
 
         youtubeReady = true;
 
-        event.target.cueVideoById(videoId);
+        event.target.setVolume(100);
 
         if (musicRequested) {
           event.target.playVideo();
@@ -58,17 +74,21 @@ function createYouTubePlayer() {
 
       },
 
+      /* LOOP FALLBACK */
       onStateChange: function(event) {
 
         if (event.data === YT.PlayerState.ENDED) {
-          event.target.seekTo(0, true);
+          event.target.seekTo(0);
           event.target.playVideo();
         }
 
       },
 
+      /* PLAYER ERRORS */
       onError: function(event) {
-        console.warn("YouTube player error:", event.data);
+
+        console.error("YouTube playback error:", event.data);
+
       }
 
     }
@@ -77,66 +97,121 @@ function createYouTubePlayer() {
 
 }
 
-/* YouTube API ready callback */
-window.onYouTubeIframeAPIReady = createYouTubePlayer;
+/* =========================================================
+   YOUTUBE API CALLBACK
+========================================================= */
 
-/* Load YouTube API once */
+function handleYouTubeAPIReady() {
+  createYouTubePlayer();
+}
+
+/* =========================================================
+   LOAD YOUTUBE API
+========================================================= */
+
 (function loadYouTubeAPI() {
 
+  /* API already loaded */
   if (window.YT && window.YT.Player) {
     createYouTubePlayer();
     return;
   }
 
-  if (
-    document.querySelector(
-      'script[src="https://www.youtube.com/iframe_api"]'
-    )
-  ) {
+  /* Preserve any existing callback */
+  const previousCallback = window.onYouTubeIframeAPIReady;
+
+  window.onYouTubeIframeAPIReady = function() {
+
+    if (typeof previousCallback === "function") {
+      try {
+        previousCallback();
+      } catch (error) {
+        console.warn("Previous YouTube callback error:", error);
+      }
+    }
+
+    handleYouTubeAPIReady();
+
+  };
+
+  /* Check for an API script already loading */
+  const existingScript = document.querySelector(
+    'script[src*="youtube.com/iframe_api"]'
+  );
+
+  if (existingScript) {
+
+    existingScript.addEventListener("load", function() {
+      createYouTubePlayer();
+    });
+
     return;
   }
 
+  /* Load API */
   const tag = document.createElement("script");
 
   tag.src = "https://www.youtube.com/iframe_api";
   tag.async = true;
 
-  const firstScript = document.getElementsByTagName("script")[0];
+  tag.onload = function() {
+    createYouTubePlayer();
+  };
 
-  if (firstScript && firstScript.parentNode) {
-    firstScript.parentNode.insertBefore(tag, firstScript);
-  } else {
-    document.head.appendChild(tag);
-  }
+  tag.onerror = function() {
+    console.error("Unable to load YouTube API.");
+  };
+
+  document.head.appendChild(tag);
 
 })();
 
 /* =========================================================
-   OPENING BUTTON
+   OPEN SURPRISE BUTTON
 ========================================================= */
 
-document.getElementById("open-button").addEventListener("click", function() {
+const openButton = document.getElementById("open-button");
 
-  musicRequested = true;
+if (openButton) {
 
-  /* Start music directly from the user's tap */
-  if (youtubeReady && youtubePlayer) {
+  openButton.addEventListener("click", function() {
 
-    youtubePlayer.loadVideoById({
-      videoId: videoId,
-      startSeconds: 0
-    });
+    /* Remember playback request */
+    musicRequested = true;
 
-    youtubePlayer.playVideo();
+    /* Start playback directly during the user's tap */
+    if (youtubeReady && youtubePlayer) {
 
-  }
+      try {
+        youtubePlayer.playVideo();
+      } catch (error) {
+        console.warn("Playback request failed:", error);
+      }
 
-  document.getElementById("opening").classList.add("hidden");
+    }
 
-  document.getElementById("main-screen").classList.remove("hidden");
+    /* Open main screen */
+    const opening = document.getElementById("opening");
+    const mainScreen = document.getElementById("main-screen");
 
-  startPhotos();
+    if (opening) {
+      opening.classList.add("hidden");
+    }
 
-});
+    if (mainScreen) {
+      mainScreen.classList.remove("hidden");
+    }
+
+    /* Start falling photos only once */
+    if (!photosStarted && typeof startPhotos === "function") {
+
+      photosStarted = true;
+      startPhotos();
+
+    }
+
+  });
+
+}
 
 </script>
