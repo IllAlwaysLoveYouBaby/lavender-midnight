@@ -842,9 +842,10 @@ async function createFallingPhoto(attempt=0) {
   Revised Polaroid drop sequence:
 
   First photo: immediately.
-  Second photo: 5 seconds later.
-  Third photo: 4 seconds after the second.
-  Remaining photos: every 5 seconds.
+  Second photo: 5s later.
+  Third photo: 9s after start.
+  Fourth photo: 14s after start.
+  Then every 5 seconds.
 */
 let photoTimersStarted = false;
 let photoIntervalTimer = null;
@@ -854,20 +855,16 @@ function startPhotos() {
 
   photoTimersStarted = true;
 
-  /* First Polaroid appears immediately */
   createFallingPhoto();
 
-  /* Second Polaroid arrives after 5 seconds */
   setTimeout(() => {
     createFallingPhoto();
   },5000);
 
-  /* Third Polaroid arrives 4 seconds after the second */
   setTimeout(() => {
     createFallingPhoto();
   },9000);
 
-  /* Continue with a steady 5-second interval */
   setTimeout(() => {
     createFallingPhoto();
 
@@ -878,8 +875,8 @@ function startPhotos() {
   },14000);
 }
 
-/* Hidden YouTube player — updated song */
-const videoId = "paoMU9GN21s";
+/* Hidden YouTube player — original single song restored */
+const videoId = "yLZoVTayvxY";
 
 let youtubePlayer = null;
 let youtubeReady = false;
